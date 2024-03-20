@@ -22,6 +22,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -94,8 +95,22 @@ entity router_node_top is
 end router_node_top;
 
 architecture Behavioral of router_node_top is
-
 begin
+
+  R_nw: entity router
+    port map (
+      i_req => ir_nw,
+      addr => id_nw,
+      o_req0: out std_logic;
+      o_req1: out std_logic;
+      o_req2: out std_logic
+      inB_data(DATA_WIDTH-1 downto 0) => reg_fork_0_outC_data(DATA_WIDTH-1 downto 0),
+      in_ack => join_0_outC_ack,
+      in_req => join_0_outC_req,
+      outC_data(DATA_WIDTH-1 downto 0) => add_block_0_outC_data(DATA_WIDTH-1 downto 0),
+      out_ack => add_block_0_ctrl_out_ack,
+      out_req => add_block_0_ctrl_out_req
+    );
 
 
 end Behavioral;
