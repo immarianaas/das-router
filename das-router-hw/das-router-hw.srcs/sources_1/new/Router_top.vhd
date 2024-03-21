@@ -21,6 +21,8 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use work.defs.all;
+
 
 
 -- Uncomment the following library declaration if using
@@ -36,7 +38,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 
 entity router_node_top is
-    Port ( 
+    Port (
+
+        -- some kind of clock signal? The examples have it, and we need it
+        rst : in STD_LOGIC;
+
         ia_nw:  in std_logic;
         ia_n:   in std_logic;
         ia_ne:  in std_logic;
@@ -94,22 +100,99 @@ entity router_node_top is
     );
 end router_node_top;
 
+
 architecture Behavioral of router_node_top is
+
+    -- almost copy pasted from router.vhd
+    component router is
+    port ( 
+        i_req:  in std_logic;
+        addr:   in std_logic_vector(16 downto 0);
+        o_req0: out std_logic;
+        o_req1: out std_logic;
+        o_req2: out std_logic;
+        
+        -- additional ports that we didn't thought of before
+        i_ack:  in std_logic;
+        o_ack0: out std_logic;
+        o_ack1: out std_logic;
+        o_ack2: out std_logic
+    );
+    end component router;
+  
+    
+    component arbiter is
+    PORT (
+        rst : IN STD_LOGIC;
+        -- Channel A
+        inA_req   : in  std_logic;
+        inA_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        inA_ack   : out std_logic;
+        -- Channel B
+        inB_req   : in std_logic;
+        inB_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        inB_ack   : out std_logic;
+        -- Output channel
+        outC_req  : out std_logic;
+        outC_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
+        outC_ack  : in  std_logic
+    );
+    end component arbiter;
+
+    signal r_nw_a_nw_req : STD_LOGIC; -- nw router to nw arbiter - request (and data?)
+    signal r_nw_a_nw_ack : STD_LOGIC; -- nw router to nw arbiter - ack
+    
+    signal r_n_a_nw_req : STD_LOGIC; -- n router to nw arbiter - request (and data?)
+    signal r_n_a_nw_ack : STD_LOGIC; -- n router to nw arbiter - ack
+    
+    signal r_nw_a_n_req : STD_LOGIC; -- nw router to n arbiter - request (and data?)
+    signal r_nw_a_n_ack : STD_LOGIC; -- nw router to n arbiter - ack
+    
+    signal out_a_nw_req : STD_LOGIC; -- output of nw arbiter
+    signal out_a_nw_ack : STD_LOGIC;
+    
+    -- bits initialized with 0 to use in the data fields because I'm not sure what it is supposed to be
+    signal data : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0'); 
+
 begin
 
-  R_nw: entity router
+-- rst ?? is this some kind of clock signal?
+
+  -- actually, we might need to create an arbiter with more inputs
+  -- than two? we also should check how many  
+  
+  A_nw: component arbiter 
+    port map (
+    rst => rst,
+    
+    inA_req => r_nw_a_nw_req,
+    inA_data => data, -- do we have a data to send? I'm a bit confused..?
+    inA_ack => r_nw_a_nw_ack,
+    
+    inB_req =>  r_n_a_nw_req,
+    inB_data => data,
+    inB_ack => r_n_a_nw_ack,
+    
+    outC_req => out_a_nw_req,
+    outC_data => data,
+    outC_ack => out_a_nw_ack  
+    );
+    
+
+  R_nw: component router
     port map (
       i_req => ir_nw,
       addr => id_nw,
-      o_req0: out std_logic;
-      o_req1: out std_logic;
-      o_req2: out std_logic
-      inB_data(DATA_WIDTH-1 downto 0) => reg_fork_0_outC_data(DATA_WIDTH-1 downto 0),
-      in_ack => join_0_outC_ack,
-      in_req => join_0_outC_req,
-      outC_data(DATA_WIDTH-1 downto 0) => add_block_0_outC_data(DATA_WIDTH-1 downto 0),
-      out_ack => add_block_0_ctrl_out_ack,
-      out_req => add_block_0_ctrl_out_req
+      
+      o_req0 => r_nw_a_nw_req,
+      o_req1 => r_nw_a_n_req, 
+      o_req2 => r_nw_a_nw_req, -- change this one (actually, at the end we have to verify this directions thing)
+      
+      i_ack => ia_nw,
+      o_ack0 => r_nw_a_nw_ack,
+      o_ack1 => r_nw_a_n_ack,
+      o_ack2 => r_nw_a_n_ack -- same for this one
+      
     );
 
 
