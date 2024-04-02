@@ -107,7 +107,7 @@ architecture Behavioral of router_node_top is
     component router is
     port ( 
         i_req:  in std_logic;
-        addr:   in std_logic_vector(16 downto 0);
+        addr:   in std_logic_vector(15 downto 0);
         o_req0: out std_logic;
         o_req1: out std_logic;
         o_req2: out std_logic;
@@ -164,7 +164,7 @@ begin
   A_nw: component arbiter 
     port map (
     rst => rst,
-    
+
     inA_req => r_nw_a_nw_req,
     inA_data => data, -- do we have a data to send? I'm a bit confused..?
     inA_ack => r_nw_a_nw_ack,
@@ -181,17 +181,102 @@ begin
 
   R_nw: component router
     port map (
+      alias x : addr(15 downto 12), --Sliced vector
+      alias y : addr(11 downto 8),
+      alias dx : addr(7 downto 4),
+      alias dy : addr(3 downto 0),
+      dx <= dx +1, -- increment dx and dy
+      dy <= dy +1,
+
+      case id_nw is
+        when x > dx and y > dy => 
+          o_req0 <= '1'; -- right & down
+        when x > dx => 
+          o_req1 <= '1'; -- right 
+        when others => 
+          o_req2 <= '1'; -- down
+      end case;
+      
       i_req => ir_nw,
-      addr => id_nw,
-      
-      o_req0 => r_nw_a_nw_req,
-      o_req1 => r_nw_a_n_req, 
-      o_req2 => r_nw_a_nw_req, -- change this one (actually, at the end we have to verify this directions thing)
-      
       i_ack => ia_nw,
       o_ack0 => r_nw_a_nw_ack,
       o_ack1 => r_nw_a_n_ack,
-      o_ack2 => r_nw_a_n_ack -- same for this one
+      o_ack2 => r_nw_a_n_ack 
+      
+    );
+  R_ne: component router
+    port map (
+      alias x : addr(15 downto 12), --Sliced vector
+      alias y : addr(11 downto 8),
+      alias dx : addr(7 downto 4),
+      alias dy : addr(3 downto 0),
+      dx <= dx -1, -- decrement dx and dy
+      dy <= dy +1,
+
+      case id_ne is
+        when x < dx and y > dy => 
+          o_req0 <= '1'; -- left & down
+        when x < dx => 
+          o_req1 <= '1'; -- left 
+        when others => 
+          o_req2 <= '1'; -- down
+      end case;
+      
+      i_req => ir_ne,
+      i_ack => ia_ne,
+      o_ack0 => r_nw_a_nw_ack,
+      o_ack1 => r_nw_a_n_ack,
+      o_ack2 => r_nw_a_n_ack 
+      
+    );
+  R_sw: component router
+    port map (
+      alias x : addr(15 downto 12), --Sliced vector
+      alias y : addr(11 downto 8),
+      alias dx : addr(7 downto 4),
+      alias dy : addr(3 downto 0),
+      dx <= dx +1, -- increment dx and dy
+      dy <= dy -1,
+
+      case id_sw is
+        when x > dx and y < dy => 
+          o_req0 <= '1'; -- right & up
+        when x > dx => 
+          o_req1 <= '1'; -- right 
+        when others => 
+          o_req2 <= '1'; -- up
+      end case;
+      
+      i_req => ir_sw,
+      i_ack => ia_sw,
+      o_ack0 => r_nw_a_nw_ack,
+      o_ack1 => r_nw_a_n_ack,
+      o_ack2 => r_nw_a_n_ack 
+      
+    );
+  R_se: component router
+    port map (
+      alias x : addr(15 downto 12), --Sliced vector
+      alias y : addr(11 downto 8),
+      alias dx : addr(7 downto 4),
+      alias dy : addr(3 downto 0),
+      dx <= dx -1, -- decrement dx and dy
+      dy <= dy -1,
+
+      case id_se is
+        when x < dx and y < dy => 
+          o_req0 <= '1'; -- left & up
+        when x < dx => 
+          o_req1 <= '1'; -- left 
+        when others => 
+          o_req2 <= '1'; -- up
+      end case;
+      
+      i_req => ir_se,
+      i_ack => ia_se,
+      o_ack0 => r_nw_a_nw_ack,
+      o_ack1 => r_nw_a_n_ack,
+      o_ack2 => r_nw_a_n_ack 
       
     );
 
