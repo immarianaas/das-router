@@ -108,6 +108,7 @@ architecture Behavioral of router_node_top is
     port ( 
         i_req:  in std_logic;
         addr:   in std_logic_vector(15 downto 0);
+        addr_out : out std_logic_vector(15 downto 0);
         o_req0: out std_logic;
         o_req1: out std_logic;
         o_req2: out std_logic;
@@ -187,7 +188,7 @@ begin
       alias dy : addr(3 downto 0),
       dx <= dx +1, -- increment dx and dy
       dy <= dy +1,
-
+      addr_out <= x & y & dx & dy, -- concatenate the vectors
       case id_nw is
         when x > dx and y > dy => 
           o_req0 <= '1'; -- right & down
@@ -212,7 +213,7 @@ begin
       alias dy : addr(3 downto 0),
       dx <= dx -1, -- decrement dx and dy
       dy <= dy +1,
-
+      addr_out <= x & y & dx & dy, -- concatenate the vectors
       case id_ne is
         when x < dx and y > dy => 
           o_req0 <= '1'; -- left & down
@@ -237,7 +238,7 @@ begin
       alias dy : addr(3 downto 0),
       dx <= dx +1, -- increment dx and dy
       dy <= dy -1,
-
+      addr_out <= x & y & dx & dy, -- concatenate the vectors
       case id_sw is
         when x > dx and y < dy => 
           o_req0 <= '1'; -- right & up
@@ -262,7 +263,7 @@ begin
       alias dy : addr(3 downto 0),
       dx <= dx -1, -- decrement dx and dy
       dy <= dy -1,
-
+      addr_out <= x & y & dx & dy, -- concatenate the vectors
       case id_se is
         when x < dx and y < dy => 
           o_req0 <= '1'; -- left & up
