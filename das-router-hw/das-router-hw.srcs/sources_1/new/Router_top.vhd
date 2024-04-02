@@ -88,14 +88,14 @@ entity router_node_top is
         or_sw:  out std_logic;
         or_w:   out std_logic;
         
-        od_nw:  out std_logic_vector(16 downto 0);
-        od_n:   out std_logic_vector(16 downto 0);
-        od_ne:  out std_logic_vector(16 downto 0);
-        od_e:   out std_logic_vector(16 downto 0);
-        od_se:  out std_logic_vector(16 downto 0);
-        od_s:   out std_logic_vector(16 downto 0);
-        od_sw:  out std_logic_vector(16 downto 0);
-        od_w:   out std_logic_vector(16 downto 0)  
+        od_nw:  out std_logic_vector(15 downto 0);
+        od_n:   out std_logic_vector(15 downto 0);
+        od_ne:  out std_logic_vector(15 downto 0);
+        od_e:   out std_logic_vector(15 downto 0);
+        od_se:  out std_logic_vector(15 downto 0);
+        od_s:   out std_logic_vector(15 downto 0);
+        od_sw:  out std_logic_vector(15 downto 0);
+        od_w:   out std_logic_vector(15 downto 0)  
         
     );
 end router_node_top;
