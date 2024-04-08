@@ -72,14 +72,14 @@ entity router_node_top is
         id_sw:  in std_logic_vector(DATA_WIDTH-1 downto 0);
         id_w:   in std_logic_vector(DATA_WIDTH-1 downto 0);
         
-        oa_nw:  out std_logic;
-        oa_n:   out std_logic;
-        oa_ne:  out std_logic;
-        oa_e:   out std_logic;
-        oa_se:  out std_logic;
-        oa_s:   out std_logic;
-        oa_sw:  out std_logic;
-        oa_w:   out std_logic;
+        oa_nw:  in std_logic;
+        oa_n:   in std_logic;
+        oa_ne:  in std_logic;
+        oa_e:   in std_logic;
+        oa_se:  in std_logic;
+        oa_s:   in std_logic;
+        oa_sw:  in std_logic;
+        oa_w:   in std_logic;
          
         or_nw:  out std_logic;
         or_n:   out std_logic;
@@ -156,22 +156,28 @@ architecture Behavioral of router_node_top is
     -- north west 
     signal nw_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
     signal nw_req_vertical: std_logic;
+    signal nw_ack_vertical: std_logic;
     
     signal nw_data_oblique: std_logic_vector(DATA_WIDTH-1 downto 0);
     signal nw_req_oblique: std_logic;
+    signal nw_ack_oblique: std_logic;
     
     signal nw_data_horizontal: std_logic_vector(DATA_WIDTH-1 downto 0);
     signal nw_req_horizontal: std_logic;
-    
+    signal nw_ack_horizontal: std_logic;
+
     -- north east 
     signal ne_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
     signal ne_req_vertical: std_logic;
+    signal ne_ack_vertical: std_logic;
     
     signal ne_data_oblique: std_logic_vector(DATA_WIDTH-1 downto 0);
     signal ne_req_oblique: std_logic;
+    signal ne_ack_oblique: std_logic;
     
     signal ne_data_horizontal: std_logic_vector(DATA_WIDTH-1 downto 0);
     signal ne_req_horizontal: std_logic;
+    signal ne_ack_horizontal: std_logic;
     
     
      
@@ -183,31 +189,30 @@ begin
   -- actually, we might need to create an arbiter with more inputs
   -- than two? we also should check how many  
   
-  A_south: component arbiter 
+  A_south: entity arbiter3 
     port map (
     rst => rst,
     
-    in_vertical_req => nw_vertical_req,
-    in_vertical_data => nw_vertical_data
-    in_vertical_ack -- todo?
+    in_vertical_req => nw_req_vertical,
+    in_vertical_data => nw_data_vertical,
+    in_vertical_ack => nw_ack_vertical,
     
-    in_oblique_req => nw_vertical_req,
-    in_oblique_data => nw_vertical_data,
-    in_oblique_req -- todo
+    in_oblique_req => ne_req_vertical,
+    in_oblique_data => ne_data_vertical,
+    in_oblique_ack => ne_ack_vertical,
     
-    in_horizontal_req => nw_horizontal_req,
-    in_horizontal_data => nw_horizontal_data,
-    in_horizontal_ack -- todo
+    in_horizontal_req => ir_n,
+    in_horizontal_data => id_n,
+    in_horizontal_ack => ia_n,
     
-    out_req -- todo
-    out_data -- todo
-    out_ack -- todo
-    
-    
+    out_req => or_s,
+    out_data => od_s,
+    out_ack => oa_s
+     
     );
     
 
-  R_nw: component router
+  R_nw: entity router
       generic map (
         DIRECTION => 0
     )
@@ -226,15 +231,14 @@ begin
         
         i_ack => ia_nw,
 
-        o_ack_vertical -- missing
-        o_ack_oblique -- missing
-        o_ack_horizontal -- missing
-        );
+        o_ack_vertical => nw_ack_vertical,
+        o_ack_oblique => nw_ack_oblique, 
+        o_ack_horizontal => nw_ack_horizontal 
+     );
       
       
-      
-    );
-  R_ne: component router
+   
+  R_ne: entity router
       generic map (
         DIRECTION => 1
     )
@@ -253,64 +257,10 @@ begin
         
         i_ack => ia_ne,
 
-        o_ack_vertical -- missing
-        o_ack_oblique -- missing
-        o_ack_horizontal -- missing
+        o_ack_vertical => ne_ack_vertical,
+        o_ack_oblique => ne_ack_oblique,
+        o_ack_horizontal => ne_ack_horizontal
         );
       
-      
-      
-      
-  R_sw: component router
-    port map (
-      alias x : addr(15 downto 12), --Sliced vector
-      alias y : addr(11 downto 8),
-      alias dx : addr(7 downto 4),
-      alias dy : addr(3 downto 0),
-      dx <= dx +1, -- increment dx and dy
-      dy <= dy -1,
-      addr_out <= x & y & dx & dy, -- concatenate the vectors
-      case id_sw is
-        when x > dx and y < dy => 
-          o_req0 <= '1'; -- right & up
-        when x > dx => 
-          o_req1 <= '1'; -- right 
-        when others => 
-          o_req2 <= '1'; -- up
-      end case;
-      
-      i_req => ir_sw,
-      i_ack => ia_sw,
-      o_ack0 => r_nw_a_nw_ack,
-      o_ack1 => r_nw_a_n_ack,
-      o_ack2 => r_nw_a_n_ack 
-      
-    );
-  R_se: component router
-    port map (
-      alias x : addr(15 downto 12), --Sliced vector
-      alias y : addr(11 downto 8),
-      alias dx : addr(7 downto 4),
-      alias dy : addr(3 downto 0),
-      dx <= dx -1, -- decrement dx and dy
-      dy <= dy -1,
-      addr_out <= x & y & dx & dy, -- concatenate the vectors
-      case id_se is
-        when x < dx and y < dy => 
-          o_req0 <= '1'; -- left & up
-        when x < dx => 
-          o_req1 <= '1'; -- left 
-        when others => 
-          o_req2 <= '1'; -- up
-      end case;
-      
-      i_req => ir_se,
-      i_ack => ia_se,
-      o_ack0 => r_nw_a_nw_ack,
-      o_ack1 => r_nw_a_n_ack,
-      o_ack2 => r_nw_a_n_ack 
-      
-    );
-
 
 end Behavioral;
