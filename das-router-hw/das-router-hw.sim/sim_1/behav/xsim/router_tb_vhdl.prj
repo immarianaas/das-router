@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../das-router-hw.srcs/sources_1/imports/misc/defs.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/router.vhd" \
+
+# Do not sort compile order
+nosort

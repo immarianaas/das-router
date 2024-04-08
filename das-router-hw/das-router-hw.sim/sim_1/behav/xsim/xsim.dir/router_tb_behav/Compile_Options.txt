@@ -1,0 +1,1 @@
+--incr --debug "typical" --relax --mt "8" -L "xil_defaultlib" -L "secureip" --snapshot "router_tb_behav" "xil_defaultlib.router_tb" -log "elaborate.log" 

@@ -22,6 +22,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
+use work.arbiter3;
+use work.router;
 
 
 
@@ -43,14 +45,14 @@ entity router_node_top is
         -- some kind of clock signal? The examples have it, and we need it
         rst : in STD_LOGIC;
 
-        ia_nw:  in std_logic;
-        ia_n:   in std_logic;
-        ia_ne:  in std_logic;
-        ia_e:   in std_logic;
-        ia_se:  in std_logic;
-        ia_s:   in std_logic;
-        ia_sw:  in std_logic;
-        ia_w:   in std_logic;
+        ia_nw:  out std_logic;
+        ia_n:   out std_logic;
+        ia_ne:  out std_logic;
+        ia_e:   out std_logic;
+        ia_se:  out std_logic;
+        ia_s:   out std_logic;
+        ia_sw:  out std_logic;
+        ia_w:   out std_logic;
         
         ir_nw:  in std_logic;
         ir_n:   in std_logic;
@@ -61,14 +63,14 @@ entity router_node_top is
         ir_sw:  in std_logic;
         ir_w:   in std_logic;
         
-        id_nw:  in std_logic_vector(16 downto 0);
-        id_n:   in std_logic_vector(16 downto 0);
-        id_ne:  in std_logic_vector(16 downto 0);
-        id_e:   in std_logic_vector(16 downto 0);
-        id_se:  in std_logic_vector(16 downto 0);
-        id_s:   in std_logic_vector(16 downto 0);
-        id_sw:  in std_logic_vector(16 downto 0);
-        id_w:   in std_logic_vector(16 downto 0);
+        id_nw:  in std_logic_vector(DATA_WIDTH-1 downto 0);
+        id_n:   in std_logic_vector(DATA_WIDTH-1 downto 0);
+        id_ne:  in std_logic_vector(DATA_WIDTH-1 downto 0);
+        id_e:   in std_logic_vector(DATA_WIDTH-1 downto 0);
+        id_se:  in std_logic_vector(DATA_WIDTH-1 downto 0);
+        id_s:   in std_logic_vector(DATA_WIDTH-1 downto 0);
+        id_sw:  in std_logic_vector(DATA_WIDTH-1 downto 0);
+        id_w:   in std_logic_vector(DATA_WIDTH-1 downto 0);
         
         oa_nw:  out std_logic;
         oa_n:   out std_logic;
@@ -88,14 +90,14 @@ entity router_node_top is
         or_sw:  out std_logic;
         or_w:   out std_logic;
         
-        od_nw:  out std_logic_vector(15 downto 0);
-        od_n:   out std_logic_vector(15 downto 0);
-        od_ne:  out std_logic_vector(15 downto 0);
-        od_e:   out std_logic_vector(15 downto 0);
-        od_se:  out std_logic_vector(15 downto 0);
-        od_s:   out std_logic_vector(15 downto 0);
-        od_sw:  out std_logic_vector(15 downto 0);
-        od_w:   out std_logic_vector(15 downto 0)  
+        od_nw:  out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_n:   out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_ne:  out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_e:   out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_se:  out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_s:   out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_sw:  out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0)  
         
     );
 end router_node_top;
@@ -103,45 +105,10 @@ end router_node_top;
 
 architecture Behavioral of router_node_top is
 
-    -- almost copy pasted from router.vhd
-    component router is
-    port ( 
-        i_req:  in std_logic;
-        addr:   in std_logic_vector(15 downto 0);
-        addr_out : out std_logic_vector(15 downto 0);
-        o_req0: out std_logic;
-        o_req1: out std_logic;
-        o_req2: out std_logic;
-        
-        -- additional ports that we didn't thought of before
-        i_ack:  in std_logic;
-        o_ack0: out std_logic;
-        o_ack1: out std_logic;
-        o_ack2: out std_logic
-    );
-    end component router;
-  
     
-    component arbiter is
-    PORT (
-        rst : IN STD_LOGIC;
-        -- Channel A
-        inA_req   : in  std_logic;
-        inA_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        inA_ack   : out std_logic;
-        -- Channel B
-        inB_req   : in std_logic;
-        inB_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        inB_ack   : out std_logic;
-        -- Output channel
-        outC_req  : out std_logic;
-        outC_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
-        outC_ack  : in  std_logic
-    );
-    end component arbiter;
-
     signal r_nw_a_nw_req : STD_LOGIC; -- nw router to nw arbiter - request (and data?)
     signal r_nw_a_nw_ack : STD_LOGIC; -- nw router to nw arbiter - ack
+        
     
     signal r_n_a_nw_req : STD_LOGIC; -- n router to nw arbiter - request (and data?)
     signal r_n_a_nw_ack : STD_LOGIC; -- n router to nw arbiter - ack
@@ -153,7 +120,61 @@ architecture Behavioral of router_node_top is
     signal out_a_nw_ack : STD_LOGIC;
     
     -- bits initialized with 0 to use in the data fields because I'm not sure what it is supposed to be
-    signal data : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0'); 
+    signal data : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        
+    -- NORTH WEST router to SOUTH arbiter
+    signal r_nw_a_s_req : STD_LOGIC;  -- nw router to s arbiter - request
+    signal r_nw_a_s_data : STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);  -- nw router to s arbiter - data
+    signal r_nw_a_s_ack : STD_LOGIC;  -- nw router to s arbiter - ack
+    
+    -- NORTH WEST router to SOUTH EAST arbiter -- not needed?
+    signal r_nw_a_se_req : STD_LOGIC;
+    signal r_nw_a_se_data: STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);  
+    signal r_nw_a_se_ack : STD_LOGIC;  
+    
+    -- NORTH WEST router to EAST arbiter
+    signal r_nw_a_e_req : STD_LOGIC;  -- nw router to se arbiter - request
+    signal r_nw_a_e_addr : STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);  -- nw router to se arbiter - data
+    signal r_nw_a_e_ack : STD_LOGIC;  -- nw router to s arbiter - ack
+    
+    
+    
+    
+    
+    
+    
+    -- north west 
+    signal nw_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal nw_req_vertical: std_logic;
+    
+    signal nw_data_oblique: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal nw_req_oblique: std_logic;
+    
+    signal nw_data_horizontal: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal nw_req_horizontal: std_logic;
+    
+    -- north east 
+    signal ne_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal ne_req_vertical: std_logic;
+    
+    signal ne_data_oblique: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal ne_req_oblique: std_logic;
+    
+    signal ne_data_horizontal: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal ne_req_horizontal: std_logic;
+    
+    
+     
 
 begin
 
@@ -162,74 +183,84 @@ begin
   -- actually, we might need to create an arbiter with more inputs
   -- than two? we also should check how many  
   
-  A_nw: component arbiter 
+  A_south: component arbiter 
     port map (
     rst => rst,
-
-    inA_req => r_nw_a_nw_req,
-    inA_data => data, -- do we have a data to send? I'm a bit confused..?
-    inA_ack => r_nw_a_nw_ack,
     
-    inB_req =>  r_n_a_nw_req,
-    inB_data => data,
-    inB_ack => r_n_a_nw_ack,
+    in_vertical_req => nw_vertical_req,
+    in_vertical_data => nw_vertical_data
+    in_vertical_ack -- todo?
     
-    outC_req => out_a_nw_req,
-    outC_data => data,
-    outC_ack => out_a_nw_ack  
+    in_oblique_req => nw_vertical_req,
+    in_oblique_data => nw_vertical_data,
+    in_oblique_req -- todo
+    
+    in_horizontal_req => nw_horizontal_req,
+    in_horizontal_data => nw_horizontal_data,
+    in_horizontal_ack -- todo
+    
+    out_req -- todo
+    out_data -- todo
+    out_ack -- todo
+    
+    
     );
     
 
   R_nw: component router
-    port map (
-      alias x : addr(15 downto 12), --Sliced vector
-      alias y : addr(11 downto 8),
-      alias dx : addr(7 downto 4),
-      alias dy : addr(3 downto 0),
-      dx <= dx +1, -- increment dx and dy
-      dy <= dy +1,
-      addr_out <= x & y & dx & dy, -- concatenate the vectors
-      case id_nw is
-        when x > dx and y > dy => 
-          o_req0 <= '1'; -- right & down
-        when x > dx => 
-          o_req1 <= '1'; -- right 
-        when others => 
-          o_req2 <= '1'; -- down
-      end case;
+      generic map (
+        DIRECTION => 0
+    )
+        port map (
+        
+        i_req => ir_nw,
+        i_data => id_nw,
+        
+        o_data_vertical => nw_data_vertical,
+        o_data_oblique => nw_data_oblique,
+        o_data_horizontal => nw_data_horizontal,
+        
+        o_req_vertical => nw_req_vertical,
+        o_req_oblique => nw_req_oblique,
+        o_req_horizontal => nw_req_horizontal,
+        
+        i_ack => ia_nw,
+
+        o_ack_vertical -- missing
+        o_ack_oblique -- missing
+        o_ack_horizontal -- missing
+        );
       
-      i_req => ir_nw,
-      i_ack => ia_nw,
-      o_ack0 => r_nw_a_nw_ack,
-      o_ack1 => r_nw_a_n_ack,
-      o_ack2 => r_nw_a_n_ack 
+      
       
     );
   R_ne: component router
-    port map (
-      alias x : addr(15 downto 12), --Sliced vector
-      alias y : addr(11 downto 8),
-      alias dx : addr(7 downto 4),
-      alias dy : addr(3 downto 0),
-      dx <= dx -1, -- decrement dx and dy
-      dy <= dy +1,
-      addr_out <= x & y & dx & dy, -- concatenate the vectors
-      case id_ne is
-        when x < dx and y > dy => 
-          o_req0 <= '1'; -- left & down
-        when x < dx => 
-          o_req1 <= '1'; -- left 
-        when others => 
-          o_req2 <= '1'; -- down
-      end case;
+      generic map (
+        DIRECTION => 1
+    )
+        port map (
+        
+        i_req => ir_ne,
+        i_data => id_ne,
+        
+        o_data_vertical => ne_data_vertical,
+        o_data_oblique => ne_data_oblique,
+        o_data_horizontal => ne_data_horizontal,
+        
+        o_req_vertical => ne_req_vertical,
+        o_req_oblique => ne_req_oblique,
+        o_req_horizontal => ne_req_horizontal,
+        
+        i_ack => ia_ne,
+
+        o_ack_vertical -- missing
+        o_ack_oblique -- missing
+        o_ack_horizontal -- missing
+        );
       
-      i_req => ir_ne,
-      i_ack => ia_ne,
-      o_ack0 => r_nw_a_nw_ack,
-      o_ack1 => r_nw_a_n_ack,
-      o_ack2 => r_nw_a_n_ack 
       
-    );
+      
+      
   R_sw: component router
     port map (
       alias x : addr(15 downto 12), --Sliced vector
