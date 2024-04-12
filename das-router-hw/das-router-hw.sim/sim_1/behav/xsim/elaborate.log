@@ -1,7 +1,7 @@
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: /tools/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot router_tb_behav xil_defaultlib.router_tb -log elaborate.log 
+Running: /tools/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot click_element_tb_behav xil_defaultlib.click_element_tb -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
 Completed static elaboration
@@ -12,7 +12,8 @@ Compiling package std.standard
 Compiling package std.textio
 Compiling package ieee.std_logic_1164
 Compiling package xil_defaultlib.defs
+Compiling package std.env
 Compiling package ieee.numeric_std
-Compiling architecture behavioral of entity xil_defaultlib.router [router_default]
-Compiling architecture tb of entity xil_defaultlib.router_tb
-Built simulation snapshot router_tb_behav
+Compiling architecture behavioral of entity xil_defaultlib.click_element [click_element_default]
+Compiling architecture tb of entity xil_defaultlib.click_element_tb
+Built simulation snapshot click_element_tb_behav

@@ -38,17 +38,17 @@ entity arbiter3 is
     PORT (
         rst : IN STD_LOGIC;
         -- Channel A
-        in_vertical_req   : in  std_logic;
-        in_vertical_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        in_vertical_ack   : out std_logic;
+        inA_req   : in  std_logic;
+        inA_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        inA_ack   : out std_logic;
         -- Channel B
-        in_oblique_req   : in std_logic;
-        in_oblique_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        in_oblique_ack   : out std_logic;
+        inB_req   : in std_logic;
+        inB_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        inB_ack   : out std_logic;
         -- Channel C
-        in_horizontal_req   : in std_logic;
-        in_horizontal_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        in_horizontal_ack   : out std_logic;
+        inC_req   : in std_logic;
+        inC_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        inC_ack   : out std_logic;
         -- Output channel
         out_req  : out std_logic;
         out_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -65,12 +65,12 @@ begin
 
     arbiter1 : ENTITY arbiter PORT MAP (
         rst => rst,
-        inA_req => in_vertical_req,
-        inA_data => in_vertical_data,
-        inA_ack => in_vertical_ack,
-        inB_req => in_oblique_req,
-        inB_data => in_oblique_data,
-        inB_ack => in_oblique_ack,
+        inA_req => inA_req,
+        inA_data => inA_data,
+        inA_ack => inA_ack,
+        inB_req => inB_req,
+        inB_data => inB_data,
+        inB_ack => inB_ack,
         outC_req => mid_req,
         outC_data => mid_data,
         outC_ack => mid_ack
@@ -78,9 +78,9 @@ begin
 
     arbiter2 : ENTITY arbiter PORT MAP (
         rst => rst,
-        inA_req => in_horizontal_req,
-        inA_data => in_horizontal_data,
-        inA_ack => in_horizontal_ack,
+        inA_req => inC_req,
+        inA_data => inC_data,
+        inA_ack => inC_ack,
         inB_req => mid_req,
         inB_data => mid_data,
         inB_ack => mid_ack,

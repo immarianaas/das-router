@@ -153,6 +153,8 @@ architecture Behavioral of router_node_top is
     
     
     
+    
+    
     -- north west 
     signal nw_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
     signal nw_req_vertical: std_logic;
@@ -193,17 +195,17 @@ begin
     port map (
     rst => rst,
     
-    in_vertical_req => nw_req_vertical,
-    in_vertical_data => nw_data_vertical,
-    in_vertical_ack => nw_ack_vertical,
+    inA_req => nw_req_vertical,
+    inA_data => nw_data_vertical,
+    inA_ack => nw_ack_vertical,
     
-    in_oblique_req => ne_req_vertical,
-    in_oblique_data => ne_data_vertical,
-    in_oblique_ack => ne_ack_vertical,
+    inB_req => ne_req_vertical,
+    inB_data => ne_data_vertical,
+    inB_ack => ne_ack_vertical,
     
-    in_horizontal_req => ir_n,
-    in_horizontal_data => id_n,
-    in_horizontal_ack => ia_n,
+    inC_req => ir_n,
+    inC_data => id_n,
+    inC_ack => ia_n,
     
     out_req => or_s,
     out_data => od_s,
