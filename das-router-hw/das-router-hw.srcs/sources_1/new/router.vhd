@@ -23,6 +23,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 USE work.defs.ALL;
 use work.click_element;
+use work.demux3;
 use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
@@ -38,9 +39,9 @@ use ieee.numeric_std.all;
 
 -- direction:
 -- 0 nw north west
--- 01 ne north east
--- 10 se south east
--- 11 sw south west
+-- 1 ne north east
+-- 2 se south east
+-- 3 sw south west
 
 
 -- addr
@@ -73,6 +74,7 @@ entity router is
         o_ack_vertical: in std_logic;
         o_ack_oblique: in std_logic;
         o_ack_horizontal: in std_logic
+        
     );
 end router;
 
@@ -86,6 +88,11 @@ architecture Behavioral of router is
   -- req and ack out of the click element
   signal req, ack : std_logic;
   
+  signal selector : std_logic_vector(1 downto 0);
+  -- 11 is oblique
+  -- 01 is horizontal
+  -- 10 is vertical
+  
 begin
     x <= data(VALUE_WIDTH-1 downto VALUE_WIDTH*0);
     y <= data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1);
@@ -96,16 +103,8 @@ begin
     processed_data(VALUE_WIDTH-1 downto VALUE_WIDTH*0) <= x;
     processed_data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1) <= y;
     
-    -- going to be an input for the click element
-    ack <= o_ack_vertical or o_ack_oblique or o_ack_horizontal;
-    
-    o_req_vertical <= req when dx = x else '0';
-    o_req_oblique <= req when dx /= x and dy /= y else '0';
-    o_req_horizontal <= req when dy = y else '0';
-    
-    o_data_vertical <= processed_data when dx = x else (others => '0');
-    o_data_oblique <= processed_data when dx /= x and dy /= y else (others => '0');
-    o_data_horizontal <= processed_data when dy = y else (others => '0');
+    -- ack_internal <= ack;
+
     
     click: entity click_element 
     port map (
@@ -120,6 +119,47 @@ begin
         out_ack => ack
     );
 
+    
+    -- going to be an input for the click element
+    ack <= o_ack_vertical or o_ack_oblique or o_ack_horizontal;
+    
+    selector(0) <= '0' when dx = x else '1';
+    selector(1) <= '0' when dy = y else '1';
+    
+    demux: entity demux3
+        port map (
+        rst => rst,
+        
+        inA_req     =>      req,    -- from click
+        inA_data    =>      processed_data,   -- from click
+        inA_ack     =>      ack,    -- to click
+        
+        inSel_req   =>      req,
+        inSel_ack   =>      ack,
+        selector    =>      selector,
+        
+        out_oblique_req      => o_req_oblique,
+        out_oblique_data     => o_data_oblique,
+        out_oblique_ack      => o_ack_oblique,
+
+        out_horizontal_req      => o_req_horizontal,
+        out_horizontal_data     => o_data_horizontal,
+        out_horizontal_ack      => o_ack_horizontal,
+
+        out_vertical_req      => o_req_vertical,
+        out_vertical_data     => o_data_vertical,
+        out_vertical_ack      => o_ack_vertical
+        );
+    
+    
+    --o_req_vertical <= req when dx = x else '0';
+    --o_req_oblique <= req when dx /= x and dy /= y else '0';
+    --o_req_horizontal <= req when dy = y else '0';
+    
+    -- o_data_vertical <= processed_data when dx = x else (others => '0');
+    --o_data_oblique <= processed_data when dx /= x and dy /= y else (others => '0');
+    --o_data_horizontal <= processed_data when dy = y else (others => '0');
+    
         
     c0: if DIRECTION = 0 generate
     
@@ -169,23 +209,27 @@ entity router_tb is
 end entity;
 
 architecture tb of router_tb is
-        signal rst: std_logic;
+        signal rst   :  std_logic;
+    
+        signal i_req:std_logic;
+        signal i_data: std_logic_vector(DATA_WIDTH-1 downto 0);
         
-        signal i_req:  std_logic;
-        signal i_addr: std_logic_vector(DATA_WIDTH-1 downto 0);
-        signal o_data_vertical:  std_logic_vector(DATA_WIDTH-1 downto 0);
-        signal o_data_oblique:  std_logic_vector(DATA_WIDTH-1 downto 0);
-        signal o_data_horizontal:  std_logic_vector(DATA_WIDTH-1 downto 0);
-        signal o_req_vertical:  std_logic; -- vertical
-        signal o_req_oblique:  std_logic; -- obliquious
-        signal o_req_horizontal:  std_logic; -- horizontal
+        signal o_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
+        signal o_data_oblique: std_logic_vector(DATA_WIDTH-1 downto 0);
+        signal o_data_horizontal:std_logic_vector(DATA_WIDTH-1 downto 0);
+
+        signal o_req_vertical: std_logic; -- vertical
+        signal o_req_oblique: std_logic; -- obliquious
+        signal o_req_horizontal:std_logic; -- horizontal
         
         -- unsure if right, but:
         -- additional ports that we didn't thought of before
-        signal i_ack:  std_logic;
-        signal o_ack_vertical:  std_logic;
+        signal i_ack:   std_logic;
+        signal o_ack_vertical: std_logic;
         signal o_ack_oblique:  std_logic;
-        signal o_ack_horizontal:  std_logic;
+        signal o_ack_horizontal: std_logic;
+        
+        signal ack_internal: std_logic;
 
 begin
 
@@ -195,14 +239,20 @@ begin
     )
         port map (
         rst,
+    
         i_req,
-        i_addr,
+        i_data,
+        
         o_data_vertical,
         o_data_oblique,
         o_data_horizontal,
+
         o_req_vertical,
         o_req_oblique,
-        o_req_horizontal,        
+        o_req_horizontal,
+        
+        -- unsure if right, but:
+        -- additional ports that we didn't thought of before
         i_ack,
         o_ack_vertical,
         o_ack_oblique,
@@ -217,22 +267,44 @@ process begin
     
     -------- test 1 -------- 
     rst <= '1', '0' after 2ns;
-    i_req <= '0', '1' after 4 ns;
-    i_addr <= "0000000000000001";
-    o_ack_horizontal <= '0', '1' after 10ns;
+    i_req <= '0', '1' after 7 ns;
+    i_data <= "0000000000000001";
+    --o_ack_horizontal <= '0', '1' after 20ns;
+    o_ack_horizontal <= '0';
+    o_ack_vertical <= '0';
+    o_ack_oblique <= '0';
     
-    wait for 20 ns;
+    wait until o_req_horizontal = '1';
+    wait for 7ns;
+    
+    o_ack_horizontal <= '1';
+    
+    
+    wait for 30 ns;
     assert o_data_horizontal = "0000000100000001" report "fail" severity failure; 
+    assert o_req_horizontal = '1' report "fail" severity failure;
+    --assert o_ack_horizontal = '1' report "fail" severity failure;
+    
     -- assert i_ack = "1" report "fail" severity failure;
     -------- -------- -------- --------
     
     -------- test 2 -------- 
-    i_req <= '0', '1' after 15 ns;
-    i_addr <= "0010000000010000";
-    o_ack_vertical <= '0', '1' after 25ns;
+    i_req <= '1', '0' after 3 ns;
+    i_data <= "0010000000010000";
+    --o_ack_horizontal<= '0';
+    --o_ack_vertical <= '1', '0' after 15ns;
+    --o_ack_oblique <= '0';
     
-    wait for 20 ns;
-    -- assert o_data_vertical = "0001000000010000" report "fail" severity failure; 
+    wait until i_req = '0';
+    wait for 7 ns;
+    
+    o_ack_horizontal <= '0';
+    
+    
+    wait for 30 ns;
+    assert o_data_vertical = "0001000000010000" report "fail" severity failure; 
+    assert o_req_vertical = '1' report "fail" severity failure;
+
     -- assert i_ack = "1" report "fail" severity failure;
     -------- -------- -------- --------
     

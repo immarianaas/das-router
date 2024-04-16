@@ -105,56 +105,6 @@ end router_node_top;
 
 architecture Behavioral of router_node_top is
 
-    
-    signal r_nw_a_nw_req : STD_LOGIC; -- nw router to nw arbiter - request (and data?)
-    signal r_nw_a_nw_ack : STD_LOGIC; -- nw router to nw arbiter - ack
-        
-    
-    signal r_n_a_nw_req : STD_LOGIC; -- n router to nw arbiter - request (and data?)
-    signal r_n_a_nw_ack : STD_LOGIC; -- n router to nw arbiter - ack
-    
-    signal r_nw_a_n_req : STD_LOGIC; -- nw router to n arbiter - request (and data?)
-    signal r_nw_a_n_ack : STD_LOGIC; -- nw router to n arbiter - ack
-    
-    signal out_a_nw_req : STD_LOGIC; -- output of nw arbiter
-    signal out_a_nw_ack : STD_LOGIC;
-    
-    -- bits initialized with 0 to use in the data fields because I'm not sure what it is supposed to be
-    signal data : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    -- NORTH WEST router to SOUTH arbiter
-    signal r_nw_a_s_req : STD_LOGIC;  -- nw router to s arbiter - request
-    signal r_nw_a_s_data : STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);  -- nw router to s arbiter - data
-    signal r_nw_a_s_ack : STD_LOGIC;  -- nw router to s arbiter - ack
-    
-    -- NORTH WEST router to SOUTH EAST arbiter -- not needed?
-    signal r_nw_a_se_req : STD_LOGIC;
-    signal r_nw_a_se_data: STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);  
-    signal r_nw_a_se_ack : STD_LOGIC;  
-    
-    -- NORTH WEST router to EAST arbiter
-    signal r_nw_a_e_req : STD_LOGIC;  -- nw router to se arbiter - request
-    signal r_nw_a_e_addr : STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);  -- nw router to se arbiter - data
-    signal r_nw_a_e_ack : STD_LOGIC;  -- nw router to s arbiter - ack
-    
-    
-    
-    
-    
-    
-    
-    
-    
     -- north west 
     signal nw_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
     signal nw_req_vertical: std_logic;
@@ -181,16 +131,37 @@ architecture Behavioral of router_node_top is
     signal ne_req_horizontal: std_logic;
     signal ne_ack_horizontal: std_logic;
     
+    -- south east 
+    signal se_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal se_req_vertical: std_logic;
+    signal se_ack_vertical: std_logic;
+    
+    signal se_data_oblique: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal se_req_oblique: std_logic;
+    signal se_ack_oblique: std_logic;
+    
+    signal se_data_horizontal: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal se_req_horizontal: std_logic;
+    signal se_ack_horizontal: std_logic;
+    
+    -- south west 
+    signal sw_data_vertical: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal sw_req_vertical: std_logic;
+    signal sw_ack_vertical: std_logic;
+    
+    signal sw_data_oblique: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal sw_req_oblique: std_logic;
+    signal sw_ack_oblique: std_logic;
+    
+    signal sw_data_horizontal: std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal sw_req_horizontal: std_logic;
+    signal sw_ack_horizontal: std_logic;
     
      
 
 begin
 
--- rst ?? is this some kind of clock signal?
-
-  -- actually, we might need to create an arbiter with more inputs
-  -- than two? we also should check how many  
-  
+----------------------------------------------------------------------------------------------------  
   A_south: entity arbiter3 
     port map (
     rst => rst,
@@ -219,6 +190,7 @@ begin
         DIRECTION => 0
     )
         port map (
+        rst => rst,
         
         i_req => ir_nw,
         i_data => id_nw,
@@ -238,13 +210,13 @@ begin
         o_ack_horizontal => nw_ack_horizontal 
      );
       
-      
    
   R_ne: entity router
       generic map (
         DIRECTION => 1
     )
         port map (
+        rst => rst,
         
         i_req => ir_ne,
         i_data => id_ne,
@@ -264,5 +236,125 @@ begin
         o_ack_horizontal => ne_ack_horizontal
         );
       
+----------------------------------------------------------------------------------------------------
 
+    R_se: entity router
+        generic map(
+        DIRECTION => 2
+        ) 
+        port map (
+        rst => rst,
+        
+        i_req => ir_se,
+        i_data => id_se,
+        
+        o_data_vertical => se_data_vertical,
+        o_data_oblique => se_data_oblique,
+        o_data_horizontal => se_data_horizontal,
+        
+        o_req_vertical => se_req_vertical,
+        o_req_oblique => se_req_oblique,
+        o_req_horizontal => se_req_horizontal,
+        
+        i_ack => ia_se,
+
+        o_ack_vertical => se_ack_vertical,
+        o_ack_oblique => se_ack_oblique,
+        o_ack_horizontal => se_ack_horizontal
+        );
+        
+        
+  A_west: entity arbiter3 
+    port map (
+    rst => rst,
+    
+    inA_req => ne_req_horizontal,
+    inA_data => ne_data_horizontal,
+    inA_ack => ne_ack_horizontal,
+    
+    inB_req => se_req_horizontal,
+    inB_data => se_data_horizontal,
+    inB_ack => se_ack_horizontal,
+    
+    inC_req => ir_e,
+    inC_data => id_e,
+    inC_ack => ia_e,
+    
+    out_req => or_w,
+    out_data => od_w,
+    out_ack => oa_w
+    );
+    
+----------------------------------------------------------------------------------------------------
+
+    R_sw: entity router
+        generic map(
+        DIRECTION => 2
+        ) 
+        port map (
+        rst => rst,
+        
+        i_req => ir_sw,
+        i_data => id_sw,
+        
+        o_data_vertical => sw_data_vertical,
+        o_data_oblique => sw_data_oblique,
+        o_data_horizontal => sw_data_horizontal,
+        
+        o_req_vertical => sw_req_vertical,
+        o_req_oblique => sw_req_oblique,
+        o_req_horizontal => sw_req_horizontal,
+        
+        i_ack => ia_sw,
+
+        o_ack_vertical => sw_ack_vertical,
+        o_ack_oblique => sw_ack_oblique,
+        o_ack_horizontal => sw_ack_horizontal
+        );
+
+        
+  A_east: entity arbiter3 
+    port map (
+    rst => rst,
+    
+    inA_req => nw_req_horizontal,
+    inA_data => nw_data_horizontal,
+    inA_ack => nw_ack_horizontal,
+    
+    inB_req => sw_req_horizontal,
+    inB_data => sw_data_horizontal,
+    inB_ack => sw_ack_horizontal,
+    
+    inC_req => ir_w,
+    inC_data => id_w,
+    inC_ack => ia_w,
+    
+    out_req => or_e,
+    out_data => od_e,
+    out_ack => oa_e
+    );
+    
+            
+  A_north: entity arbiter3 
+    port map ( 
+    rst => rst,
+    
+    inA_req => se_req_vertical,
+    inA_data => se_data_vertical,
+    inA_ack => se_ack_vertical,
+    
+    inB_req => sw_req_vertical,
+    inB_data => sw_data_vertical,
+    inB_ack => sw_ack_vertical,
+    
+    inC_req => ir_s,
+    inC_data => id_s,
+    inC_ack => ia_s,
+    
+    out_req => or_n,
+    out_data => od_n,
+    out_ack => oa_n
+    );
+    
+        
 end Behavioral;
