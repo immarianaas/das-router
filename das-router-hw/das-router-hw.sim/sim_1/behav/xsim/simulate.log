@@ -1,0 +1,4 @@
+Time resolution is 1 ps
+Note: passed! ;)
+Time: 102 ns  Iteration: 0  Process: /router_tb/line__264  File: /home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/router.vhd
+$finish called at time : 102 ns : File "/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/router.vhd" Line 314
