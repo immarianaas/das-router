@@ -12,13 +12,14 @@ Compiling package std.standard
 Compiling package std.textio
 Compiling package ieee.std_logic_1164
 Compiling package xil_defaultlib.defs
+Compiling package std.env
 Compiling package ieee.numeric_std
 Compiling architecture impl of entity xil_defaultlib.mutex [mutex_default]
 Compiling architecture impl of entity xil_defaultlib.rgd_mutex [rgd_mutex_default]
 Compiling architecture behavioral of entity xil_defaultlib.merge [merge_default]
 Compiling architecture impl of entity xil_defaultlib.arbiter [arbiter_default]
-Compiling architecture behavioral of entity xil_defaultlib.arbiter3 [arbiter3_default]
 Compiling architecture behavioral of entity xil_defaultlib.click_element [click_element_default]
+Compiling architecture behavioral of entity xil_defaultlib.arbiter3 [arbiter3_default]
 Compiling architecture behavioral of entity xil_defaultlib.demux [demux_default]
 Compiling architecture behavioral of entity xil_defaultlib.demux3 [demux3_default]
 Compiling architecture behavioral of entity xil_defaultlib.router [router_default]

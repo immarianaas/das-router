@@ -25,6 +25,8 @@ use work.defs.all;
 use work.arbiter3;
 use work.router;
 
+use std.env.finish;
+
 
 
 -- Uncomment the following library declaration if using
@@ -97,7 +99,11 @@ entity router_node_top is
         od_se:  out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_s:   out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_sw:  out std_logic_vector(DATA_WIDTH-1 downto 0);
-        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0)  
+        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0);
+        
+        
+        internal_nw_req_horizontal: out std_logic;
+        internal_nw_req_vertical: out std_logic
         
     );
 end router_node_top;
@@ -157,26 +163,38 @@ architecture Behavioral of router_node_top is
     signal sw_req_horizontal: std_logic;
     signal sw_ack_horizontal: std_logic;
     
+    
+    
+    
      
 
 begin
 
 ----------------------------------------------------------------------------------------------------
 
-    ia_nw <= nw_ack_oblique;
-    ia_ne <= ne_ack_oblique;
-    ia_se <= se_ack_oblique;
-    ia_sw <= sw_ack_oblique;
+    internal_nw_req_horizontal <= nw_req_horizontal;
+    internal_nw_req_vertical <= nw_req_vertical;
     
-    or_nw <= nw_req_oblique;
-    or_ne <= ne_req_oblique;
-    or_se <= se_req_oblique;
-    or_sw <= sw_req_oblique;
+    -- nw_ack_oblique:
+    -- represents the oblique output that comes out
+    -- from the NW router
+    -- which means, when data comes from NW and goes through an oblique line
+    -- it will come out on the SE line
     
-    od_nw <= nw_data_oblique;
-    od_ne <= ne_data_oblique;
-    od_se <= se_data_oblique;
-    od_sw <= sw_data_oblique;
+--    ia_se <= nw_ack_oblique;
+--    ia_sw <= ne_ack_oblique;
+--    ia_nw <= se_ack_oblique;
+--    ia_ne <= sw_ack_oblique;
+    
+    or_se <= nw_req_oblique;
+    or_sw <= ne_req_oblique;
+    or_nw <= se_req_oblique;
+    or_ne <= sw_req_oblique;
+    
+    od_se <= nw_data_oblique;
+    od_sw <= ne_data_oblique;
+    od_nw <= se_data_oblique;
+    od_ne <= sw_data_oblique;
     
   
   A_south: entity arbiter3 
@@ -399,7 +417,10 @@ architecture tb of router_node_top_tb is
     signal req_out : t_bit_arr;
    
    signal rst : std_logic;
-
+   
+   signal internal_nw_req_horizontal : std_logic;
+    signal internal_nw_req_vertical : std_logic;
+   
 begin
 
 node: entity router_node_top
@@ -459,7 +480,10 @@ node: entity router_node_top
         od_se  => data_out(4),
         od_s   => data_out(5),
         od_sw  => data_out(6),
-        od_w   => data_out(7)
+        od_w   => data_out(7),
+        
+        internal_nw_req_horizontal => internal_nw_req_horizontal,
+        internal_nw_req_vertical => internal_nw_req_vertical
     );
     
     process begin
@@ -469,12 +493,59 @@ node: entity router_node_top
         data_in <= (others => (others => '0'));
         
         
+        
+--        -- it's in (3,3) and goes to (3, 0)
+--        --data_in(0) <= "0011001100000011";
+        
+        -- it's in (3,3) and goes to (5,3)
+        data_in(0) <= "0011001100110101";
+        req_in(0) <= '0', '1' after 20ns;
+        wait until ack_in(0) = '1';
+        
+        ack_out(3) <= '1';
+
+
+
+        
+        -- it's in (3,3) and goes to (3, 0)
+--        --data_in(0) <= "0011001100000011";
+        
+--        -- it's in (3,3) and goes to (5,3)
+--        data_in(2) <= "0011001100110101";
+--        req_in(2) <= '0', '1' after 40ns;
+--        wait until ack_in(2) = '1';
+        
+--        ack_out(5) <= '1';
+
+
+
+
+
+        
+        ---------------------------------------
+        
+        -- south to north
+        data_in(5) <= "0000000000110000";
+        req_in(5) <= '0', '1' after 20ns;
+        wait until ack_in(5) = '1';
+        
+        ack_out(1) <= '1';
+
+        ---------------------------------------
         -- sw
         data_in(6) <= "0000000000110011";
         req_in(6) <= '0', '1' after 20ns;
         
         wait until ack_in(6) = '1';
-         
+        
+        ack_out(2) <= '1';
+        
+
+        
+ 
+        wait for 20ns;
+                        
+        -- finish; 
         
     end process;
 end architecture;

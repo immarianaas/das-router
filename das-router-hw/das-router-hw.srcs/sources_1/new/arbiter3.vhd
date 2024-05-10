@@ -23,6 +23,8 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 USE work.arbiter;
+use work.click_element;
+
 
 
 -- Uncomment the following library declaration if using
@@ -60,6 +62,10 @@ architecture Behavioral of arbiter3 is
 
     SIGNAL mid_req, mid_ack: STD_LOGIC;
     SIGNAL mid_data: STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);
+    
+    SIGNAL end_req, end_ack: STD_LOGIC;
+    SIGNAL end_data: STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);
+
 
 begin
 
@@ -84,9 +90,27 @@ begin
         inB_req => mid_req,
         inB_data => mid_data,
         inB_ack => mid_ack,
-        outC_req => out_req,
-        outC_data => out_data,
-        outC_ack => out_ack
+        outC_req => end_req,
+        outC_data => end_data,
+        outC_ack => end_ack
     );
+
+
+
+    click: entity click_element 
+    port map (
+        rst => rst,
+        
+        in_ack => end_ack,
+        in_req => end_req,
+        in_data => end_data,
+    -- Output channel
+        out_req => out_req,
+        out_data => out_data,
+        out_ack => out_ack
+    );
+
+    
+
 
 end Behavioral;

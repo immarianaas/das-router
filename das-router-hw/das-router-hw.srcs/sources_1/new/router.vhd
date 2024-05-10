@@ -239,7 +239,7 @@ begin
 
     DUT : entity router
     generic map (
-        DIRECTION => 3
+        DIRECTION => 1
     )
         port map (
         rst,
@@ -266,6 +266,30 @@ begin
 
 
 process begin
+
+
+    rst <= '1', '0' after 2ns;
+    i_req <= '0', '1' after 7 ns;
+    i_data <= "0011001100110101";
+    --o_ack_horizontal <= '0', '1' after 20ns;
+    o_ack_horizontal <= '0';
+    o_ack_vertical <= '0';
+    o_ack_oblique <= '0';
+    
+    wait until o_req_horizontal = '1';
+    wait for 7ns;
+    
+    o_ack_horizontal <= '1';
+    
+    
+    wait for 30 ns;
+    assert o_data_horizontal = "0011001100000011" report "fail" severity failure; 
+    assert o_req_horizontal = '1' report "fail" severity failure;
+    
+    
+    
+    
+
 
     -- NORTH WEST
     
