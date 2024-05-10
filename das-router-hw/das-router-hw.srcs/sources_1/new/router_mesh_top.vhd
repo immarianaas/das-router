@@ -284,31 +284,33 @@ signal req_32_33: std_logic;
 signal data_32_33: std_logic_vector(DATA_WIDTH-1 downto 0);
 
 
-
+signal zero: std_logic;
 
 begin
+
+zero <= '0';
 
   router00: entity router_node_top
         port map (
         rst => rst,
         
-        ia_nw =>    ack_00_in,
+        ia_nw =>    zero,
         ia_n =>     ack_00_01,
         ia_ne =>    ack_00_11,
         ia_e =>     ack_00_10,
-        ia_se =>    ack_00_in,
-        ia_s =>     ack_00_in,
+        ia_se =>    zero,
+        ia_s =>     zero,
         ia_sw =>    ack_00_in,
-        ia_w =>     ack_00_in,
+        ia_w =>     zero,
 
-        ir_nw   => req_00_in,
+        ir_nw   => zero,
         ir_n    => req_00_01,
         ir_ne   => req_00_11,
         ir_e    => req_00_10,
-        ir_se   => req_00_in,
-        ir_s    => req_00_in,
+        ir_se   => zero,
+        ir_s    => zero,
         ir_sw   => req_00_in,
-        ir_w    => req_00_in,
+        ir_w    => zero,
         
         id_nw   => data_00_in,
         id_n    => data_00_01,
@@ -319,23 +321,23 @@ begin
         id_sw   => data_00_in,
         id_w    => data_00_in,
 
-        oa_nw   => ack_00_out,
+        oa_nw   => zero,
         oa_n    => ack_00_01,
         oa_ne   => ack_00_11,
         oa_e    => ack_00_10,
-        oa_se   => ack_00_out,
-        oa_s    => ack_00_out,
+        oa_se   => zero,
+        oa_s    => zero,
         oa_sw   => ack_00_out,
-        oa_w    => ack_00_out,
+        oa_w    => zero,
 
-        or_nw   => req_00_out,
+        or_nw   => zero,
         or_n    => req_00_01,
         or_ne   => req_00_11,
         or_e    => req_00_10,
-        or_se   => req_00_out,
-        or_s    => req_00_out,
+        or_se   => zero,
+        or_s    => zero,
         or_sw   => req_00_out,
-        or_w    => req_00_out,
+        or_w    => zero,
 
         od_nw   => data_00_out,
         od_n    => data_00_01,

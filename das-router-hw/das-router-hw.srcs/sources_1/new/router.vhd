@@ -37,6 +37,7 @@ use ieee.numeric_std.all;
 
 
 
+-- DIRECTION WHERE THE DATA COMES FROM!!!! NOT TO WHERE IT GOES
 -- direction:
 -- 0 nw north west
 -- 1 ne north east
@@ -94,6 +95,11 @@ architecture Behavioral of router is
   -- 10 is vertical
   
 begin
+    -- x ( 3 downto 0)
+    -- y ( 7 downto 4)
+    -- dx ( 11 downto 8)
+    -- dy (15 downto 12)
+     
     x <= data(VALUE_WIDTH-1 downto VALUE_WIDTH*0);
     y <= data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1);
     dx <= data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2);
@@ -121,7 +127,7 @@ begin
 
     
     -- going to be an input for the click element
-    ack <= o_ack_vertical or o_ack_oblique or o_ack_horizontal;
+    -- ack <= o_ack_vertical or o_ack_oblique or o_ack_horizontal;
     
     selector(0) <= '0' when dx = x else '1';
     selector(1) <= '0' when dy = y else '1';
@@ -181,15 +187,15 @@ begin
     
     c2: if DIRECTION = 2 generate
      
-        processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx > x;
-        processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y;
+        processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx > x else dx;
+        processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y else dy;
         
     end generate;
        
     c3: if DIRECTION = 3 generate
      
-        processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x;
-        processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y;
+        processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x else dx;
+        processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y else dy;
         
     end generate;
 
@@ -229,13 +235,11 @@ architecture tb of router_tb is
         signal o_ack_oblique:  std_logic;
         signal o_ack_horizontal: std_logic;
         
-        signal ack_internal: std_logic;
-
 begin
 
     DUT : entity router
     generic map (
-        DIRECTION => 0
+        DIRECTION => 3
     )
         port map (
         rst,
@@ -268,16 +272,16 @@ process begin
     -------- test 1 -------- 
     rst <= '1', '0' after 2ns;
     i_req <= '0', '1' after 7 ns;
-    i_data <= "0000000000000001";
+    i_data <= "0000000000110011";
     --o_ack_horizontal <= '0', '1' after 20ns;
     o_ack_horizontal <= '0';
     o_ack_vertical <= '0';
     o_ack_oblique <= '0';
     
-    wait until o_req_horizontal = '1';
+    wait until o_req_oblique = '1';
     wait for 7ns;
     
-    o_ack_horizontal <= '1';
+    o_ack_oblique <= '1';
     
     
     wait for 30 ns;
@@ -312,35 +316,6 @@ process begin
     
     report "passed! ;)";
     finish;
-    
-    --wait for 50 ns;
-    --i_addr <= "0011001100110011";
-    
-    --wait for 50 ns;
-    
-    --assert i_req = '0' report "hello" severity failure;
-
-
-    -- i_req <= '0', '1' after 15 ns;
-    
-    -- dy, dx, y, x
-    --i_addr <= "0000000000000001", "0001000000000000" after 50ns; -- x = 1, y = 0, dx = 0, dy = 0
-    
-    -- o_addr should be "0101"
-    --o_ack_horizontal <= '0', '1' after 25ns; --ack2 and req2 should be the same
-    
-
---------------------
-
-    --wait for 100 ns;
-    
-    --i_req <= '0', '1' after 50 ns;
-    
-    -- dy, dx, y, x
-    --i_addr <= "0001000000000000"; -- x = 1, y = 0, dx = 0, dy = 1
-    
-    -- o_addr should be "0101" ?
-    --o_ack_horizontal <= '0', '1' after 75ns; --ack2 and req2 should be the same
     
     end process;
 end architecture;
