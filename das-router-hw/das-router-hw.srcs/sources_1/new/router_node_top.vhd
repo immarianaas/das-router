@@ -99,11 +99,11 @@ entity router_node_top is
         od_se:  out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_s:   out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_sw:  out std_logic_vector(DATA_WIDTH-1 downto 0);
-        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0)
         
         
-        internal_nw_req_horizontal: out std_logic;
-        internal_nw_req_vertical: out std_logic
+        -- internal_nw_req_horizontal: out std_logic;
+        -- internal_nw_req_vertical: out std_logic
         
     );
 end router_node_top;
@@ -172,8 +172,8 @@ begin
 
 ----------------------------------------------------------------------------------------------------
 
-    internal_nw_req_horizontal <= nw_req_horizontal;
-    internal_nw_req_vertical <= nw_req_vertical;
+    --internal_nw_req_horizontal <= nw_req_horizontal;
+    --internal_nw_req_vertical <= nw_req_vertical;
     
     -- nw_ack_oblique:
     -- represents the oblique output that comes out
@@ -400,6 +400,9 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.router_node_top;
+use std.env.finish;
+
+
 
 entity router_node_top_tb is
 end entity;
@@ -418,8 +421,8 @@ architecture tb of router_node_top_tb is
    
    signal rst : std_logic;
    
-   signal internal_nw_req_horizontal : std_logic;
-    signal internal_nw_req_vertical : std_logic;
+   --signal internal_nw_req_horizontal : std_logic;
+   -- signal internal_nw_req_vertical : std_logic;
    
 begin
 
@@ -480,10 +483,10 @@ node: entity router_node_top
         od_se  => data_out(4),
         od_s   => data_out(5),
         od_sw  => data_out(6),
-        od_w   => data_out(7),
+        od_w   => data_out(7)
         
-        internal_nw_req_horizontal => internal_nw_req_horizontal,
-        internal_nw_req_vertical => internal_nw_req_vertical
+        -- internal_nw_req_horizontal => internal_nw_req_horizontal,
+        -- internal_nw_req_vertical => internal_nw_req_vertical
     );
     
     process begin
@@ -500,10 +503,13 @@ node: entity router_node_top
         -- it's in (3,3) and goes to (5,3)
         data_in(0) <= "0011001100110101";
         req_in(0) <= '0', '1' after 20ns;
-        wait until ack_in(0) = '1';
+        
+        wait until req_out(3) = '1';
         
         ack_out(3) <= '1';
 
+        wait for 50ns;
+        finish;
 
 
         

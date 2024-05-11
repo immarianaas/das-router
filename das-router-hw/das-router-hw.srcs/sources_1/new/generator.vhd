@@ -59,8 +59,6 @@ begin
 
 
 
-
-
         mesh: entity router_mesh_top
         port map (
         rst => rst,
@@ -205,12 +203,12 @@ begin
         
 
     
-    rst <= '1', '0' after 4 ns;
-    req_in_sig(0,0) <= '0', '1' after 14ns;
+    rst <= '1', '0' after 7 ns;
 
     -- [ dy (0), dx (0), y (3), x (3)];
     data_in_sig(0,0) <= "0000000000110011";
-    wait until req_out_sig(0,0) = '1';
+    req_in_sig(0,0) <= '0', '1' after 14ns;
+    wait until req_out_sig(3,3) = '1';
     
     wait for 2ns;
     report "something happened yay";

@@ -114,3 +114,85 @@ begin
 
 
 end Behavioral;
+
+
+
+----------------------------------------------------------------
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use work.defs.all;
+use work.arbiter3;
+
+entity arbiter3_tb is
+signal rst : std_logic;
+signal inA_req, inB_req, inC_req, out_req : std_logic;
+signal inA_ack, inB_ack, inC_ack, out_ack : std_logic;
+signal inA_data, inB_data, inC_data, out_data : std_logic_vector(DATA_WIDTH-1 downto 0);
+end entity;
+
+architecture tb of arbiter3_tb is
+-- internal signals
+begin
+
+
+a3 : entity arbiter3    
+    port map (
+        rst => rst,
+        
+        inA_req => inA_req,
+        inA_data => inA_data,
+        inA_ack => inA_ack,
+        
+        inB_req => inB_req,
+        inB_data => inB_data,
+        inB_ack => inB_ack,
+        
+        inC_req => inC_req,
+        inC_data => inC_data,
+        inC_ack => inC_ack,
+        
+        out_req => out_req,
+        out_data => out_data,
+        out_ack => out_ack
+    );
+
+    process begin
+    
+    inA_req <= '0'; inB_req <= '0'; inC_req <= '0';
+    inB_data <= (others => '0');
+    inC_data <= (others => '0');
+
+    out_ack <= '0';
+    
+    rst <= '1', '0' after 7ns;
+
+    inA_data <= "0001000100010001";
+    inA_req <= '0', '1' after 20ns;
+    
+    wait until out_req = '1';
+    
+    out_ack <= '1';
+    
+    wait for 50ns;
+    
+--    inA_data <= (others => '0');
+--    inB_data <= "0010001000100010";
+--    inB_req <= '0', '1' after 20ns;
+
+--    wait for 20ns;
+    
+--    inB_data <= (others => '0');
+--    inC_data <= "0011001100110011";
+--    inC_req <= '0', '1' after 20ns;
+
+--    wait for 20ns;
+
+    
+    
+    
+    end process;
+    
+end architecture;
+
+
