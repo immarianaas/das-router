@@ -86,7 +86,7 @@ Arbiter_corner : entity arbiter3
     
     inC_req => or_oblique,
     inC_data => od_oblique,
-    inC_ack => oa_oblique
+    inC_ack => oa_oblique,
     
     out_req => orr,
     out_data => od,
