@@ -1,0 +1,1 @@
+--incr --debug "typical" --relax --mt "8" -L "xil_defaultlib" -L "secureip" --snapshot "corner_node_top_tb_behav" "xil_defaultlib.corner_node_top_tb" -log "elaborate.log" 
