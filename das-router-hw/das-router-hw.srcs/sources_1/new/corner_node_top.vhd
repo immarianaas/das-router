@@ -75,18 +75,17 @@ Router_corner: entity router
 Arbiter_corner : entity arbiter3
     port map ( 
     rst => rst,
+    inA_req => ir_vertical,
+    inA_data => id_vertical,
+    inA_ack => ia_vertical,
     
-    inA_req => or_vertical,
-    inA_data => od_vertical,
-    inA_ack => oa_vertical,
+    inB_req => ir_horizontal,
+    inB_data => id_horizontal,
+    inB_ack => ia_horizontal,
     
-    inB_req => or_horizontal,
-    inB_data => od_horizontal,
-    inB_ack => oa_horizontal,
-    
-    inC_req => or_oblique,
-    inC_data => od_oblique,
-    inC_ack => oa_oblique,
+    inC_req => ir_oblique,
+    inC_data => id_oblique,
+    inC_ack => ia_oblique,
     
     out_req => orr,
     out_data => od,
