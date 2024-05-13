@@ -38,7 +38,6 @@ entity corner_node_top is
         od_oblique    : out std_logic_vector(DATA_WIDTH-1 downto 0);
         id_horizontal : in std_logic_vector(DATA_WIDTH-1 downto 0);
         id_vertical   : in std_logic_vector(DATA_WIDTH-1 downto 0);
-        id_oblique    : in std_logic_vector(DATA_WIDTH-1 downto 0);
         id_oblique    : in std_logic_vector(DATA_WIDTH-1 downto 0)
     
     );
@@ -76,8 +75,22 @@ Router_corner: entity router
 Arbiter_corner : entity arbiter3
     port map ( 
     rst => rst,
+    
     inA_req => or_vertical,
     inA_data => od_vertical,
+    inA_ack => oa_vertical,
     
+    inB_req => or_horizontal,
+    inB_data => od_horizontal,
+    inB_ack => oa_horizontal,
+    
+    inC_req => or_oblique,
+    inC_data => od_oblique,
+    inC_ack => oa_oblique
+    
+    out_req => orr,
+    out_data => od,
+    out_ack => oa
+    );
 
 end Behavioral;
