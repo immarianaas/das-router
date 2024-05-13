@@ -74,20 +74,6 @@ entity router_mesh_top is
         req_10_out: out std_logic;
         ack_10_in: out std_logic;
         
-        data_11_in: in std_logic_vector(DATA_WIDTH-1 downto 0);
-        req_11_in: in std_logic;
-        ack_11_out: in std_logic;
-        data_11_out: out std_logic_vector(DATA_WIDTH-1 downto 0);
-        req_11_out: out std_logic;
-        ack_11_in: out std_logic;
-
-        data_12_in: in std_logic_vector(DATA_WIDTH-1 downto 0);
-        req_12_in: in std_logic;
-        ack_12_out: in std_logic;
-        data_12_out: out std_logic_vector(DATA_WIDTH-1 downto 0);
-        req_12_out: out std_logic;
-        ack_12_in: out std_logic;
-        
         data_13_in: in std_logic_vector(DATA_WIDTH-1 downto 0);
         req_13_in: in std_logic;
         ack_13_out: in std_logic;
@@ -101,20 +87,6 @@ entity router_mesh_top is
         data_20_out: out std_logic_vector(DATA_WIDTH-1 downto 0);
         req_20_out: out std_logic;
         ack_20_in: out std_logic;
-
-        data_21_in: in std_logic_vector(DATA_WIDTH-1 downto 0);
-        req_21_in: in std_logic;
-        ack_21_out: in std_logic;
-        data_21_out: out std_logic_vector(DATA_WIDTH-1 downto 0);
-        req_21_out: out std_logic;
-        ack_21_in: out std_logic;
-        
-        data_22_in: in std_logic_vector(DATA_WIDTH-1 downto 0);
-        req_22_in: in std_logic;
-        ack_22_out: in std_logic;
-        data_22_out: out std_logic_vector(DATA_WIDTH-1 downto 0);
-        req_22_out: out std_logic;
-        ack_22_in: out std_logic;
         
         data_23_in: in std_logic_vector(DATA_WIDTH-1 downto 0);
         req_23_in: in std_logic;
@@ -286,6 +258,7 @@ signal data_32_33: std_logic_vector(DATA_WIDTH-1 downto 0);
 
 signal zero: std_logic;
 
+
 begin
 
 zero <= '0';
@@ -294,14 +267,14 @@ zero <= '0';
         port map (
         rst => rst,
         
-        ia_nw =>    zero,
+        ia_nw =>    open,
         ia_n =>     ack_00_01,
         ia_ne =>    ack_00_11,
         ia_e =>     ack_00_10,
-        ia_se =>    zero,
-        ia_s =>     zero,
+        ia_se =>    open,
+        ia_s =>     open,
         ia_sw =>    ack_00_in,
-        ia_w =>     zero,
+        ia_w =>     open,
 
         ir_nw   => zero,
         ir_n    => req_00_01,
@@ -312,14 +285,14 @@ zero <= '0';
         ir_sw   => req_00_in,
         ir_w    => zero,
         
-        id_nw   => data_00_in,
+        id_nw   => (others => '0'),
         id_n    => data_00_01,
         id_ne   => data_00_11,
         id_e    => data_00_10,
-        id_se   => data_00_in,
-        id_s    => data_00_in,
+        id_se   => (others => '0'),
+        id_s    => (others => '0'),
         id_sw   => data_00_in,
-        id_w    => data_00_in,
+        id_w    => (others => '0'),
 
         oa_nw   => zero,
         oa_n    => ack_00_01,
@@ -339,14 +312,14 @@ zero <= '0';
         or_sw   => req_00_out,
         or_w    => zero,
 
-        od_nw   => data_00_out,
+        od_nw   => open,
         od_n    => data_00_01,
         od_ne   => data_00_11,
         od_e    => data_00_10,
-        od_se   => data_00_out,
-        od_s    => data_00_out,
+        od_se   => open,
+        od_s    => open,
         od_sw   => data_00_out,
-        od_w    => data_00_out
+        od_w    => open
      );
       
    

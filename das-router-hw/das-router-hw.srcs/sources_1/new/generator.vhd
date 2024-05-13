@@ -98,20 +98,6 @@ begin
         req_10_out => req_out_sig(1,0),
         ack_10_in => ack_in_sig(1,0),
 
-        data_11_in => data_in_sig(1,1),
-        req_11_in => req_in_sig(1,1),
-        ack_11_out => ack_out_sig(1,1),
-        data_11_out => data_out_sig(1,1),
-        req_11_out => req_out_sig(1,1),
-        ack_11_in => ack_in_sig(1,1),
-
-        data_12_in => data_in_sig(1,2),
-        req_12_in => req_in_sig(1,2),
-        ack_12_out => ack_out_sig(1,2),
-        data_12_out => data_out_sig(1,2),
-        req_12_out => req_out_sig(1,2),
-        ack_12_in => ack_in_sig(1,2),
-
         data_13_in => data_in_sig(1,3),
         req_13_in => req_in_sig(1,3),
         ack_13_out => ack_out_sig(1,3),
@@ -125,21 +111,7 @@ begin
         data_20_out => data_out_sig(2,0),
         req_20_out => req_out_sig(2,0),
         ack_20_in => ack_in_sig(2,0),
-
-        data_21_in => data_in_sig(2,1),
-        req_21_in => req_in_sig(2,1),
-        ack_21_out => ack_out_sig(2,1),
-        data_21_out => data_out_sig(2,1),
-        req_21_out => req_out_sig(2,1),
-        ack_21_in => ack_in_sig(2,1),
-
-        data_22_in => data_in_sig(2,2),
-        req_22_in => req_in_sig(2,2),
-        ack_22_out => ack_out_sig(2,2),
-        data_22_out => data_out_sig(2,2),
-        req_22_out => req_out_sig(2,2),
-        ack_22_in => ack_in_sig(2,2),
-
+        
         data_23_in => data_in_sig(2,3),
         req_23_in => req_in_sig(2,3),
         ack_23_out => ack_out_sig(2,3),
@@ -207,7 +179,7 @@ begin
 
     -- [ dy (0), dx (0), y (3), x (3)];
     data_in_sig(0,0) <= "0000000000110011";
-    req_in_sig(0,0) <= '0', '1' after 14ns;
+    req_in_sig(0,0) <= '0', '1' after 20ns;
     wait until req_out_sig(3,3) = '1';
     
     wait for 2ns;
