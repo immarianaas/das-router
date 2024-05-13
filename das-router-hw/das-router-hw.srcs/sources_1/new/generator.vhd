@@ -25,6 +25,9 @@ use std.textio.all;
 use work.defs.all;
 use work.router_mesh_top;
 
+use std.env.finish;
+
+
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -180,11 +183,27 @@ begin
     -- [ dy (0), dx (0), y (3), x (3)];
     data_in_sig(0,0) <= "0000000000110011";
     req_in_sig(0,0) <= '0', '1' after 20ns;
+    wait until ack_in_sig(0,0) = '1';
+    
     wait until req_out_sig(3,3) = '1';
+    ack_out_sig(3,3) <= '1';
     
-    wait for 2ns;
-    report "something happened yay";
     
+    -- were in (0,0) and want to go to (0,3)
+    data_in_sig(0,0) <= "0000000000110000";
+    req_in_sig(0,0) <= '1', '0' after 20ns;
+    wait until ack_in_sig(0,0) = '0';
+    wait until req_out_sig(0,3) = '1';
+    ack_out_sig(0,3) <= '1';
+
+    
+
+    
+    
+    
+    
+    wait for 50ns;
+    finish;
     
     end process proc;
     
