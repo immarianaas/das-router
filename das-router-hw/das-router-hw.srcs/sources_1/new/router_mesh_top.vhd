@@ -24,6 +24,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.router_node_top;
 use work.corner_node_top;
+use work.side_node_top;
 
 
 -- Uncomment the following library declaration if using
@@ -391,6 +392,7 @@ begin
 
 zero <= '0';
 
+
     router00: entity corner_node_top
     generic map(
         CORNER => 3
@@ -427,129 +429,115 @@ zero <= '0';
     );
     
 
-
-  router01: entity router_node_top
-        port map (
+    router01: entity side_node_top
+    generic map( 
+        SIDE => 3
+    )
+    port map (
         rst => rst,
+        ia  => ack_01_in,
+        ir  => req_01_in,
+        id  => data_01_in,
+        oa  => ack_01_out,
+        orr => req_01_out,
+        od  => data_01_out,
         
-        ia_nw =>    ack_01_in,
-        ia_n =>     ack_01_02,
-        ia_ne =>    ack_01_12,
-        ia_e =>     ack_01_11,
-        ia_se =>    ack_01_10,
-        ia_s =>     ack_01_00,
-        ia_sw =>    ack_01_in,
-        ia_w =>     ack_01_in,
-
-        ir_nw   => req_01_in,
-        ir_n    => req_02_01,
-        ir_ne   => req_12_01,
-        ir_e    => req_11_01,
-        ir_se   => req_10_01,
-        ir_s    => req_00_01,
-        ir_sw   => req_01_in,
-        ir_w    => req_01_in,
+        or_straight => req_01_11,
+        oa_straight => ack_11_01,
+        od_straight => data_01_11,
         
-        id_nw   => data_01_in,
-        id_n    => data_02_01,
-        id_ne   => data_12_01,
-        id_e    => data_11_01,
-        id_se   => data_10_01,
-        id_s    => data_00_01,
-        id_sw   => data_01_in,
-        id_w    => data_01_in,
+        ir_straight => req_11_01,
+        ia_straight => ack_01_11,
+        id_straight => data_11_01,
+        
+        or_left => req_01_02,
+        oa_left => ack_02_01,
+        od_left => data_01_02,
+        
+        ir_left => req_02_01,
+        ia_left => ack_01_02,
+        id_left => data_02_01,
+        
+        or_right => req_01_00,
+        oa_right => ack_00_01,
+        od_right => data_01_00,
+        
+        ir_right => req_00_01,
+        ia_right => ack_01_00,
+        id_right => data_00_01,
+        
+        or_lefto => req_01_12,
+        oa_lefto => ack_12_01,
+        od_lefto => data_01_12,
+        
+        ir_lefto => req_12_01,
+        ia_lefto => ack_01_12,
+        id_lefto => data_12_01,
+        
+        or_righto => req_01_10,
+        oa_righto => ack_10_01,
+        od_righto => data_01_10,
+        
+        ir_righto => req_10_01,
+        ia_righto => ack_01_10,
+        id_righto => data_10_01
+    );
+    
 
-        oa_nw   => ack_01_out,
-        oa_n    => ack_02_01,
-        oa_ne   => ack_12_01,
-        oa_e    => ack_11_01,
-        oa_se   => ack_10_01,
-        oa_s    => ack_00_01,
-        oa_sw   => ack_01_out,
-        oa_w    => ack_01_out,
-
-        or_nw   => req_01_out,
-        or_n    => req_01_02,
-        or_ne   => req_01_12,
-        or_e    => req_01_11,
-        or_se   => req_01_10,
-        or_s    => req_01_00,
-        or_sw   => req_01_out,
-        or_w    => req_01_out,
-
-        od_nw   => data_01_out,
-        od_n    => data_01_02,
-        od_ne   => data_01_12,
-        od_e    => data_01_11,
-        od_se   => data_01_10,
-        od_s    => data_01_00,
-        od_sw   => data_01_out,
-        od_w    => data_01_out
-     );
-      
-   
-
-
-  router02: entity router_node_top
-        port map (
+    router02: entity side_node_top
+    generic map( 
+        SIDE => 3
+    )
+    port map (
         rst => rst,
+        ia  => ack_02_in,
+        ir  => req_02_in,
+        id  => data_02_in,
+        oa  => ack_02_out,
+        orr => req_02_out,
+        od  => data_02_out,
         
-        ia_nw =>    ack_02_in,
-        ia_n =>     ack_02_03,
-        ia_ne =>    ack_02_13,
-        ia_e =>     ack_02_12,
-        ia_se =>    ack_02_11,
-        ia_s =>     ack_02_01,
-        ia_sw =>    ack_02_in,
-        ia_w =>     ack_02_in,
-
-        ir_nw   => req_02_in,
-        ir_n    => req_03_02,
-        ir_ne   => req_13_02,
-        ir_e    => req_12_02,
-        ir_se   => req_11_02,
-        ir_s    => req_01_02,
-        ir_sw   => req_02_in,
-        ir_w    => req_02_in,
+        or_straight => req_02_12,
+        oa_straight => ack_12_02,
+        od_straight => data_02_12,
         
-        id_nw   => data_02_in,
-        id_n    => data_03_02,
-        id_ne   => data_13_02,
-        id_e    => data_12_02,
-        id_se   => data_11_02,
-        id_s    => data_01_02,
-        id_sw   => data_02_in,
-        id_w    => data_02_in,
-
-        oa_nw   => ack_02_out,
-        oa_n    => ack_03_02,
-        oa_ne   => ack_13_02,
-        oa_e    => ack_12_02,
-        oa_se   => ack_11_02,
-        oa_s    => ack_01_02,
-        oa_sw   => ack_02_out,
-        oa_w    => ack_02_out,
-
-        or_nw   => req_02_out,
-        or_n    => req_02_03,
-        or_ne   => req_02_13,
-        or_e    => req_02_12,
-        or_se   => req_02_11,
-        or_s    => req_02_01,
-        or_sw   => req_02_out,
-        or_w    => req_02_out,
-
-        od_nw   => data_02_out,
-        od_n    => data_02_03,
-        od_ne   => data_02_13,
-        od_e    => data_02_12,
-        od_se   => data_02_11,
-        od_s    => data_02_01,
-        od_sw   => data_02_out,
-        od_w    => data_02_out
-     );
-      
-   
+        ir_straight => req_12_02,
+        ia_straight => ack_02_12,
+        id_straight => data_12_02,
+        
+        or_left => req_02_03,
+        oa_left => ack_03_02,
+        od_left => data_02_03,
+        
+        ir_left => req_03_02,
+        ia_left => ack_02_03,
+        id_left => data_03_02,
+        
+        or_right => req_02_01,
+        oa_right => ack_01_02,
+        od_right => data_02_01,
+        
+        ir_right => req_01_02,
+        ia_right => ack_02_01,
+        id_right => data_01_02,
+        
+        or_lefto => req_02_13,
+        oa_lefto => ack_13_02,
+        od_lefto => data_02_13,
+        
+        ir_lefto => req_13_02,
+        ia_lefto => ack_02_13,
+        id_lefto => data_13_02,
+        
+        or_righto => req_02_11,
+        oa_righto => ack_11_02,
+        od_righto => data_02_11,
+        
+        ir_righto => req_11_02,
+        ia_righto => ack_02_11,
+        id_righto => data_11_02
+    );
+    
 
     router03: entity corner_node_top
     generic map(
@@ -587,67 +575,60 @@ zero <= '0';
     );
     
 
-
-  router10: entity router_node_top
-        port map (
+    router10: entity side_node_top
+    generic map( 
+        SIDE => 2
+    )
+    port map (
         rst => rst,
+        ia  => ack_10_in,
+        ir  => req_10_in,
+        id  => data_10_in,
+        oa  => ack_10_out,
+        orr => req_10_out,
+        od  => data_10_out,
         
-        ia_nw =>    ack_10_01,
-        ia_n =>     ack_10_11,
-        ia_ne =>    ack_10_21,
-        ia_e =>     ack_10_20,
-        ia_se =>    ack_10_in,
-        ia_s =>     ack_10_in,
-        ia_sw =>    ack_10_in,
-        ia_w =>     ack_10_00,
-
-        ir_nw   => req_01_10,
-        ir_n    => req_11_10,
-        ir_ne   => req_21_10,
-        ir_e    => req_20_10,
-        ir_se   => req_10_in,
-        ir_s    => req_10_in,
-        ir_sw   => req_10_in,
-        ir_w    => req_00_10,
+        or_straight => req_10_11,
+        oa_straight => ack_11_10,
+        od_straight => data_10_11,
         
-        id_nw   => data_01_10,
-        id_n    => data_11_10,
-        id_ne   => data_21_10,
-        id_e    => data_20_10,
-        id_se   => data_10_in,
-        id_s    => data_10_in,
-        id_sw   => data_10_in,
-        id_w    => data_00_10,
-
-        oa_nw   => ack_01_10,
-        oa_n    => ack_11_10,
-        oa_ne   => ack_21_10,
-        oa_e    => ack_20_10,
-        oa_se   => ack_10_out,
-        oa_s    => ack_10_out,
-        oa_sw   => ack_10_out,
-        oa_w    => ack_00_10,
-
-        or_nw   => req_10_01,
-        or_n    => req_10_11,
-        or_ne   => req_10_21,
-        or_e    => req_10_20,
-        or_se   => req_10_out,
-        or_s    => req_10_out,
-        or_sw   => req_10_out,
-        or_w    => req_10_00,
-
-        od_nw   => data_10_01,
-        od_n    => data_10_11,
-        od_ne   => data_10_21,
-        od_e    => data_10_20,
-        od_se   => data_10_out,
-        od_s    => data_10_out,
-        od_sw   => data_10_out,
-        od_w    => data_10_00
-     );
-      
-   
+        ir_straight => req_11_10,
+        ia_straight => ack_10_11,
+        id_straight => data_11_10,
+        
+        or_left => req_10_00,
+        oa_left => ack_00_10,
+        od_left => data_10_00,
+        
+        ir_left => req_00_10,
+        ia_left => ack_10_00,
+        id_left => data_00_10,
+        
+        or_right => req_10_20,
+        oa_right => ack_20_10,
+        od_right => data_10_20,
+        
+        ir_right => req_20_10,
+        ia_right => ack_10_20,
+        id_right => data_20_10,
+        
+        or_lefto => req_10_01,
+        oa_lefto => ack_01_10,
+        od_lefto => data_10_01,
+        
+        ir_lefto => req_01_10,
+        ia_lefto => ack_10_01,
+        id_lefto => data_01_10,
+        
+        or_righto => req_10_21,
+        oa_righto => ack_21_10,
+        od_righto => data_10_21,
+        
+        ir_righto => req_21_10,
+        ia_righto => ack_10_21,
+        id_righto => data_21_10
+    );
+    
 
 
   router11: entity router_node_top
@@ -773,129 +754,115 @@ zero <= '0';
       
    
 
-
-  router13: entity router_node_top
-        port map (
+    router13: entity side_node_top
+    generic map( 
+        SIDE => 0
+    )
+    port map (
         rst => rst,
+        ia  => ack_13_in,
+        ir  => req_13_in,
+        id  => data_13_in,
+        oa  => ack_13_out,
+        orr => req_13_out,
+        od  => data_13_out,
         
-        ia_nw =>    ack_13_in,
-        ia_n =>     ack_13_in,
-        ia_ne =>    ack_13_in,
-        ia_e =>     ack_13_23,
-        ia_se =>    ack_13_22,
-        ia_s =>     ack_13_12,
-        ia_sw =>    ack_13_02,
-        ia_w =>     ack_13_03,
-
-        ir_nw   => req_13_in,
-        ir_n    => req_13_in,
-        ir_ne   => req_13_in,
-        ir_e    => req_23_13,
-        ir_se   => req_22_13,
-        ir_s    => req_12_13,
-        ir_sw   => req_02_13,
-        ir_w    => req_03_13,
+        or_straight => req_13_12,
+        oa_straight => ack_12_13,
+        od_straight => data_13_12,
         
-        id_nw   => data_13_in,
-        id_n    => data_13_in,
-        id_ne   => data_13_in,
-        id_e    => data_23_13,
-        id_se   => data_22_13,
-        id_s    => data_12_13,
-        id_sw   => data_02_13,
-        id_w    => data_03_13,
+        ir_straight => req_12_13,
+        ia_straight => ack_13_12,
+        id_straight => data_12_13,
+        
+        or_left => req_13_23,
+        oa_left => ack_23_13,
+        od_left => data_13_23,
+        
+        ir_left => req_23_13,
+        ia_left => ack_13_23,
+        id_left => data_23_13,
+        
+        or_right => req_13_03,
+        oa_right => ack_03_13,
+        od_right => data_13_03,
+        
+        ir_right => req_03_13,
+        ia_right => ack_13_03,
+        id_right => data_03_13,
+        
+        or_lefto => req_13_22,
+        oa_lefto => ack_22_13,
+        od_lefto => data_13_22,
+        
+        ir_lefto => req_22_13,
+        ia_lefto => ack_13_22,
+        id_lefto => data_22_13,
+        
+        or_righto => req_13_02,
+        oa_righto => ack_02_13,
+        od_righto => data_13_02,
+        
+        ir_righto => req_02_13,
+        ia_righto => ack_13_02,
+        id_righto => data_02_13
+    );
+    
 
-        oa_nw   => ack_13_out,
-        oa_n    => ack_13_out,
-        oa_ne   => ack_13_out,
-        oa_e    => ack_23_13,
-        oa_se   => ack_22_13,
-        oa_s    => ack_12_13,
-        oa_sw   => ack_02_13,
-        oa_w    => ack_03_13,
-
-        or_nw   => req_13_out,
-        or_n    => req_13_out,
-        or_ne   => req_13_out,
-        or_e    => req_13_23,
-        or_se   => req_13_22,
-        or_s    => req_13_12,
-        or_sw   => req_13_02,
-        or_w    => req_13_03,
-
-        od_nw   => data_13_out,
-        od_n    => data_13_out,
-        od_ne   => data_13_out,
-        od_e    => data_13_23,
-        od_se   => data_13_22,
-        od_s    => data_13_12,
-        od_sw   => data_13_02,
-        od_w    => data_13_03
-     );
-      
-   
-
-
-  router20: entity router_node_top
-        port map (
+    router20: entity side_node_top
+    generic map( 
+        SIDE => 2
+    )
+    port map (
         rst => rst,
+        ia  => ack_20_in,
+        ir  => req_20_in,
+        id  => data_20_in,
+        oa  => ack_20_out,
+        orr => req_20_out,
+        od  => data_20_out,
         
-        ia_nw =>    ack_20_11,
-        ia_n =>     ack_20_21,
-        ia_ne =>    ack_20_31,
-        ia_e =>     ack_20_30,
-        ia_se =>    ack_20_in,
-        ia_s =>     ack_20_in,
-        ia_sw =>    ack_20_in,
-        ia_w =>     ack_20_10,
-
-        ir_nw   => req_11_20,
-        ir_n    => req_21_20,
-        ir_ne   => req_31_20,
-        ir_e    => req_30_20,
-        ir_se   => req_20_in,
-        ir_s    => req_20_in,
-        ir_sw   => req_20_in,
-        ir_w    => req_10_20,
+        or_straight => req_20_21,
+        oa_straight => ack_21_20,
+        od_straight => data_20_21,
         
-        id_nw   => data_11_20,
-        id_n    => data_21_20,
-        id_ne   => data_31_20,
-        id_e    => data_30_20,
-        id_se   => data_20_in,
-        id_s    => data_20_in,
-        id_sw   => data_20_in,
-        id_w    => data_10_20,
-
-        oa_nw   => ack_11_20,
-        oa_n    => ack_21_20,
-        oa_ne   => ack_31_20,
-        oa_e    => ack_30_20,
-        oa_se   => ack_20_out,
-        oa_s    => ack_20_out,
-        oa_sw   => ack_20_out,
-        oa_w    => ack_10_20,
-
-        or_nw   => req_20_11,
-        or_n    => req_20_21,
-        or_ne   => req_20_31,
-        or_e    => req_20_30,
-        or_se   => req_20_out,
-        or_s    => req_20_out,
-        or_sw   => req_20_out,
-        or_w    => req_20_10,
-
-        od_nw   => data_20_11,
-        od_n    => data_20_21,
-        od_ne   => data_20_31,
-        od_e    => data_20_30,
-        od_se   => data_20_out,
-        od_s    => data_20_out,
-        od_sw   => data_20_out,
-        od_w    => data_20_10
-     );
-      
-   
+        ir_straight => req_21_20,
+        ia_straight => ack_20_21,
+        id_straight => data_21_20,
+        
+        or_left => req_20_10,
+        oa_left => ack_10_20,
+        od_left => data_20_10,
+        
+        ir_left => req_10_20,
+        ia_left => ack_20_10,
+        id_left => data_10_20,
+        
+        or_right => req_20_30,
+        oa_right => ack_30_20,
+        od_right => data_20_30,
+        
+        ir_right => req_30_20,
+        ia_right => ack_20_30,
+        id_right => data_30_20,
+        
+        or_lefto => req_20_11,
+        oa_lefto => ack_11_20,
+        od_lefto => data_20_11,
+        
+        ir_lefto => req_11_20,
+        ia_lefto => ack_20_11,
+        id_lefto => data_11_20,
+        
+        or_righto => req_20_31,
+        oa_righto => ack_31_20,
+        od_righto => data_20_31,
+        
+        ir_righto => req_31_20,
+        ia_righto => ack_20_31,
+        id_righto => data_31_20
+    );
+    
 
 
   router21: entity router_node_top
@@ -1021,67 +988,60 @@ zero <= '0';
       
    
 
-
-  router23: entity router_node_top
-        port map (
+    router23: entity side_node_top
+    generic map( 
+        SIDE => 0
+    )
+    port map (
         rst => rst,
+        ia  => ack_23_in,
+        ir  => req_23_in,
+        id  => data_23_in,
+        oa  => ack_23_out,
+        orr => req_23_out,
+        od  => data_23_out,
         
-        ia_nw =>    ack_23_in,
-        ia_n =>     ack_23_in,
-        ia_ne =>    ack_23_in,
-        ia_e =>     ack_23_33,
-        ia_se =>    ack_23_32,
-        ia_s =>     ack_23_22,
-        ia_sw =>    ack_23_12,
-        ia_w =>     ack_23_13,
-
-        ir_nw   => req_23_in,
-        ir_n    => req_23_in,
-        ir_ne   => req_23_in,
-        ir_e    => req_33_23,
-        ir_se   => req_32_23,
-        ir_s    => req_22_23,
-        ir_sw   => req_12_23,
-        ir_w    => req_13_23,
+        or_straight => req_23_22,
+        oa_straight => ack_22_23,
+        od_straight => data_23_22,
         
-        id_nw   => data_23_in,
-        id_n    => data_23_in,
-        id_ne   => data_23_in,
-        id_e    => data_33_23,
-        id_se   => data_32_23,
-        id_s    => data_22_23,
-        id_sw   => data_12_23,
-        id_w    => data_13_23,
-
-        oa_nw   => ack_23_out,
-        oa_n    => ack_23_out,
-        oa_ne   => ack_23_out,
-        oa_e    => ack_33_23,
-        oa_se   => ack_32_23,
-        oa_s    => ack_22_23,
-        oa_sw   => ack_12_23,
-        oa_w    => ack_13_23,
-
-        or_nw   => req_23_out,
-        or_n    => req_23_out,
-        or_ne   => req_23_out,
-        or_e    => req_23_33,
-        or_se   => req_23_32,
-        or_s    => req_23_22,
-        or_sw   => req_23_12,
-        or_w    => req_23_13,
-
-        od_nw   => data_23_out,
-        od_n    => data_23_out,
-        od_ne   => data_23_out,
-        od_e    => data_23_33,
-        od_se   => data_23_32,
-        od_s    => data_23_22,
-        od_sw   => data_23_12,
-        od_w    => data_23_13
-     );
-      
-   
+        ir_straight => req_22_23,
+        ia_straight => ack_23_22,
+        id_straight => data_22_23,
+        
+        or_left => req_23_33,
+        oa_left => ack_33_23,
+        od_left => data_23_33,
+        
+        ir_left => req_33_23,
+        ia_left => ack_23_33,
+        id_left => data_33_23,
+        
+        or_right => req_23_13,
+        oa_right => ack_13_23,
+        od_right => data_23_13,
+        
+        ir_right => req_13_23,
+        ia_right => ack_23_13,
+        id_right => data_13_23,
+        
+        or_lefto => req_23_32,
+        oa_lefto => ack_32_23,
+        od_lefto => data_23_32,
+        
+        ir_lefto => req_32_23,
+        ia_lefto => ack_23_32,
+        id_lefto => data_32_23,
+        
+        or_righto => req_23_12,
+        oa_righto => ack_12_23,
+        od_righto => data_23_12,
+        
+        ir_righto => req_12_23,
+        ia_righto => ack_23_12,
+        id_righto => data_12_23
+    );
+    
 
     router30: entity corner_node_top
     generic map(
@@ -1119,129 +1079,115 @@ zero <= '0';
     );
     
 
-
-  router31: entity router_node_top
-        port map (
+    router31: entity side_node_top
+    generic map( 
+        SIDE => 1
+    )
+    port map (
         rst => rst,
+        ia  => ack_31_in,
+        ir  => req_31_in,
+        id  => data_31_in,
+        oa  => ack_31_out,
+        orr => req_31_out,
+        od  => data_31_out,
         
-        ia_nw =>    ack_31_22,
-        ia_n =>     ack_31_32,
-        ia_ne =>    ack_31_in,
-        ia_e =>     ack_31_in,
-        ia_se =>    ack_31_in,
-        ia_s =>     ack_31_30,
-        ia_sw =>    ack_31_20,
-        ia_w =>     ack_31_21,
-
-        ir_nw   => req_22_31,
-        ir_n    => req_32_31,
-        ir_ne   => req_31_in,
-        ir_e    => req_31_in,
-        ir_se   => req_31_in,
-        ir_s    => req_30_31,
-        ir_sw   => req_20_31,
-        ir_w    => req_21_31,
+        or_straight => req_31_21,
+        oa_straight => ack_21_31,
+        od_straight => data_31_21,
         
-        id_nw   => data_22_31,
-        id_n    => data_32_31,
-        id_ne   => data_31_in,
-        id_e    => data_31_in,
-        id_se   => data_31_in,
-        id_s    => data_30_31,
-        id_sw   => data_20_31,
-        id_w    => data_21_31,
+        ir_straight => req_21_31,
+        ia_straight => ack_31_21,
+        id_straight => data_21_31,
+        
+        or_left => req_31_30,
+        oa_left => ack_30_31,
+        od_left => data_31_30,
+        
+        ir_left => req_30_31,
+        ia_left => ack_31_30,
+        id_left => data_30_31,
+        
+        or_right => req_31_32,
+        oa_right => ack_32_31,
+        od_right => data_31_32,
+        
+        ir_right => req_32_31,
+        ia_right => ack_31_32,
+        id_right => data_32_31,
+        
+        or_lefto => req_31_20,
+        oa_lefto => ack_20_31,
+        od_lefto => data_31_20,
+        
+        ir_lefto => req_20_31,
+        ia_lefto => ack_31_20,
+        id_lefto => data_20_31,
+        
+        or_righto => req_31_22,
+        oa_righto => ack_22_31,
+        od_righto => data_31_22,
+        
+        ir_righto => req_22_31,
+        ia_righto => ack_31_22,
+        id_righto => data_22_31
+    );
+    
 
-        oa_nw   => ack_22_31,
-        oa_n    => ack_32_31,
-        oa_ne   => ack_31_out,
-        oa_e    => ack_31_out,
-        oa_se   => ack_31_out,
-        oa_s    => ack_30_31,
-        oa_sw   => ack_20_31,
-        oa_w    => ack_21_31,
-
-        or_nw   => req_31_22,
-        or_n    => req_31_32,
-        or_ne   => req_31_out,
-        or_e    => req_31_out,
-        or_se   => req_31_out,
-        or_s    => req_31_30,
-        or_sw   => req_31_20,
-        or_w    => req_31_21,
-
-        od_nw   => data_31_22,
-        od_n    => data_31_32,
-        od_ne   => data_31_out,
-        od_e    => data_31_out,
-        od_se   => data_31_out,
-        od_s    => data_31_30,
-        od_sw   => data_31_20,
-        od_w    => data_31_21
-     );
-      
-   
-
-
-  router32: entity router_node_top
-        port map (
+    router32: entity side_node_top
+    generic map( 
+        SIDE => 1
+    )
+    port map (
         rst => rst,
+        ia  => ack_32_in,
+        ir  => req_32_in,
+        id  => data_32_in,
+        oa  => ack_32_out,
+        orr => req_32_out,
+        od  => data_32_out,
         
-        ia_nw =>    ack_32_23,
-        ia_n =>     ack_32_33,
-        ia_ne =>    ack_32_in,
-        ia_e =>     ack_32_in,
-        ia_se =>    ack_32_in,
-        ia_s =>     ack_32_31,
-        ia_sw =>    ack_32_21,
-        ia_w =>     ack_32_22,
-
-        ir_nw   => req_23_32,
-        ir_n    => req_33_32,
-        ir_ne   => req_32_in,
-        ir_e    => req_32_in,
-        ir_se   => req_32_in,
-        ir_s    => req_31_32,
-        ir_sw   => req_21_32,
-        ir_w    => req_22_32,
+        or_straight => req_32_22,
+        oa_straight => ack_22_32,
+        od_straight => data_32_22,
         
-        id_nw   => data_23_32,
-        id_n    => data_33_32,
-        id_ne   => data_32_in,
-        id_e    => data_32_in,
-        id_se   => data_32_in,
-        id_s    => data_31_32,
-        id_sw   => data_21_32,
-        id_w    => data_22_32,
-
-        oa_nw   => ack_23_32,
-        oa_n    => ack_33_32,
-        oa_ne   => ack_32_out,
-        oa_e    => ack_32_out,
-        oa_se   => ack_32_out,
-        oa_s    => ack_31_32,
-        oa_sw   => ack_21_32,
-        oa_w    => ack_22_32,
-
-        or_nw   => req_32_23,
-        or_n    => req_32_33,
-        or_ne   => req_32_out,
-        or_e    => req_32_out,
-        or_se   => req_32_out,
-        or_s    => req_32_31,
-        or_sw   => req_32_21,
-        or_w    => req_32_22,
-
-        od_nw   => data_32_23,
-        od_n    => data_32_33,
-        od_ne   => data_32_out,
-        od_e    => data_32_out,
-        od_se   => data_32_out,
-        od_s    => data_32_31,
-        od_sw   => data_32_21,
-        od_w    => data_32_22
-     );
-      
-   
+        ir_straight => req_22_32,
+        ia_straight => ack_32_22,
+        id_straight => data_22_32,
+        
+        or_left => req_32_31,
+        oa_left => ack_31_32,
+        od_left => data_32_31,
+        
+        ir_left => req_31_32,
+        ia_left => ack_32_31,
+        id_left => data_31_32,
+        
+        or_right => req_32_33,
+        oa_right => ack_33_32,
+        od_right => data_32_33,
+        
+        ir_right => req_33_32,
+        ia_right => ack_32_33,
+        id_right => data_33_32,
+        
+        or_lefto => req_32_21,
+        oa_lefto => ack_21_32,
+        od_lefto => data_32_21,
+        
+        ir_lefto => req_21_32,
+        ia_lefto => ack_32_21,
+        id_lefto => data_21_32,
+        
+        or_righto => req_32_23,
+        oa_righto => ack_23_32,
+        od_righto => data_32_23,
+        
+        ir_righto => req_23_32,
+        ia_righto => ack_32_23,
+        id_righto => data_23_32
+    );
+    
 
     router33: entity corner_node_top
     generic map(
@@ -1279,7 +1225,6 @@ zero <= '0';
     );
     
 
-      
    
 
 

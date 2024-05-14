@@ -180,7 +180,7 @@ begin
     
     rst <= '1', '0' after 7 ns;
 
-    -- [ dy (0), dx (0), y (3), x (3)];
+     -- [ dy (0), dx (0), y (3), x (3)];
     data_in_sig(0,0) <= "0000000000110011";
     req_in_sig(0,0) <= '0', '1' after 5ns;
     
@@ -190,15 +190,31 @@ begin
     ack_out_sig(3,3) <= '1';
     
     
-    -- were in (0,0) and want to go to (0,3)
-    data_in_sig(0,0) <= "0000000000110000";
-    req_in_sig(0,0) <= '1', '0' after 20ns;
-    wait until ack_in_sig(0,0) = '0';
-    wait until req_out_sig(0,3) = '1';
-    ack_out_sig(0,3) <= '1';
+    -- we're in (0,3) and want to go to (0,0)
+    data_in_sig(0,3) <= "0011000000000000";
+    req_in_sig(0,3) <= '0', '1' after 20ns;
+    wait until ack_in_sig(0,3) = '1';
+    wait until req_out_sig(0,0) = '1';
+    ack_out_sig(0,0) <= '1';
+
+
+    -- we're in (3,3) and want to go to (0,1)
+    data_in_sig(3,3) <= "0011001100010000";
+    req_in_sig(3,3) <= '0', '1' after 20ns;
+    wait until ack_in_sig(3,3) = '1';
+    wait until req_out_sig(0,1) = '1';
+    ack_out_sig(0,1) <= '1';
 
     
-
+--    -- [ dy (1), dx (0), y (1), x (3)];
+--    data_in_sig(0,1) <= "0001000000010011";
+--    req_in_sig(0,1) <= '0', '1' after 5ns;
+    
+--    wait until ack_in_sig(0,1) = '1';
+    
+--    wait until req_out_sig(3,1) = '1';
+--    ack_out_sig(3,1) <= '1';
+    
     
     
     

@@ -62,14 +62,17 @@ demux1 : entity demux
     inSel_ack => inSel_ack,
     selector => selector(0),
     
+    -- 1
     outB_req =>  d1_req,
     outB_ack => d1_ack,
     outB_data => d1_data,
     
+    -- 0
     outC_req => o_straight_req,
     outC_ack => o_straight_ack,
     outC_data => o_straight_data
     );
+    
 demux2: entity demux
     port map(
     rst => rst,
@@ -82,10 +85,13 @@ demux2: entity demux
     inSel_ack => inSel_ack,
     selector => selector(1),
     
+    -- 1
     outB_req =>  d2_1_req,
     outB_ack => d2_1_ack,
     outB_data => d2_1_data,
     
+    
+    -- 0
     outC_req => d2_2_req,
     outC_ack => d2_2_ack,
     outC_data => d2_2_data
@@ -122,10 +128,12 @@ demux2_2: entity demux
     inSel_ack => inSel_ack,
     selector => selector(2),
     
+    -- 1
     outB_req =>  o_righto_req,
     outB_ack => o_righto_ack,
     outB_data => o_righto_data,
     
+    -- 0
     outC_req => o_right_req,
     outC_ack => o_right_ack,
     outC_data => o_right_data

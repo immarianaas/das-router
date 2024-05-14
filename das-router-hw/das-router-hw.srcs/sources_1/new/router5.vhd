@@ -56,6 +56,7 @@ begin
     processed_data(VALUE_WIDTH-1 downto VALUE_WIDTH*0)<=x;
     processed_data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1) <=y;
     
+    
     click: entity click_element
     port map (
         rst => rst,
@@ -71,12 +72,15 @@ begin
 -- TODO: DOUBLE CHECK SELECTOR, main idea was to reverse direction on selector N/S and E/W
 -- TODO: SELECTION BASED ON GOING LEFT, double check this is true
     N: if SIDE = 0 generate
+        -- dx
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x 
         else std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx>x else dx;
+        
+        -- dy
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy > y else dy;
-        selector(0) <= '0' when dx = x else '1'; -- Go straight?
-        selector(1) <= '0' when dx < x else '1'; -- Go left?
-        selector(2) <= '0' when dy = y else '1'; -- Go oblique?
+        selector(0) <= '1' when dx = x else '0'; -- Go straight?
+        selector(1) <= '1' when dx < x else '0'; -- Go left?
+        selector(2) <= '1' when dy = y else '0'; -- Go oblique?
     
     end generate;
     
@@ -84,18 +88,19 @@ begin
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx > x else dx;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y 
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
-        selector(0) <= '0' when dy = y else '1'; -- Go straight?
-        selector(1) <= '0' when dy > y else '1'; -- Go left?
-        selector(2) <= '0' when dx = x else '1'; -- Go oblique?
+        selector(0) <= '1' when dy = y else '0'; -- Go straight?
+        selector(1) <= '1' when dy > y else '0'; -- Go left?
+        selector(2) <= '1' when dx = x else '0'; -- Go oblique?
     end generate; 
     
     S: if SIDE = 2 generate
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x 
         else std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx>x else dx;
+        
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y else dy;
         selector(0) <= '0' when dx = x else '1'; -- Go straight?
-        selector(1) <= '0' when dx > x else '1'; -- Go left?
-        selector(2) <= '0' when dy = y else '1'; -- Go oblique?
+        selector(1) <= '0' when dx < x else '1'; -- Go right?
+        selector(2) <= '0' when dy /= y else '1'; -- Go oblique?
     
     end generate;
     
@@ -103,11 +108,12 @@ begin
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x else dx;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y 
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
-        selector(0) <= '0' when dy = y else '1'; -- Go straight?
-        selector(1) <= '0' when dy < y else '1'; -- Go left?
-        selector(2) <= '0' when dx = x else '1'; -- Go oblique
+        selector(0) <= '1' when dy = y else '0'; -- Go straight?
+        selector(1) <= '1' when dy < y else '0'; -- Go left?
+        selector(2) <= '1' when dx = x else '0'; -- Go oblique
     end generate;    
------------------- ENDS GENERATE --------------    
+------------------ ENDS GENERATE --------------
+    
     demux: entity demux5
     port map(
     rst=> rst,

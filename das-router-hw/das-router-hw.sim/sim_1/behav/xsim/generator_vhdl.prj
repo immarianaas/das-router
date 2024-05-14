@@ -6,10 +6,18 @@ vhdl xil_defaultlib  \
 "../../../../das-router-hw.srcs/sources_1/imports/components/merge.vhd" \
 "../../../../das-router-hw.srcs/sources_1/imports/components/arbiter.vhd" \
 "../../../../das-router-hw.srcs/sources_1/imports/components/click_element.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/arbiter3.vhd" \
 "../../../../das-router-hw.srcs/sources_1/new/arbiter5.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/demux3.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/router.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/corner_node_top.vhd" \
 "../../../../das-router-hw.srcs/sources_1/new/demux5.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/router_node_top.vhd" \
 "../../../../das-router-hw.srcs/sources_1/new/router5.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/router2.vhd" \
 "../../../../das-router-hw.srcs/sources_1/new/side_node_top.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/router_mesh_top.vhd" \
+"../../../../das-router-hw.srcs/sources_1/new/generator.vhd" \
 
 # Do not sort compile order
 nosort
