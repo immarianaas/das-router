@@ -24,7 +24,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 use std.textio.all;
 use work.defs.all;
 use work.router_mesh_top;
-
+use std.textio.all;
+use ieee.std_logic_textio.all;
 use std.env.finish;
 
 
@@ -59,8 +60,6 @@ architecture Behavioral of generator is
     signal rst : std_logic;
     
 begin
-
-
 
         mesh: entity router_mesh_top
         port map (
@@ -151,33 +150,34 @@ begin
         ack_33_in => ack_in_sig(3,3)
 
         );
+        
+        
+    io: process is
+    variable line_v : line;
+    file read_file : text;
+    file write_file : text;
+    variable data : std_logic_vector(DATA_WIDTH-1 downto 0);
+  begin
+    file_open(read_file, "/home/mar/DTU/das-24/das-router/data_in.txt", read_mode);
+    file_open(write_file, "/home/mar/DTU/das-24/das-router/data_out.txt", write_mode);
+    while not endfile(read_file) loop
+      readline(read_file, line_v);
+      hread(line_v, data);
+      hwrite(line_v, data);
+      writeline(write_file, line_v);
+    end loop;
+    file_close(read_file);
+    file_close(write_file);
+    wait;
+  end process;
 
     proc : process
-    
---    variable req_in : t_bit_matrix := (others => (others => '0')); 
---    variable ack_out : t_bit_matrix := (others => (others => '0')); 
---    variable req_out : t_bit_matrix := (others => (others => '0')); 
---    variable ack_in : t_bit_matrix := (others => (others => '0')); 
---    variable data_in : t_data_matrix := (others => (others => (others =>'0')));
---    variable data_out : t_data_matrix := (others => (others => (others =>'0')));
-     
     begin
-    
---    req_in_sig <= req_in;
---    data_in_sig <= data_in;
---    ack_out_sig <= ack_out;
-    
---    data_out := data_out_sig;
---    ack_in := ack_in_sig;
---    req_out := ack_out_sig;
-
+  
       req_in_sig <= (others => (others => '0'));             
       ack_out_sig <= (others => (others => '0'));            
       data_in_sig <= (others => (others => (others => '0')));
         
-        
-
-    
     rst <= '1', '0' after 7 ns;
 
      -- [ dy (0), dx (0), y (3), x (3)];

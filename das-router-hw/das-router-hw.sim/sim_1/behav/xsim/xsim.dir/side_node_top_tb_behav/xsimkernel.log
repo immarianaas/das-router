@@ -2,3 +2,6 @@ Running: xsim.dir/side_node_top_tb_behav/xsimk -simmode gui -wdb side_node_top_t
 Design successfully loaded
 Design Loading Memory Usage: 24100 KB (Peak: 24108 KB)
 Design Loading CPU Usage: 40 ms
+Simulation completed
+Simulation Memory Usage: 109936 KB (Peak: 163368 KB)
+Simulation CPU Usage: 50 ms
