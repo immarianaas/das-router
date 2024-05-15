@@ -1,0 +1,1 @@
+--incr --debug "typical" --relax --mt "8" -L "xil_defaultlib" -L "secureip" --snapshot "router_mesh_top_behav" "xil_defaultlib.router_mesh_top" -log "elaborate.log" 

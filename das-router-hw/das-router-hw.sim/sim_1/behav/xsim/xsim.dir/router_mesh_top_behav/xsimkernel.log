@@ -1,0 +1,4 @@
+Running: xsim.dir/router_mesh_top_behav/xsimk -simmode gui -wdb router_mesh_top_behav.wdb -simrunnum 0 -socket 49099
+Design successfully loaded
+Design Loading Memory Usage: 27332 KB (Peak: 27340 KB)
+Design Loading CPU Usage: 30 ms

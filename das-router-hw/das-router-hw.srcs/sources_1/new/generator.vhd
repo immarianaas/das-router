@@ -26,6 +26,7 @@ use work.defs.all;
 use work.router_mesh_top;
 use std.textio.all;
 use ieee.std_logic_textio.all;
+use ieee.numeric_std.all;
 use std.env.finish;
 
 
@@ -157,109 +158,112 @@ begin
     file read_file : text;
     file write_file : text;
     variable data : std_logic_vector(DATA_WIDTH-1 downto 0);
+    
+    variable x,y,dx,dy : integer;
+
   begin
+    req_in_sig <= (others => (others => '0'));             
+    ack_out_sig <= (others => (others => '0'));            
+    data_in_sig <= (others => (others => (others => '0')));
+        
+    rst <= '1', '0' after 7 ns;
+
     file_open(read_file, "/home/mar/DTU/das-24/das-router/data_in.txt", read_mode);
     file_open(write_file, "/home/mar/DTU/das-24/das-router/data_out.txt", write_mode);
     while not endfile(read_file) loop
       readline(read_file, line_v);
-      hread(line_v, data);
-      hwrite(line_v, data);
+      read(line_v, data);
+      report "1) The value of 'data' is " & integer'image(to_integer(unsigned(data)));
+
+      
+      write(line_v, data);
       writeline(write_file, line_v);
+      
+      
+    x := to_integer(unsigned(data(VALUE_WIDTH-1 downto VALUE_WIDTH*0)));
+    y := to_integer(unsigned(data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1)));
+    dx:= to_integer(unsigned(data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2)));
+    dy:= to_integer(unsigned(data( VALUE_WIDTH*4-1 downto VALUE_WIDTH*3))); 
+    
+    
+    report "2) The value of 'data' is " & integer'image(to_integer(unsigned(data)));
+    report "value 'x'=" & integer'image(x) & "; 'y'=" & integer'image(y);
+    report "value 'dx'=" & integer'image(dx) & "; 'dy'=" & integer'image(dy);
+
+
+    -- to start, we put the data on the line
+    data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
+    
+    -- then we toggle the request signal TODO: not sure about the 10ns
+    --req_in_sig(dx, dy) <= req_in_sig(dx, dy), not req_in_sig(dx, dy) after 10ns;
+    req_in_sig(dx, dy) <= '0', '1' after 20ns;
+    
+    -- then we wait for ack on the input TODO: change this to be a toggle too!!!
+    wait until ack_in_sig(dx, dy) = '1';
+    
+    -- (just for testing purposes) wait until the request out comes out
+    -- if we keep this TODO change to toggle!
+    wait until req_out_sig(x, y) = '1';
+    ack_out_sig(x,y) <= '1';
+  
+      
+    wait for 20ns;
+      
     end loop;
     file_close(read_file);
-    file_close(write_file);
+    finish;
     wait;
   end process;
 
-    proc : process
-    begin
-  
-      req_in_sig <= (others => (others => '0'));             
-      ack_out_sig <= (others => (others => '0'));            
-      data_in_sig <= (others => (others => (others => '0')));
-        
-    rst <= '1', '0' after 7 ns;
-
-     -- [ dy (0), dx (0), y (3), x (3)];
-    data_in_sig(0,0) <= "0000000000110011";
-    req_in_sig(0,0) <= '0', '1' after 5ns;
-    
-    wait until ack_in_sig(0,0) = '1';
-    
-    wait until req_out_sig(3,3) = '1';
-    ack_out_sig(3,3) <= '1';
-    
-    
-    -- we're in (0,3) and want to go to (0,0)
-    data_in_sig(0,3) <= "0011000000000000";
-    req_in_sig(0,3) <= '0', '1' after 20ns;
-    wait until ack_in_sig(0,3) = '1';
-    wait until req_out_sig(0,0) = '1';
-    ack_out_sig(0,0) <= '1';
-
-
-    -- we're in (3,3) and want to go to (0,1)
-    data_in_sig(3,3) <= "0011001100010000";
-    req_in_sig(3,3) <= '0', '1' after 20ns;
-    wait until ack_in_sig(3,3) = '1';
-    wait until req_out_sig(0,1) = '1';
-    ack_out_sig(0,1) <= '1';
-
-    
---    -- [ dy (1), dx (0), y (1), x (3)];
---    data_in_sig(0,1) <= "0001000000010011";
---    req_in_sig(0,1) <= '0', '1' after 5ns;
-    
---    wait until ack_in_sig(0,1) = '1';
-    
---    wait until req_out_sig(3,1) = '1';
---    ack_out_sig(3,1) <= '1';
-    
-    
-    
-    
-    
-    wait for 50ns;
-    finish;
-    
-    end process proc;
-    
-    
---    p_read : process(rstb,clk)
-    
---    constant NUM_COL                : integer := 2;   -- number of column of file
---    type t_integer_array       is array(integer range <> )  of integer;
---    file test_vector                : text open read_mode is "file_name.txt";
---    variable row                    : line;
---    variable v_data_read            : t_integer_array(1 to NUM_COL);
---    variable v_data_row_counter     : integer := 0;
+--    proc : process
 --    begin
+  
+--      req_in_sig <= (others => (others => '0'));             
+--      ack_out_sig <= (others => (others => '0'));            
+--      data_in_sig <= (others => (others => (others => '0')));
+        
+--    rst <= '1', '0' after 7 ns;
+
+--     -- [ dy (0), dx (0), y (3), x (3)];
+--    data_in_sig(0,0) <= "0000000000110011";
+--    req_in_sig(0,0) <= '0', '1' after 5ns;
     
---        if(rstb='0') then -- 1
---            v_data_row_counter     := 0;
---            v_data_read            := (others=> -1);
---            i_op1                  <= (others=>'0');
---            i_op2                  <= (others=>'0');
-            
---        elsif(rising_edge(clk)) then -- 1
-        
---            if(ena = '1') then  -- external enable signal --2
-        
---                -- read from input file in "row" variable
---                if(not endfile(test_vector)) then -- 3
---                    v_data_row_counter := v_data_row_counter + 1;
---                    readline(test_vector,row);
---                end if; -- 3
-                
---                -- read integer number from "row" variable in integer array
---                for kk in 1 to NUM_COL loop
---                    read(row,v_data_read(kk));
---                end loop;
---                value1_std_logic_8_bit    <= conv_std_logic_vector(v_data_read(1),8);
---                value2_std_logic_8_bit    <= conv_std_logic_vector(v_data_read(2),8);
---            end if; -- 2
---        end if; -- 1
---    end process p_read;
+--    wait until ack_in_sig(0,0) = '1';
+    
+--    wait until req_out_sig(3,3) = '1';
+--    ack_out_sig(3,3) <= '1';
+    
+    
+--    -- we're in (0,3) and want to go to (0,0)
+--    data_in_sig(0,3) <= "0011000000000000";
+--    req_in_sig(0,3) <= '0', '1' after 20ns;
+--    wait until ack_in_sig(0,3) = '1';
+--    wait until req_out_sig(0,0) = '1';
+--    ack_out_sig(0,0) <= '1';
+
+
+--    -- we're in (3,3) and want to go to (0,1)
+--    data_in_sig(3,3) <= "0011001100010000";
+--    req_in_sig(3,3) <= '0', '1' after 20ns;
+--    wait until ack_in_sig(3,3) = '1';
+--    wait until req_out_sig(0,1) = '1';
+--    ack_out_sig(0,1) <= '1';
+
+    
+----    -- [ dy (1), dx (0), y (1), x (3)];
+----    data_in_sig(0,1) <= "0001000000010011";
+----    req_in_sig(0,1) <= '0', '1' after 5ns;
+    
+----    wait until ack_in_sig(0,1) = '1';
+    
+----    wait until req_out_sig(3,1) = '1';
+----    ack_out_sig(3,1) <= '1';    
+--    wait for 50ns;
+--    finish;
+--   
+--    end process proc;
+    
+    
 
 end Behavioral;
 
