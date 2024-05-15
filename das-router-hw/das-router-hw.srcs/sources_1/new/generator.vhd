@@ -197,6 +197,7 @@ begin
     write(line_v, data);
     write(line_v, string'(","));
     write(line_v, time'image(now));
+    write(line_v, string'(",(") & integer'image(dx) & string'(",") & integer'image(dy) & string'(")"));
     writeline(write_input_file, line_v);
     
     -- then we wait for ack on the input
@@ -224,19 +225,78 @@ begin
     
     variable x,y,dx,dy : integer;
     variable curr_ack_in : t_bit_matrix := (others => (others =>'0')); 
+    
+    variable i, j: integer;
     -- variable curr_req_out : t_bit_matrix := (others => (others =>'0')); 
 
   begin
       ack_out_sig <= (others => (others => '0'));            
 
+--    if req_out_sig'event then
+
+--        -- find the coordinates:
+--        L1: for ii in req_out_sig'range(1) loop
+--        L2: for jj in req_out_sig'range(2) loop
+        
+--            --next L2 when (ii = 1 or ii = 2) and (jj = 1 or jj = 2);
+        
+--            --if ((ii = 1 or ii = 2) and (jj = 1 or jj = 2)) then
+--              --  next;
+--            -- end if;
+        
+--        -- if req out and ack out are different, then req out changed...
+--            if req_out_sig(ii, jj) /= ack_out_sig(ii, jj) 
+--            then
+            
+--                i := ii;
+--                j := jj;
+
+--            end if;
+--        end loop L2;
+--        end loop L1;
+        
+        if req_out_sig'event then
+        
+            if req_out_sig(0,0)'event then
+                    i:=0; j:= 0;
+            elsif req_out_sig(0,1)'event then
+                    i:=0; j:= 1;
+            elsif req_out_sig(0,2)'event then
+                    i:=0; j:= 2;
+            elsif req_out_sig(0,3)'event then
+                    i:=0; j:= 3;
+            elsif req_out_sig(1,0)'event then
+                    i:=1; j:= 0;
+            elsif req_out_sig(1,3)'event then
+                    i:=1; j:= 3;
+            elsif req_out_sig(2,0)'event then
+                    i:=2; j:= 0;
+            elsif req_out_sig(2,3)'event then
+                    i:=2; j:= 3;
+            elsif req_out_sig(3,0)'event then
+                    i:=3; j:= 0;
+            elsif req_out_sig(3,1)'event then
+                    i:=3; j:= 1;
+            elsif req_out_sig(3,2)'event then
+                    i:=3; j:= 2;
+            elsif req_out_sig(3,3)'event then
+                    i:=3; j:= 3;
+            end if;
+        
+        
+        write(line_v, data_out_sig(i,j));
+        write(line_v, string'(","));
+        write(line_v, time'image(now));
+        write(line_v, string'(",(") & integer'image(i) & string'(",") & integer'image(j) & string'(")"));
+        writeline(write_output_file, line_v);
+        ack_out_sig(i,j) <= req_out_sig(i,j);
+        
+    end if;
     
-        if req_out_sig(0,0)'event then 
-            write(line_v, data_out_sig(0,0));
-            write(line_v, string'(","));
-            write(line_v, time'image(now));
-            writeline(write_output_file, line_v);
-            ack_out_sig(0,0) <= req_out_sig(0,0);
-        end if;
+    
+
+    
+
     
   end process;
 
