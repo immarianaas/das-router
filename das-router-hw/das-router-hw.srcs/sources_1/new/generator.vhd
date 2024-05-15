@@ -60,7 +60,10 @@ architecture Behavioral of generator is
     
     signal rst : std_logic;
     
+    file write_output_file : text;
+    
 begin
+    file_open(write_output_file, "/home/mar/DTU/das-24/das-router/mesh_output.txt", write_mode);
 
         mesh: entity router_mesh_top
         port map (
@@ -153,32 +156,28 @@ begin
         );
         
         
-    io: process is
+
+    
+    io1: process is
     variable line_v : line;
     file read_file : text;
-    file write_file : text;
+    file write_input_file : text;
     variable data : std_logic_vector(DATA_WIDTH-1 downto 0);
     
     variable x,y,dx,dy : integer;
+    variable curr_ack_in : t_bit_matrix := (others => (others =>'0')); 
 
   begin
     req_in_sig <= (others => (others => '0'));             
-    ack_out_sig <= (others => (others => '0'));            
     data_in_sig <= (others => (others => (others => '0')));
         
     rst <= '1', '0' after 7 ns;
 
     file_open(read_file, "/home/mar/DTU/das-24/das-router/data_in.txt", read_mode);
-    file_open(write_file, "/home/mar/DTU/das-24/das-router/data_out.txt", write_mode);
+    file_open(write_input_file, "/home/mar/DTU/das-24/das-router/mesh_input.txt", write_mode);
     while not endfile(read_file) loop
       readline(read_file, line_v);
       read(line_v, data);
-      report "1) The value of 'data' is " & integer'image(to_integer(unsigned(data)));
-
-      
-      write(line_v, data);
-      writeline(write_file, line_v);
-      
       
     x := to_integer(unsigned(data(VALUE_WIDTH-1 downto VALUE_WIDTH*0)));
     y := to_integer(unsigned(data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1)));
@@ -186,34 +185,62 @@ begin
     dy:= to_integer(unsigned(data( VALUE_WIDTH*4-1 downto VALUE_WIDTH*3))); 
     
     
-    report "2) The value of 'data' is " & integer'image(to_integer(unsigned(data)));
-    report "value 'x'=" & integer'image(x) & "; 'y'=" & integer'image(y);
-    report "value 'dx'=" & integer'image(dx) & "; 'dy'=" & integer'image(dy);
-
-
     -- to start, we put the data on the line
     data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
     
     -- then we toggle the request signal TODO: not sure about the 10ns
     --req_in_sig(dx, dy) <= req_in_sig(dx, dy), not req_in_sig(dx, dy) after 10ns;
-    req_in_sig(dx, dy) <= '0', '1' after 20ns;
+    wait for 20ns;
+    req_in_sig(dx, dy) <= not req_in_sig(dx, dy);
     
-    -- then we wait for ack on the input TODO: change this to be a toggle too!!!
-    wait until ack_in_sig(dx, dy) = '1';
+    -- save data sent and when
+    write(line_v, data);
+    write(line_v, string'(","));
+    write(line_v, time'image(now));
+    writeline(write_input_file, line_v);
+    
+    -- then we wait for ack on the input
+    wait until ack_in_sig(dx, dy) = not curr_ack_in(dx, dy);
+    curr_ack_in(dx, dy) := not curr_ack_in(dx, dy);
     
     -- (just for testing purposes) wait until the request out comes out
     -- if we keep this TODO change to toggle!
-    wait until req_out_sig(x, y) = '1';
-    ack_out_sig(x,y) <= '1';
+--    wait until req_out_sig(x, y) = not curr_req_out(x,y);
+--    curr_req_out(x,y) := not curr_req_out(x,y);
+--    ack_out_sig(x,y) <= curr_req_out(x,y);
   
       
-    wait for 20ns;
+    --wait for 100ns;
       
     end loop;
     file_close(read_file);
-    finish;
+    --finish;
     wait;
   end process;
+
+    io2: process(req_out_sig) is
+    variable line_v : line;
+    variable data : std_logic_vector(DATA_WIDTH-1 downto 0);
+    
+    variable x,y,dx,dy : integer;
+    variable curr_ack_in : t_bit_matrix := (others => (others =>'0')); 
+    -- variable curr_req_out : t_bit_matrix := (others => (others =>'0')); 
+
+  begin
+      ack_out_sig <= (others => (others => '0'));            
+
+    
+        if req_out_sig(0,0)'event then 
+            write(line_v, data_out_sig(0,0));
+            write(line_v, string'(","));
+            write(line_v, time'image(now));
+            writeline(write_output_file, line_v);
+            ack_out_sig(0,0) <= req_out_sig(0,0);
+        end if;
+    
+  end process;
+
+
 
 --    proc : process
 --    begin
