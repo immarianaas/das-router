@@ -2,8 +2,9 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
 package defs is
-	constant DATA_WIDTH : Integer := 16;
-    constant VALUE_WIDTH: Integer := DATA_WIDTH/4; 
+	constant DATA_WIDTH : Integer := 64;
+	constant HEADER_WIDTH : Integer := 16;
+    constant VALUE_WIDTH: Integer := HEADER_WIDTH/4; 
 
     constant ONE: std_logic_vector := "0001";
 

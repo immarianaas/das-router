@@ -55,7 +55,8 @@ begin
     
     processed_data(VALUE_WIDTH-1 downto VALUE_WIDTH*0)<=x;
     processed_data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1) <=y;
-    
+    processed_data(DATA_WIDTH-1 downto VALUE_WIDTH*4) <= data(DATA_WIDTH-1 downto VALUE_WIDTH*4);
+
     
     click: entity click_element
     port map (

@@ -173,7 +173,7 @@ begin
         
     rst <= '1', '0' after 7 ns;
 
-    file_open(read_file, "/home/mar/DTU/das-24/das-router/data_in.txt", read_mode);
+    file_open(read_file, "/home/mar/DTU/das-24/das-router/test_1_x5.txt", read_mode);
     file_open(write_input_file, "/home/mar/DTU/das-24/das-router/mesh_input.txt", write_mode);
     while not endfile(read_file) loop
       readline(read_file, line_v);
