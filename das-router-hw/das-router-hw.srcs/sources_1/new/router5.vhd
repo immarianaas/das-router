@@ -79,8 +79,8 @@ begin
         -- dy
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy > y else dy;
         selector(0) <= '1' when dx = x else '0'; -- Go straight?
-        selector(1) <= '1' when dx < x else '0'; -- Go left?
-        selector(2) <= '1' when dy = y else '0'; -- Go oblique?
+        selector(1) <= '1' when dx > x else '0'; -- Go right?
+        selector(2) <= '1' when dy /= y else '0'; -- Go oblique?
     
     end generate;
     
@@ -89,7 +89,7 @@ begin
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y 
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
         selector(0) <= '1' when dy = y else '0'; -- Go straight?
-        selector(1) <= '1' when dy > y else '0'; -- Go left?
+        selector(1) <= '1' when dy < y else '0'; -- Go right?
         selector(2) <= '1' when dx = x else '0'; -- Go oblique?
     end generate; 
     
@@ -98,9 +98,9 @@ begin
         else std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx>x else dx;
         
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y else dy;
-        selector(0) <= '0' when dx = x else '1'; -- Go straight?
-        selector(1) <= '0' when dx < x else '1'; -- Go right?
-        selector(2) <= '0' when dy /= y else '1'; -- Go oblique?
+        selector(0) <= '1' when dx = x else '0'; -- Go straight?
+        selector(1) <= '1' when dx < x else '0'; -- Go right?
+        selector(2) <= '1' when dy /= y else '0'; -- Go oblique?
     
     end generate;
     
@@ -109,8 +109,8 @@ begin
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y 
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
         selector(0) <= '1' when dy = y else '0'; -- Go straight?
-        selector(1) <= '1' when dy < y else '0'; -- Go left?
-        selector(2) <= '1' when dx = x else '0'; -- Go oblique
+        selector(1) <= '1' when dy > y else '0'; -- Go right?
+        selector(2) <= '1' when dx /= x else '0'; -- Go oblique
     end generate;    
 ------------------ ENDS GENERATE --------------
     
@@ -147,3 +147,80 @@ begin
     );
     
 end Behavioral;
+
+
+----------------------------------------------------------------
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use work.defs.all;
+use work.router5;
+use std.env.finish;
+
+entity router5_tb is 
+end entity; 
+
+architecture tb of router5_tb is 
+    type t_bit_arr is array (0 to 4) of std_logic;
+    type t_data_arr is array (0 to 4) of std_logic_vector(DATA_WIDTH-1 downto 0);
+    type t_sel_arr is array (0 to 3) of std_logic;
+    signal ack_out : t_bit_arr;
+    signal data_out : t_data_arr;
+    signal req_in : t_bit_arr;
+    
+    signal ack_in : t_bit_arr;
+    signal req_out : t_bit_arr;
+    signal rst: std_logic;
+    signal sel : t_sel_arr;
+    signal ia,ir,oa,orr: std_logic;
+    signal id,od : std_logic_vector(DATA_WIDTH-1 downto 0);
+
+begin 
+
+router: entity router5
+generic map(
+    SIDE => 2
+    )
+    port map (
+    rst => rst,
+    ia => ia,
+    ir => ir,
+    id => id,
+    oa_straight => ack_out(0),
+    or_straight => req_out(0),
+    od_straight => data_out(0),
+    
+    oa_left => ack_out(1),
+    or_left => req_out(1),
+    od_left => data_out(1),
+    
+    oa_right => ack_out(2),
+    or_right => req_out(2),
+    od_right => data_out(2),
+    
+    oa_lefto => ack_out(3),
+    or_lefto => req_out(3),
+    od_lefto => data_out(3),
+    
+    oa_righto => ack_out(4),
+    or_righto => req_out(4),
+    od_righto => data_out(4)   
+    );
+    
+    process begin
+    
+        rst <= '1', '0' after 7ns;
+        ack_out <= (others=>'0');
+        ir <= '0'; oa <= '0';
+        id <= (others =>'0');
+        id <= "0000000100000010";
+        ir <= '0', '1' after 20ns;
+        wait until ia = '1';
+        wait until req_out(2) = '1';
+        
+        wait for 50ns;
+        finish;
+        
+    end process;
+end architecture;
+        
