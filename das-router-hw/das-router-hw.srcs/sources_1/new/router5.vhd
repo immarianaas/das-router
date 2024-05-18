@@ -37,14 +37,14 @@ entity router5 is
         od_left : out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_right : out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_lefto : out std_logic_vector(DATA_WIDTH-1 downto 0);
-        od_righto : out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_righto : out std_logic_vector(DATA_WIDTH-1 downto 0)
         
         --TEMP
-        dxx : out std_logic_vector(VALUE_WIDTH -1 downto 0);
-        dyy : out std_logic_vector(VALUE_WIDTH -1 downto 0);
-        xx  : out std_logic_vector(VALUE_WIDTH -1 downto 0);
-        yy  : out std_logic_vector(VALUE_WIDTH -1 downto 0);
-        datao : out std_logic_vector(DATA_WIDTH -1 downto 0)
+--        dxx : out std_logic_vector(VALUE_WIDTH -1 downto 0);
+--        dyy : out std_logic_vector(VALUE_WIDTH -1 downto 0);
+--        xx  : out std_logic_vector(VALUE_WIDTH -1 downto 0);
+--        yy  : out std_logic_vector(VALUE_WIDTH -1 downto 0);
+--        datao : out std_logic_vector(DATA_WIDTH -1 downto 0)
          
   );
 end router5;
@@ -126,11 +126,11 @@ begin
     --yy <= processed_data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1);
     --xx <= processed_data(VALUE_WIDTH*1-1 downto VALUE_WIDTH*0);
     
-    dyy <= dy;
-    dxx <= dx;
-    yy <= y;
-    xx <= x;
-    datao <= data;
+--    dyy <= dy;
+--    dxx <= dx;
+--    yy <= y;
+--    xx <= x;
+--    datao <= data;
 ------------------ ENDS GENERATE --------------
     
     demux: entity demux5
@@ -190,8 +190,8 @@ architecture tb of router5_tb is
     signal ia,ir,oa: std_logic;
     signal id : std_logic_vector(DATA_WIDTH-1 downto 0);
     --TEMP
-    signal dxx,dyy,xx,yy : std_logic_vector(VALUE_WIDTH-1 downto 0);
-    signal datao : std_logic_vector(DATA_WIDTH-1 downto 0);
+--    signal dxx,dyy,xx,yy : std_logic_vector(VALUE_WIDTH-1 downto 0);
+--    signal datao : std_logic_vector(DATA_WIDTH-1 downto 0);
 
 begin 
 
@@ -222,12 +222,12 @@ generic map(
     
     oa_righto => ack_out(4),
     or_righto => req_out(4),
-    od_righto => data_out(4),
-    dxx => dxx,
-    dyy => dyy,
-    yy => yy,
-    xx => xx,
-    datao => datao
+    od_righto => data_out(4)
+--    dxx => dxx,
+--    dyy => dyy,
+--    yy => yy,
+--    xx => xx,
+--    datao => datao
     );
     
     process begin
