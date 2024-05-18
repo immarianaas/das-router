@@ -196,6 +196,8 @@ begin
     od_nw <= se_data_oblique;
     od_ne <= sw_data_oblique;
     
+   
+    
   
   A_south: entity arbiter3 
     port map (
@@ -421,6 +423,8 @@ architecture tb of router_node_top_tb is
    
    signal rst : std_logic;
    
+
+   
    --signal internal_nw_req_horizontal : std_logic;
    -- signal internal_nw_req_vertical : std_logic;
    
@@ -489,69 +493,153 @@ node: entity router_node_top
         -- internal_nw_req_vertical => internal_nw_req_vertical
     );
     
-    process begin
+    process is
+       variable direction: Integer;
+        variable direction_out: Integer;
+        variable msg : std_logic_vector(DATA_WIDTH-1 downto 0);
+   
+   begin
+    
+          -- the following doesnt work
+--        direction := 2; -- ne
+--        direction_out := 6; -- sw
+--        -- (3,3) to (0,0)
+--        msg := "0000000000000000000000000000000000000000000000000011001100000000";
+
+        -- the following works
+        direction := 2; -- ne
+        direction_out := 5; -- s
+        -- (3,3) to (3,0)
+        msg := "0000000000000000000000000000000000000000000000000011001100000011";
+
+
         rst <= '1', '0' after 7ns;
         ack_out <= (others =>'0');
         req_in <= (others =>'0');
         data_in <= (others => (others => '0'));
+   
+        req_in(direction) <= '0'; 
+        ack_out(direction) <= '0';
+        
+        data_in(direction) <= (others =>'0');
+        
+        wait for 20ns;
+        -- currently in (3,3), wanna go to (0,0)
+        data_in(direction) <= msg;
+        req_in(direction) <= '0', '1' after 30ns;
+        
+        wait until ack_in(direction) = '1';
+        
+
+        -- we should see something on the output line
+        wait until req_out(direction_out) = '1';
+        ack_out(direction_out) <= '0','1' after 70ns;
+        
+
         
         
+        wait for 20ns;
+        data_in(direction) <= msg;
+        req_in(direction) <= '1', '0' after 30ns;
         
---        -- it's in (3,3) and goes to (3, 0)
---        --data_in(0) <= "0011001100000011";
+
         
-        -- it's in (3,3) and goes to (5,3)
-        data_in(0) <= "0011001100110101";
-        req_in(0) <= '0', '1' after 20ns;
+        wait until ack_in(direction) = '0';
         
-        wait until req_out(3) = '1';
+        --finish;
         
-        ack_out(3) <= '1';
+        wait until req_out(direction_out) = '0';
+        ack_out(direction_out) <= '1', '0' after 50ns;
+        
+                
+        wait for 20ns;
+        -- currently in (3,3), wanna go to (3,0)
+        data_in(direction) <= msg;
+        req_in(direction) <= '0', '1' after 20ns;
+        
+        wait until ack_in(direction) = '1';
+        
+
+        -- we should see something on the vertical (1) line
+        wait until req_out(direction_out) = '1';
+        ack_out(direction_out) <= '0','1' after 50ns;
+        
+        
 
         wait for 50ns;
         finish;
 
 
+
+
+    
+    
+    
+    
+    
+    
+--        rst <= '1', '0' after 7ns;
+--        ack_out <= (others =>'0');
+--        req_in <= (others =>'0');
+--        data_in <= (others => (others => '0'));
         
-        -- it's in (3,3) and goes to (3, 0)
---        --data_in(0) <= "0011001100000011";
+        
+        
+----        -- it's in (3,3) and goes to (3, 0)
+----        --data_in(0) <= "0011001100000011";
         
 --        -- it's in (3,3) and goes to (5,3)
---        data_in(2) <= "0011001100110101";
---        req_in(2) <= '0', '1' after 40ns;
---        wait until ack_in(2) = '1';
+--        data_in(0) <= "0011001100110101";
+--        req_in(0) <= '0', '1' after 20ns;
         
---        ack_out(5) <= '1';
+--        wait until req_out(3) = '1';
+        
+--        ack_out(3) <= '1';
+
+--        wait for 50ns;
+--        finish;
+
+
+        
+--        -- it's in (3,3) and goes to (3, 0)
+----        --data_in(0) <= "0011001100000011";
+        
+----        -- it's in (3,3) and goes to (5,3)
+----        data_in(2) <= "0011001100110101";
+----        req_in(2) <= '0', '1' after 40ns;
+----        wait until ack_in(2) = '1';
+        
+----        ack_out(5) <= '1';
 
 
 
 
 
         
-        ---------------------------------------
+--        ---------------------------------------
         
-        -- south to north
-        data_in(5) <= "0000000000110000";
-        req_in(5) <= '0', '1' after 20ns;
-        wait until ack_in(5) = '1';
+--        -- south to north
+--        data_in(5) <= "0000000000110000";
+--        req_in(5) <= '0', '1' after 20ns;
+--        wait until ack_in(5) = '1';
         
-        ack_out(1) <= '1';
+--        ack_out(1) <= '1';
 
-        ---------------------------------------
-        -- sw
-        data_in(6) <= "0000000000110011";
-        req_in(6) <= '0', '1' after 20ns;
+--        ---------------------------------------
+--        -- sw
+--        data_in(6) <= "0000000000110011";
+--        req_in(6) <= '0', '1' after 20ns;
         
-        wait until ack_in(6) = '1';
+--        wait until ack_in(6) = '1';
         
-        ack_out(2) <= '1';
+--        ack_out(2) <= '1';
         
 
         
  
-        wait for 20ns;
+--        wait for 20ns;
                         
-        -- finish; 
+--        -- finish; 
         
     end process;
 end architecture;

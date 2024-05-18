@@ -50,9 +50,9 @@ architecture Behavioral of generator is
     type t_bit_matrix is array (0 to 3, 0 to 3) of std_logic;
     type t_data_matrix is array (0 to 3, 0 to 3) of std_logic_vector(DATA_WIDTH-1 downto 0);
     
-    signal req_in_sig : t_bit_matrix;
-    signal data_in_sig : t_data_matrix;
-    signal ack_out_sig : t_bit_matrix;
+    signal req_in_sig : t_bit_matrix := (others => (others => '0'));
+    signal data_in_sig : t_data_matrix := (others => (others => (others => '0')));
+    signal ack_out_sig : t_bit_matrix := (others => (others => '0'));
     
     signal data_out_sig : t_data_matrix;
     signal req_out_sig : t_bit_matrix;
@@ -168,8 +168,8 @@ begin
     variable curr_ack_in : t_bit_matrix := (others => (others =>'0')); 
 
   begin
-    req_in_sig <= (others => (others => '0'));             
-    data_in_sig <= (others => (others => (others => '0')));
+    --req_in_sig <= (others => (others => '0'));             
+    --data_in_sig <= (others => (others => (others => '0')));
         
     rst <= '1', '0' after 7 ns;
 
@@ -186,11 +186,13 @@ begin
     
     
     -- to start, we put the data on the line
-    data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
+    -- data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
     
     -- then we toggle the request signal TODO: not sure about the 10ns
     --req_in_sig(dx, dy) <= req_in_sig(dx, dy), not req_in_sig(dx, dy) after 10ns;
-    wait for 20ns;
+    wait for 80ns;
+    -- to start, we put the data on the line
+    data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
     req_in_sig(dx, dy) <= not req_in_sig(dx, dy);
     
     -- save data sent and when
@@ -203,6 +205,7 @@ begin
     -- then we wait for ack on the input
     wait until ack_in_sig(dx, dy) = not curr_ack_in(dx, dy);
     curr_ack_in(dx, dy) := not curr_ack_in(dx, dy);
+    
     
     -- (just for testing purposes) wait until the request out comes out
     -- if we keep this TODO change to toggle!
@@ -230,7 +233,7 @@ begin
     -- variable curr_req_out : t_bit_matrix := (others => (others =>'0')); 
 
   begin
-      ack_out_sig <= (others => (others => '0'));            
+      --ack_out_sig <= (others => (others => '0'));            
 
 --    if req_out_sig'event then
 
@@ -289,7 +292,8 @@ begin
         write(line_v, time'image(now));
         write(line_v, string'(",(") & integer'image(i) & string'(",") & integer'image(j) & string'(")"));
         writeline(write_output_file, line_v);
-        ack_out_sig(i,j) <= req_out_sig(i,j);
+
+        ack_out_sig(i,j) <= ack_out_sig(i,j), req_out_sig(i,j) after 50ns;
         
     end if;
     
