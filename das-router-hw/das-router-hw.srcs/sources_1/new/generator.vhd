@@ -190,9 +190,12 @@ begin
     
     -- then we toggle the request signal TODO: not sure about the 10ns
     --req_in_sig(dx, dy) <= req_in_sig(dx, dy), not req_in_sig(dx, dy) after 10ns;
-    wait for 80ns;
+    wait for 10ns;
     -- to start, we put the data on the line
     data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
+    
+    assert req_in_sig(dx, dy) = ack_in_sig(dx, dy) report "crl1" severity failure;
+    
     req_in_sig(dx, dy) <= not req_in_sig(dx, dy);
     
     -- save data sent and when
@@ -203,8 +206,10 @@ begin
     writeline(write_input_file, line_v);
     
     -- then we wait for ack on the input
-    wait until ack_in_sig(dx, dy) = not curr_ack_in(dx, dy);
-    curr_ack_in(dx, dy) := not curr_ack_in(dx, dy);
+    if ack_in_sig(dx, dy) /= not curr_ack_in(dx, dy) then
+        wait until ack_in_sig(dx, dy) = not curr_ack_in(dx, dy);
+        curr_ack_in(dx, dy) := not curr_ack_in(dx, dy);
+    end if;
     
     
     -- (just for testing purposes) wait until the request out comes out
@@ -259,7 +264,7 @@ begin
 --        end loop L1;
         
         if req_out_sig'event then
-        
+            
             if req_out_sig(0,0)'event then
                     i:=0; j:= 0;
             elsif req_out_sig(0,1)'event then
@@ -285,15 +290,18 @@ begin
             elsif req_out_sig(3,3)'event then
                     i:=3; j:= 3;
             end if;
-        
+    
         
         write(line_v, data_out_sig(i,j));
         write(line_v, string'(","));
         write(line_v, time'image(now));
         write(line_v, string'(",(") & integer'image(i) & string'(",") & integer'image(j) & string'(")"));
         writeline(write_output_file, line_v);
+    
+    
+        assert ack_out_sig(i,j) /= req_out_sig(i,j) report "MAR: SHOULD ONLY HAPPEN 1";
 
-        ack_out_sig(i,j) <= ack_out_sig(i,j), req_out_sig(i,j) after 50ns;
+        ack_out_sig(i,j) <= ack_out_sig(i,j), req_out_sig(i,j) after 10ns;
         
     end if;
     

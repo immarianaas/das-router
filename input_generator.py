@@ -30,6 +30,13 @@ def main(option: int, number_times: int = 1):
     match option:
         case 1:
             msg_list = []
+
+            # really don't work (even alone)
+            # msg_list += five_lines((0, 0), (2, 3), len(msg_list))
+            # msg_list += five_lines((0, 0), (3, 3), len(msg_list))
+            # msg_list += five_lines((0, 0), (3, 2), len(msg_list))
+            # msg_list += five_lines((0, 0), (3, 1), len(msg_list))
+
             # work:
             msg_list += five_lines((0, 0), (2, 0), len(msg_list))
             msg_list += five_lines((0, 0), (0, 1), len(msg_list))
@@ -39,11 +46,7 @@ def main(option: int, number_times: int = 1):
             msg_list += five_lines((0, 0), (1, 3), len(msg_list))
             msg_list += five_lines((0, 0), (3, 0), len(msg_list))
             
-            # really don't work (even alone)
-            #msg_list += five_lines((0, 0), (2, 3), len(msg_list))
-            #msg_list += five_lines((0, 0), (3, 3), len(msg_list))
-            #msg_list += five_lines((0, 0), (3, 2), len(msg_list))
-            #msg_list += five_lines((0, 0), (3, 1), len(msg_list))
+
             text = "\n".join(msg_list)
 
         case 2:
@@ -69,18 +72,17 @@ def main(option: int, number_times: int = 1):
             # no
             # msg_list += five_lines((3, 3), (0, 1), len(msg_list))
             # msg_list += five_lines((3, 3), (0, 2), len(msg_list))
-            msg_list += five_lines((3, 3), (0, 0), len(msg_list))
+            # msg_list += five_lines((3, 3), (0, 0), len(msg_list))
             # msg_list += five_lines((3, 3), (1, 0), len(msg_list))
 
             # the following work:
-            # msg_list += five_lines((3, 3), (2, 0), len(msg_list))
-            # msg_list += five_lines((3, 3), (3, 0), len(msg_list))
-            # msg_list += five_lines((3, 3), (2, 3), len(msg_list))
-            # msg_list += five_lines((3, 3), (0, 3), len(msg_list))
-            # msg_list += five_lines((3, 3), (3, 2), len(msg_list))
-            # msg_list += five_lines((3, 3), (3, 1), len(msg_list))
-            # msg_list += five_lines((3, 3), (2, 3), len(msg_list))
-            # msg_list += five_lines((3, 3), (1, 3), len(msg_list))
+            msg_list += five_lines((3, 3), (2, 0), len(msg_list))
+            msg_list += five_lines((3, 3), (3, 0), len(msg_list))
+            msg_list += five_lines((3, 3), (0, 3), len(msg_list))
+            msg_list += five_lines((3, 3), (3, 2), len(msg_list))
+            msg_list += five_lines((3, 3), (3, 1), len(msg_list))
+            msg_list += five_lines((3, 3), (2, 3), len(msg_list))
+            msg_list += five_lines((3, 3), (1, 3), len(msg_list))
             text = "\n".join(msg_list)
 
         case 4:
@@ -91,6 +93,7 @@ def main(option: int, number_times: int = 1):
             # msg_list += five_lines((3, 0), (0, 3), len(msg_list))
             # msg_list += five_lines((3, 0), (1, 3), len(msg_list))
 
+            # work:
             msg_list += five_lines((3, 0), (0, 0), len(msg_list))
             msg_list += five_lines((3, 0), (1, 0), len(msg_list))
             msg_list += five_lines((3, 0), (2, 0), len(msg_list))
@@ -98,7 +101,6 @@ def main(option: int, number_times: int = 1):
             msg_list += five_lines((3, 0), (2, 3), len(msg_list))
             msg_list += five_lines((3, 0), (3, 2), len(msg_list))
             msg_list += five_lines((3, 0), (3, 1), len(msg_list))
-            msg_list += five_lines((3, 0), (2, 3), len(msg_list))
             text = "\n".join(msg_list)
 
 
@@ -112,5 +114,4 @@ def main(option: int, number_times: int = 1):
     print(f"Saved on: {file_path}")
 
 
-main(3
-     , 5)
+main(4, 5)

@@ -1,31 +1,8 @@
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: /tools/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot router_node_top_tb_behav xil_defaultlib.router_node_top_tb -log elaborate.log 
+Running: /tools/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot generator_behav xil_defaultlib.generator -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
 Completed static elaboration
-Starting simulation data flow analysis
-Completed simulation data flow analysis
-Time Resolution for simulation is 1ps
-Compiling package std.standard
-Compiling package std.textio
-Compiling package ieee.std_logic_1164
-Compiling package xil_defaultlib.defs
-Compiling package std.env
-Compiling package ieee.numeric_std
-Compiling architecture impl of entity xil_defaultlib.mutex [mutex_default]
-Compiling architecture impl of entity xil_defaultlib.rgd_mutex [rgd_mutex_default]
-Compiling architecture behavioral of entity xil_defaultlib.merge [merge_default]
-Compiling architecture impl of entity xil_defaultlib.arbiter [arbiter_default]
-Compiling architecture behavioral of entity xil_defaultlib.click_element [click_element_default]
-Compiling architecture behavioral of entity xil_defaultlib.arbiter3 [arbiter3_default]
-Compiling architecture behavioral of entity xil_defaultlib.demux [demux_default]
-Compiling architecture behavioral of entity xil_defaultlib.demux3 [demux3_default]
-Compiling architecture behavioral of entity xil_defaultlib.router [router_default]
-Compiling architecture behavioral of entity xil_defaultlib.router [\router(direction=1)\]
-Compiling architecture behavioral of entity xil_defaultlib.router [\router(direction=2)\]
-Compiling architecture behavioral of entity xil_defaultlib.router [\router(direction=3)\]
-Compiling architecture behavioral of entity xil_defaultlib.router_node_top [router_node_top_default]
-Compiling architecture tb of entity xil_defaultlib.router_node_top_tb
-Built simulation snapshot router_node_top_tb_behav
+INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel

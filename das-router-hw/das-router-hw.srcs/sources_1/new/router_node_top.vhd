@@ -500,17 +500,43 @@ node: entity router_node_top
    
    begin
     
-          -- the following doesnt work
+--         --  the following doesnt work
 --        direction := 2; -- ne
 --        direction_out := 6; -- sw
 --        -- (3,3) to (0,0)
 --        msg := "0000000000000000000000000000000000000000000000000011001100000000";
+        
+        
+--         --  the following doesnt work
+--        direction := 6; -- sw
+--        direction_out := 2; -- ne
+--        -- (0,0) to (3,3)
+--        msg := "0000000000000000000000000000000000000000000000000000000000110011";
+
+
+        direction := 6; -- sw
+        direction_out := 3; -- e
+        -- (0,0) to (3,0)
+        msg := "0000000000000000000000000000000000000000000000000000000000000011";
+
+
+--    -- works:
+--        direction := 6; -- sw
+--        direction_out := 1; -- n
+--        -- (0,0) to (0,3)
+--        msg := "0000000000000000000000000000000000000000000000000000000000110000";
 
         -- the following works
-        direction := 2; -- ne
-        direction_out := 5; -- s
-        -- (3,3) to (3,0)
-        msg := "0000000000000000000000000000000000000000000000000011001100000011";
+--        direction := 2; -- ne
+--        direction_out := 5; -- s
+--        -- (3,3) to (3,0)
+--        msg := "0000000000000000000000000000000000000000000000000011001100000011";
+
+
+--        direction := 1; -- n
+--        direction_out := 5; -- s
+--        -- (3,3) to (3,0)
+--        msg := "0000000000000000000000000000000000000000000000000011001100000011";
 
 
         rst <= '1', '0' after 7ns;
@@ -528,41 +554,55 @@ node: entity router_node_top
         data_in(direction) <= msg;
         req_in(direction) <= '0', '1' after 30ns;
         
-        wait until ack_in(direction) = '1';
-        
-
+       
         -- we should see something on the output line
-        wait until req_out(direction_out) = '1';
-        ack_out(direction_out) <= '0','1' after 70ns;
+        if req_out(direction_out) /= '1' then
+            wait until req_out(direction_out) = '1';
+        end if;
+        
+        if ack_in(direction) /= '1' then
+            wait until ack_in(direction) = '1';
+        end if;
         
 
+
+        ack_out(direction_out) <= '0','1' after 50ns;
         
-        
+
         wait for 20ns;
+
+        
         data_in(direction) <= msg;
         req_in(direction) <= '1', '0' after 30ns;
         
+        if req_out(direction_out) /= '0' then
+            wait until req_out(direction_out) = '0';
+        end if;
+        
+        if ack_in(direction) /= '0' then
+            wait until ack_in(direction) = '0';
+        end if;
 
+        ack_out(direction_out) <= '1', '0' after 20ns;
         
-        wait until ack_in(direction) = '0';
-        
-        --finish;
-        
-        wait until req_out(direction_out) = '0';
-        ack_out(direction_out) <= '1', '0' after 50ns;
-        
+
                 
-        wait for 20ns;
+        wait for 30ns;
         -- currently in (3,3), wanna go to (3,0)
         data_in(direction) <= msg;
         req_in(direction) <= '0', '1' after 20ns;
         
+
+        if req_out(direction_out) /= '1' then
+            wait until req_out(direction_out) = '1';
+        end if;
+        if ack_in(direction) /= '1' then
         wait until ack_in(direction) = '1';
+        end if;
+
+        ack_out(direction_out) <= '0','1' after 50ns;
         
 
-        -- we should see something on the vertical (1) line
-        wait until req_out(direction_out) = '1';
-        ack_out(direction_out) <= '0','1' after 50ns;
         
         
 
