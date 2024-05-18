@@ -58,11 +58,11 @@ begin
     x <= data(VALUE_WIDTH-1 downto VALUE_WIDTH*0);
     y <= data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1);
     dx <= data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2);
-    dy <= data( VALUE_WIDTH*4-1 downto VALUE_WIDTH*3); 
+    dy <= data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3); 
     
     processed_data(VALUE_WIDTH-1 downto VALUE_WIDTH*0)<=x;
     processed_data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1) <=y;
-    
+    processed_data(DATA_WIDTH-1 downto VALUE_WIDTH*4) <=data(DATA_WIDTH-1 downto VALUE_WIDTH*4);
     
     click: entity click_element
     port map (
@@ -136,12 +136,12 @@ begin
     demux: entity demux5
     port map(
     rst=> rst,
-    in_req => ir,
-    in_ack => ia,
-    in_data => id,
+    in_req => req,
+    in_ack => ack,
+    in_data => processed_data,
     
-    inSel_req => ir,
-    inSel_ack => ia,
+    inSel_req => req,
+    inSel_ack => ack,
     selector => selector,
     
     o_straight_req => or_straight,
