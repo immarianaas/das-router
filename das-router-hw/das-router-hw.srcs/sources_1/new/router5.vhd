@@ -37,7 +37,14 @@ entity router5 is
         od_left : out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_right : out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_lefto : out std_logic_vector(DATA_WIDTH-1 downto 0);
-        od_righto : out std_logic_vector(DATA_WIDTH-1 downto 0)
+        od_righto : out std_logic_vector(DATA_WIDTH-1 downto 0);
+        
+        --TEMP
+        dxx : out std_logic_vector(VALUE_WIDTH -1 downto 0);
+        dyy : out std_logic_vector(VALUE_WIDTH -1 downto 0);
+        xx  : out std_logic_vector(VALUE_WIDTH -1 downto 0);
+        yy  : out std_logic_vector(VALUE_WIDTH -1 downto 0);
+        datao : out std_logic_vector(DATA_WIDTH -1 downto 0)
          
   );
 end router5;
@@ -55,8 +62,7 @@ begin
     
     processed_data(VALUE_WIDTH-1 downto VALUE_WIDTH*0)<=x;
     processed_data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1) <=y;
-    processed_data(DATA_WIDTH-1 downto VALUE_WIDTH*4) <= data(DATA_WIDTH-1 downto VALUE_WIDTH*4);
-
+    
     
     click: entity click_element
     port map (
@@ -91,10 +97,11 @@ begin
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
         selector(0) <= '1' when dy = y else '0'; -- Go straight?
         selector(1) <= '1' when dy < y else '0'; -- Go right?
-        selector(2) <= '1' when dx = x else '0'; -- Go oblique?
+        selector(2) <= '1' when dx /= x else '0'; -- Go oblique?
     end generate; 
     
     S: if SIDE = 2 generate
+    
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x 
         else std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx>x else dx;
         
@@ -102,7 +109,7 @@ begin
         selector(0) <= '1' when dx = x else '0'; -- Go straight?
         selector(1) <= '1' when dx < x else '0'; -- Go right?
         selector(2) <= '1' when dy /= y else '0'; -- Go oblique?
-    
+
     end generate;
     
     E: if SIDE = 3 generate
@@ -113,6 +120,17 @@ begin
         selector(1) <= '1' when dy > y else '0'; -- Go right?
         selector(2) <= '1' when dx /= x else '0'; -- Go oblique
     end generate;    
+    
+    --dyy <= processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3);
+    --dxx <= processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2);
+    --yy <= processed_data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1);
+    --xx <= processed_data(VALUE_WIDTH*1-1 downto VALUE_WIDTH*0);
+    
+    dyy <= dy;
+    dxx <= dx;
+    yy <= y;
+    xx <= x;
+    datao <= data;
 ------------------ ENDS GENERATE --------------
     
     demux: entity demux5
@@ -167,14 +185,13 @@ architecture tb of router5_tb is
     type t_sel_arr is array (0 to 3) of std_logic;
     signal ack_out : t_bit_arr;
     signal data_out : t_data_arr;
-    signal req_in : t_bit_arr;
-    
-    signal ack_in : t_bit_arr;
     signal req_out : t_bit_arr;
     signal rst: std_logic;
-    signal sel : t_sel_arr;
-    signal ia,ir,oa,orr: std_logic;
-    signal id,od : std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal ia,ir,oa: std_logic;
+    signal id : std_logic_vector(DATA_WIDTH-1 downto 0);
+    --TEMP
+    signal dxx,dyy,xx,yy : std_logic_vector(VALUE_WIDTH-1 downto 0);
+    signal datao : std_logic_vector(DATA_WIDTH-1 downto 0);
 
 begin 
 
@@ -205,16 +222,22 @@ generic map(
     
     oa_righto => ack_out(4),
     or_righto => req_out(4),
-    od_righto => data_out(4)   
+    od_righto => data_out(4),
+    dxx => dxx,
+    dyy => dyy,
+    yy => yy,
+    xx => xx,
+    datao => datao
     );
     
     process begin
     
         rst <= '1', '0' after 7ns;
         ack_out <= (others=>'0');
+        
         ir <= '0'; oa <= '0';
         id <= (others =>'0');
-        id <= "0000000100000010";
+        id <= "010101010101010101010101010101010101010101010101" & "0000" & "0001" & "0000" & "0010";
         ir <= '0', '1' after 20ns;
         wait until ia = '1';
         wait until req_out(2) = '1';
