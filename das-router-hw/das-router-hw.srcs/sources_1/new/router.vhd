@@ -69,8 +69,7 @@ entity router is
         o_req_oblique: out std_logic; -- obliquious
         o_req_horizontal: out std_logic; -- horizontal
         
-        -- unsure if right, but:
-        -- additional ports that we didn't thought of before
+        
         i_ack:  out std_logic;
         o_ack_vertical: in std_logic;
         o_ack_oblique: in std_logic;

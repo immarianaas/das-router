@@ -128,12 +128,19 @@ architecture tb of corner_node_top_tb is
     -- horizontal -> 0
     -- vertical -> 1
     -- oblique -> 2
+    
+    signal direction : Integer := 0;
         
 begin
 
 node: entity corner_node_top
 generic map( 
-    CORNER => 3 
+-- 0 nw north west
+-- 1 ne north east
+-- 2 se south east
+-- 3 sw south west
+
+    CORNER => 1
     )
     port map (
         rst => rst,
@@ -174,6 +181,47 @@ generic map(
         -- vertical -> 1
         -- oblique -> 2
     
+--        rst <= '1', '0' after 7ns;
+--        ack_out <= (others =>'0');
+--        req_in <= (others =>'0');
+--        data_in <= (others => (others => '0'));
+   
+--        ir <= '0'; oa <= '0';
+        
+--        id <= (others =>'0');
+        
+        
+--        -- currently in (3,3), wanna go to (0,1)
+--        id <= "0000000000000000000000000000000000000000000000000011001100010000";
+--        ir <= '0', '1' after 20ns;
+        
+--        wait until ia = '1';
+        
+--        -- we should see something on the oblique (2) line
+--        wait until req_out(2) = '1';
+--        ack_out(2) <= '1';
+        
+        
+--        id <= "0000000000000000000000000100000000000000000000000011001100010000";
+--        ir <= '1', '0' after 20ns;
+--        wait until ia = '0';
+--        -- we should see something on the oblique (2) line
+--        wait until req_in(2) = '0';
+--        ack_out(2) <= '0';
+        
+
+--        wait for 50ns;
+--        finish;
+
+
+        -- direction <= 1; -- vertical
+        -- (3,3) to (3,0)
+        -- "0000000000000000000000000000000000000000000000000011001100000011"
+
+        direction <= 2; -- oblique
+        -- (3,3) to (0,0)
+        -- "0000000000000000000000000000000000000000000000000011001100000000"
+
         rst <= '1', '0' after 7ns;
         ack_out <= (others =>'0');
         req_in <= (others =>'0');
@@ -183,18 +231,49 @@ generic map(
         
         id <= (others =>'0');
         
-        
-        -- currently in (0,0), wanna go to (3,0)
-        id <= "0000000000110000";
+        wait for 20ns;
+        -- currently in (3,3), wanna go to (3,0)
+        id <= "0000000000000000000000000000000000000000000000000011001100000000";
         ir <= '0', '1' after 20ns;
         
-        -- we should see something on the vertical line
-        wait until req_out(1) = '1';
+        wait until ia = '1';
         
-        ack_out(1) <= '1';
+
+        -- we should see something on the vertical (1) line
+        wait until req_out(direction) = '1';
+        ack_out(direction) <= '0','1' after 50ns;
+        
+
+        
+        wait for 20ns;
+        id <= "0000000000000000000000000000000000000000000000000011001100000000";
+        ir <= '1', '0' after 30ns;
+        
+
+        
+        wait until ia = '0';
+        -- we should see something on the vertical (1) line
+        wait until req_out(direction) = '0';
+        ack_out(direction) <= '1', '0' after 50ns;
+        
+                
+        wait for 20ns;
+        -- currently in (3,3), wanna go to (3,0)
+        id <= "0000000000000000000000000000000000000000000000000011001100000000";
+        ir <= '0', '1' after 20ns;
+        
+        wait until ia = '1';
+        
+
+        -- we should see something on the vertical (1) line
+        wait until req_out(direction) = '1';
+        ack_out(direction) <= '0','1' after 50ns;
+        
+        
 
         wait for 50ns;
         finish;
+
 
 
         
