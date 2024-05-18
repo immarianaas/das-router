@@ -85,8 +85,8 @@ begin
         
         -- dy
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy > y else dy;
-        selector(0) <= '1' when dx = x else '0'; -- Go straight?
-        selector(1) <= '1' when dx > x else '0'; -- Go right?
+        selector(0) <= '0' when dx = x else '1'; -- Go straight?
+        selector(1) <= '0' when dx > x else '1'; -- Go right?
         selector(2) <= '1' when dy /= y else '0'; -- Go oblique?
     
     end generate;
@@ -95,29 +95,29 @@ begin
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx > x else dx;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y 
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
-        selector(0) <= '1' when dy = y else '0'; -- Go straight?
-        selector(1) <= '1' when dy < y else '0'; -- Go right?
+        selector(0) <= '0' when dy = y else '1'; -- Go straight?
+        selector(1) <= '0' when dy < y else '1'; -- Go right?
         selector(2) <= '1' when dx /= x else '0'; -- Go oblique?
     end generate; 
     
-    S: if SIDE = 2 generate
+    S: if SIDE = 2 generate -- proprely tested this one 
     
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x 
         else std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx>x else dx;
         
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y else dy;
-        selector(0) <= '1' when dx = x else '0'; -- Go straight?
-        selector(1) <= '1' when dx < x else '0'; -- Go right?
+        selector(0) <= '0' when dx = x else '1'; -- Go straight?
+        selector(1) <= '0' when dx < x else '1'; -- Go right?
         selector(2) <= '1' when dy /= y else '0'; -- Go oblique?
 
     end generate;
     
-    E: if SIDE = 3 generate
+    E: if SIDE = 3 generate -- also properly tested
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x else dx;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y 
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
-        selector(0) <= '1' when dy = y else '0'; -- Go straight?
-        selector(1) <= '1' when dy > y else '0'; -- Go right?
+        selector(0) <= '0' when dy = y else '1'; -- Go straight?
+        selector(1) <= '0' when dy > y else '1'; -- Go right?
         selector(2) <= '1' when dx /= x else '0'; -- Go oblique
     end generate;    
     

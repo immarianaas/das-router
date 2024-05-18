@@ -103,6 +103,44 @@ def main(option: int, number_times: int = 1):
             msg_list += five_lines((3, 0), (3, 1), len(msg_list))
             text = "\n".join(msg_list)
 
+        case 5:
+
+            # none of these work
+            msg_list = []
+            msg_list += five_lines((0, 1), (0, 0), len(msg_list))
+            msg_list += five_lines((0, 1), (0, 2), len(msg_list))
+            msg_list += five_lines((0, 1), (0, 3), len(msg_list))
+            msg_list += five_lines((0, 1), (1, 3), len(msg_list))
+            msg_list += five_lines((0, 1), (2, 3), len(msg_list))
+            msg_list += five_lines((0, 1), (3, 3), len(msg_list))
+            msg_list += five_lines((0, 1), (3, 2), len(msg_list))
+            msg_list += five_lines((0, 1), (3, 1), len(msg_list))
+            msg_list += five_lines((0, 1), (3, 0), len(msg_list))
+            msg_list += five_lines((0, 1), (2, 0), len(msg_list))
+            msg_list += five_lines((0, 1), (1, 0), len(msg_list))
+
+            text = "\n".join(msg_list)
+
+        case 6:
+
+            # none of these work
+            msg_list = []
+            msg_list += five_lines((2, 0), (0, 0), len(msg_list))
+            msg_list += five_lines((2, 0), (0, 2), len(msg_list))
+            msg_list += five_lines((2, 0), (0, 3), len(msg_list))
+            msg_list += five_lines((2, 0), (1, 3), len(msg_list))
+            msg_list += five_lines((2, 0), (2, 3), len(msg_list))
+            msg_list += five_lines((2, 0), (3, 3), len(msg_list)) 
+            msg_list += five_lines((2, 0), (3, 2), len(msg_list))
+            msg_list += five_lines((2, 0), (3, 1), len(msg_list))
+            msg_list += five_lines((2, 0), (3, 0), len(msg_list))
+            msg_list += five_lines((2, 0), (0, 1), len(msg_list))
+            msg_list += five_lines((2, 0), (1, 0), len(msg_list))
+
+            text = "\n".join(msg_list)
+
+
+
 
         case _:
             raise Exception("Invalid option")
@@ -114,4 +152,4 @@ def main(option: int, number_times: int = 1):
     print(f"Saved on: {file_path}")
 
 
-main(4, 5)
+main(3, 5)
