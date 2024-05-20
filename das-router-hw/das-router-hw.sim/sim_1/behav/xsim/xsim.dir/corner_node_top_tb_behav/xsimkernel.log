@@ -2,3 +2,6 @@ Running: xsim.dir/corner_node_top_tb_behav/xsimk -simmode gui -wdb corner_node_t
 Design successfully loaded
 Design Loading Memory Usage: 23860 KB (Peak: 23912 KB)
 Design Loading CPU Usage: 20 ms
+Simulation completed
+Simulation Memory Usage: 113796 KB (Peak: 163128 KB)
+Simulation CPU Usage: 40 ms

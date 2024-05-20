@@ -184,9 +184,21 @@ def main(option: int, number_times: int = 1):
                     if origin == dest:
                         continue
 
+                    #if origin != (3,1): continue
+
+                    #if dest in [(1,3), (2,0)]: continue
+
+                    #if origin ==(3,1) and dest == (1,3):
+                    #    continue
+
                     msg_list += packets(origin, dest,
                                         number_times, len(msg_list))
 
+            text = "\n".join(msg_list)
+
+        case 9:
+            msg_list = []
+            msg_list += five_lines((3, 1), (2, 0), len(msg_list))
             text = "\n".join(msg_list)
 
         case _:
@@ -200,3 +212,25 @@ def main(option: int, number_times: int = 1):
 
 
 main(option=8, number_times=10)
+
+
+# 3,1 -> 1,3 (routed wrong)
+# 3,1 -> 2,0 (has no output at all)
+# 3,1 -> 3,3 (routed wrong to 3,0)
+
+
+# 0001001100110001
+# 0011000100110001 (3,1)
+
+# coming from 3,1
+# 0011 0001 should go to (1,3)
+
+
+
+
+
+
+
+
+# 000000000000000000000000000000000000000000111110 0001 0011 0000 0010
+#                                                   (3, 1) -> (2, 0)

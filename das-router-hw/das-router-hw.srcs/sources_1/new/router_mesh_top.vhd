@@ -439,7 +439,7 @@ ack_test <= ack_23_12;
 
     router01: entity side_node_top
     generic map( 
-        SIDE => 3
+        SIDE => 1
     )
     port map (
         rst => rst,
@@ -494,7 +494,7 @@ ack_test <= ack_23_12;
 
     router02: entity side_node_top
     generic map( 
-        SIDE => 3
+        SIDE => 1
     )
     port map (
         rst => rst,
@@ -1089,7 +1089,7 @@ ack_test <= ack_23_12;
 
     router31: entity side_node_top
     generic map( 
-        SIDE => 1
+        SIDE => 3
     )
     port map (
         rst => rst,
@@ -1144,7 +1144,7 @@ ack_test <= ack_23_12;
 
     router32: entity side_node_top
     generic map( 
-        SIDE => 1
+        SIDE => 3
     )
     port map (
         rst => rst,

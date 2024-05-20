@@ -128,7 +128,7 @@ begin
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y 
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
         selector(0) <= '0' when dy = y else '1'; -- Go straight?
-        selector(1) <= '0' when dy > y else '1'; -- Go right?
+        selector(1) <= '1' when dy > y else '0'; -- Go right?
         selector(2) <= '1' when dx /= x else '0'; -- Go oblique
     end generate;    
     

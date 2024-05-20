@@ -2,3 +2,6 @@ Running: xsim.dir/router_node_top_tb_behav/xsimk -simmode gui -wdb router_node_t
 Design successfully loaded
 Design Loading Memory Usage: 24164 KB (Peak: 24172 KB)
 Design Loading CPU Usage: 30 ms
+Simulation completed
+Simulation Memory Usage: 114232 KB (Peak: 163432 KB)
+Simulation CPU Usage: 40 ms

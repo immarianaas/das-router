@@ -172,16 +172,18 @@ begin
     variable data : std_logic_vector(DATA_WIDTH-1 downto 0);
     
     variable x,y,dx,dy : integer;
+    variable px, py, pdx, pdy: integer; -- previous values
     variable curr_ack_in : t_bit_matrix := (others => (others =>'0')); 
 
   begin
-    --req_in_sig <= (others => (others => '0'));             
-    --data_in_sig <= (others => (others => (others => '0')));
         
-    rst <= '1', '0' after 7 ns;
+    rst <= '1', '0' after 1ns; -- any value other than 0 will do
 
-    file_open(read_file, "/home/mar/DTU/das-24/das-router/test_1_x5.txt", read_mode);
+    file_open(read_file, "/home/mar/DTU/das-24/das-router/test_1_x10.txt", read_mode);
     file_open(write_input_file, "/home/mar/DTU/das-24/das-router/mesh_input.txt", write_mode);
+    
+    wait for 5ns; -- this is the minimum (by testing)
+
     while not endfile(read_file) loop
       readline(read_file, line_v);
       read(line_v, data);
@@ -191,18 +193,17 @@ begin
     dx:= to_integer(unsigned(data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2)));
     dy:= to_integer(unsigned(data( VALUE_WIDTH*4-1 downto VALUE_WIDTH*3))); 
     
+    -- if this is the same input node as before:
+    if pdx = dx and pdy = dy then
+        wait for 0ns; -- necessary
+    end if; 
     
-    -- to start, we put the data on the line
-    -- data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
+    if ack_in_sig(dx, dy) /= req_in_sig(dx,dy) then
+        wait until ack_in_sig(dx, dy) = req_in_sig(dx, dy);
+    end if;
     
-    -- then we toggle the request signal TODO: not sure about the 10ns
-    --req_in_sig(dx, dy) <= req_in_sig(dx, dy), not req_in_sig(dx, dy) after 10ns;
-    wait for 100ns;
-    -- to start, we put the data on the line
+    -- to start, we put the data on the line and change the request
     data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
-    
-    assert req_in_sig(dx, dy) = ack_in_sig(dx, dy) report "crl1" severity failure;
-    
     req_in_sig(dx, dy) <= not req_in_sig(dx, dy);
     
     -- save data sent and when
@@ -212,21 +213,16 @@ begin
     write(line_v, string'(",(") & integer'image(dx) & string'(",") & integer'image(dy) & string'(")"));
     writeline(write_input_file, line_v);
     
-    -- then we wait for ack on the input
-    if ack_in_sig(dx, dy) /= not curr_ack_in(dx, dy) then
-        wait until ack_in_sig(dx, dy) = not curr_ack_in(dx, dy);
-        curr_ack_in(dx, dy) := not curr_ack_in(dx, dy);
-    end if;
+--    -- then we wait for ack on the input
+--    if ack_in_sig(dx, dy) /= not curr_ack_in(dx, dy) then
+--        wait until ack_in_sig(dx, dy) = not curr_ack_in(dx, dy);
+--        curr_ack_in(dx, dy) := not curr_ack_in(dx, dy);
+--    end if;
+    
+    -- save the previous values
+    px := x; py := y; pdx := dx; pdy := dy;
     
     
-    -- (just for testing purposes) wait until the request out comes out
-    -- if we keep this TODO change to toggle!
---    wait until req_out_sig(x, y) = not curr_req_out(x,y);
---    curr_req_out(x,y) := not curr_req_out(x,y);
---    ack_out_sig(x,y) <= curr_req_out(x,y);
-  
-      
-    --wait for 100ns;
       
     end loop;
     file_close(read_file);
@@ -242,34 +238,9 @@ begin
     variable curr_ack_in : t_bit_matrix := (others => (others =>'0')); 
     
     variable i, j: integer;
-    -- variable curr_req_out : t_bit_matrix := (others => (others =>'0')); 
 
   begin
-      --ack_out_sig <= (others => (others => '0'));            
 
---    if req_out_sig'event then
-
---        -- find the coordinates:
---        L1: for ii in req_out_sig'range(1) loop
---        L2: for jj in req_out_sig'range(2) loop
-        
---            --next L2 when (ii = 1 or ii = 2) and (jj = 1 or jj = 2);
-        
---            --if ((ii = 1 or ii = 2) and (jj = 1 or jj = 2)) then
---              --  next;
---            -- end if;
-        
---        -- if req out and ack out are different, then req out changed...
---            if req_out_sig(ii, jj) /= ack_out_sig(ii, jj) 
---            then
-            
---                i := ii;
---                j := jj;
-
---            end if;
---        end loop L2;
---        end loop L1;
-        
         if req_out_sig'event then
             
             if req_out_sig(0,0)'event then
