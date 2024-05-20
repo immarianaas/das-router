@@ -175,14 +175,19 @@ begin
     variable px, py, pdx, pdy: integer; -- previous values
     variable curr_ack_in : t_bit_matrix := (others => (others =>'0')); 
 
+    variable curr_rst : std_logic := '1';
+    variable first_time : boolean := true;
+     
   begin
         
-    rst <= '1', '0' after 1ns; -- any value other than 0 will do
+    rst <= curr_rst, not curr_rst after 1ns; -- any value other than 0 will do
+    curr_rst := not curr_rst;
+    
+    wait for 5ns; -- this is the minimum (by testing)
 
     file_open(read_file, "/home/mar/DTU/das-24/das-router/test_1_x10.txt", read_mode);
     file_open(write_input_file, "/home/mar/DTU/das-24/das-router/mesh_input.txt", write_mode);
     
-    wait for 5ns; -- this is the minimum (by testing)
 
     while not endfile(read_file) loop
       readline(read_file, line_v);
@@ -192,6 +197,12 @@ begin
     y := to_integer(unsigned(data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1)));
     dx:= to_integer(unsigned(data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2)));
     dy:= to_integer(unsigned(data( VALUE_WIDTH*4-1 downto VALUE_WIDTH*3))); 
+    
+    if (x /= px or y /= py or dx /= pdx or dy /= pdy) and not first_time then
+        wait for 1000ns; -- wait for a while so that we are sure that the message gets through
+        rst <= '1', '0' after 10ns;
+        wait for 10ns; -- doesn's matter
+    end if;
     
     -- if this is the same input node as before:
     if pdx = dx and pdy = dy then
@@ -210,7 +221,7 @@ begin
     write(line_v, data);
     write(line_v, string'(","));
     write(line_v, time'image(now));
-    write(line_v, string'(",(") & integer'image(dx) & string'(",") & integer'image(dy) & string'(")"));
+    write(line_v, string'(",(") & integer'image(dx) & string'(".") & integer'image(dy) & string'(")"));
     writeline(write_input_file, line_v);
     
 --    -- then we wait for ack on the input
@@ -221,6 +232,7 @@ begin
     
     -- save the previous values
     px := x; py := y; pdx := dx; pdy := dy;
+    first_time := false;
     
     
       
@@ -273,7 +285,7 @@ begin
         write(line_v, data_out_sig(i,j));
         write(line_v, string'(","));
         write(line_v, time'image(now));
-        write(line_v, string'(",(") & integer'image(i) & string'(",") & integer'image(j) & string'(")"));
+        write(line_v, string'(",(") & integer'image(i) & string'(".") & integer'image(j) & string'(")"));
         writeline(write_output_file, line_v);
     
     
