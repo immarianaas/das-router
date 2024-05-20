@@ -129,7 +129,7 @@ begin
         out_ack => shady_ack
     );
     
-    shady_ack <= ack after 10ns;
+    shady_ack <= ack; -- after 10ns;
     test_ack <= shady_ack;
     test_req <= req;
 

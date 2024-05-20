@@ -8,10 +8,28 @@
 #    ^
 
 ROOT_PATH = "/home/mar/DTU/das-24/das-router/"
+NODES = []
+
+for i in range(4):
+    for j in range(4):
+
+        if i in [1, 2] and j in [1, 2]:
+            continue
+
+        NODES.append((i, j))
 
 
 def get_header(begin: tuple, end: tuple):
     return f'{begin[1]:04b}{begin[0]:04b}{end[1]:04b}{end[0]:04b}'
+
+
+def packets(begin: tuple, end: tuple, number_times: int, msg_counter: int) -> tuple[list[str], int]:
+    header = get_header(begin, end)
+    msg_list = []
+    for _ in range(number_times):
+        msg_list += [f'{msg_counter:048b}'+header]
+        msg_counter += 1
+    return msg_list
 
 
 def five_lines(begin: tuple, end: tuple, counter: int) -> tuple[list[str], int]:
@@ -31,11 +49,10 @@ def main(option: int, number_times: int = 1):
         case 1:
             msg_list = []
 
-            # really don't work (even alone)
-            # msg_list += five_lines((0, 0), (2, 3), len(msg_list))
-            # msg_list += five_lines((0, 0), (3, 3), len(msg_list))
-            # msg_list += five_lines((0, 0), (3, 2), len(msg_list))
-            # msg_list += five_lines((0, 0), (3, 1), len(msg_list))
+            msg_list += five_lines((0, 0), (2, 3), len(msg_list))
+            msg_list += five_lines((0, 0), (3, 3), len(msg_list))
+            msg_list += five_lines((0, 0), (3, 2), len(msg_list))
+            msg_list += five_lines((0, 0), (3, 1), len(msg_list))
 
             # work:
             msg_list += five_lines((0, 0), (2, 0), len(msg_list))
@@ -45,7 +62,6 @@ def main(option: int, number_times: int = 1):
             msg_list += five_lines((0, 0), (0, 3), len(msg_list))
             msg_list += five_lines((0, 0), (1, 3), len(msg_list))
             msg_list += five_lines((0, 0), (3, 0), len(msg_list))
-            
 
             text = "\n".join(msg_list)
 
@@ -112,7 +128,6 @@ def main(option: int, number_times: int = 1):
             # msg_list += five_lines((0, 1), (0, 3), len(msg_list))
             # msg_list += five_lines((0, 1), (1, 3), len(msg_list))
 
-
             # msg_list += five_lines((0, 1), (2, 3), len(msg_list))
             # msg_list += five_lines((0, 1), (3, 3), len(msg_list))
             msg_list += five_lines((0, 1), (3, 2), len(msg_list))
@@ -142,7 +157,6 @@ def main(option: int, number_times: int = 1):
             msg_list += five_lines((0, 2), (3, 0), len(msg_list))
             msg_list += five_lines((0, 2), (2, 0), len(msg_list))
 
-
             text = "\n".join(msg_list)
 
         case 7:
@@ -154,7 +168,7 @@ def main(option: int, number_times: int = 1):
             msg_list += five_lines((2, 0), (0, 3), len(msg_list))
             msg_list += five_lines((2, 0), (1, 3), len(msg_list))
             msg_list += five_lines((2, 0), (2, 3), len(msg_list))
-            msg_list += five_lines((2, 0), (3, 3), len(msg_list)) 
+            msg_list += five_lines((2, 0), (3, 3), len(msg_list))
             msg_list += five_lines((2, 0), (3, 2), len(msg_list))
             msg_list += five_lines((2, 0), (3, 1), len(msg_list))
             msg_list += five_lines((2, 0), (3, 0), len(msg_list))
@@ -163,8 +177,17 @@ def main(option: int, number_times: int = 1):
 
             text = "\n".join(msg_list)
 
+        case 8:
+            msg_list = []
+            for origin in NODES:
+                for dest in NODES:
+                    if origin == dest:
+                        continue
 
+                    msg_list += packets(origin, dest,
+                                        number_times, len(msg_list))
 
+            text = "\n".join(msg_list)
 
         case _:
             raise Exception("Invalid option")
@@ -176,4 +199,4 @@ def main(option: int, number_times: int = 1):
     print(f"Saved on: {file_path}")
 
 
-main(6, 5)
+main(option=8, number_times=10)

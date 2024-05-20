@@ -69,9 +69,9 @@ architecture Behavioral of demux3 is
 
 begin
 
-    shady_ack_oblique <= out_oblique_ack after 10ns;
-    shady_ack_horizontal <= out_horizontal_ack after 10ns;
-    shady_ack_vertical <= out_vertical_ack after 10ns;
+    shady_ack_oblique <= out_oblique_ack; -- after 10ns;
+    shady_ack_horizontal <= out_horizontal_ack; -- after 10ns;
+    shady_ack_vertical <= out_vertical_ack; -- after 10ns;
 
     demux1 : entity demux
     port map (

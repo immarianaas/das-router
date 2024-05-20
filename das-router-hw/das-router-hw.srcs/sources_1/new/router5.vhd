@@ -84,7 +84,7 @@ begin
         out_ack => shady_ack 
     );
     
-    shady_ack <= ack after 20ns;
+    shady_ack <= ack; -- after 20ns;
     int_ack <= shady_ack;
     int_req <= req;
     

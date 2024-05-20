@@ -1,7 +1,4 @@
-Running: xsim.dir/corner_node_top_tb_behav/xsimk -simmode gui -wdb corner_node_top_tb_behav.wdb -simrunnum 0 -socket 59805
+Running: xsim.dir/corner_node_top_tb_behav/xsimk -simmode gui -wdb corner_node_top_tb_behav.wdb -simrunnum 0 -socket 43523
 Design successfully loaded
-Design Loading Memory Usage: 23856 KB (Peak: 23908 KB)
-Design Loading CPU Usage: 40 ms
-Simulation completed
-Simulation Memory Usage: 113792 KB (Peak: 163124 KB)
-Simulation CPU Usage: 50 ms
+Design Loading Memory Usage: 23860 KB (Peak: 23912 KB)
+Design Loading CPU Usage: 20 ms

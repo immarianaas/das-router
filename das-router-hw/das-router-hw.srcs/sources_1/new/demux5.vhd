@@ -53,11 +53,11 @@ architecture Behavioral of demux5 is
 
 begin
 
-straight_ack <= o_straight_ack after 10ns; 
-left_ack <= o_left_ack  after 10ns; 
-lefto_ack <= o_lefto_ack after 10ns; 
-right_ack <= o_right_ack after 10ns; 
-righto_ack <= o_righto_ack after 10ns; 
+straight_ack <= o_straight_ack;-- after 10ns; 
+left_ack <= o_left_ack; --  after 10ns; 
+lefto_ack <= o_lefto_ack; -- after 10ns; 
+right_ack <= o_right_ack; -- after 10ns; 
+righto_ack <= o_righto_ack; -- after 10ns; 
 
 demux1 : entity demux
     port map(
