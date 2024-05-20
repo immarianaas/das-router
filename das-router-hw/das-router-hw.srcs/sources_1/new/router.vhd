@@ -89,6 +89,8 @@ architecture Behavioral of router is
   signal req, ack : std_logic;
   
   signal selector : std_logic_vector(1 downto 0);
+  
+  signal shady_ack : std_logic;
   -- 11 is oblique
   -- 01 is horizontal
   -- 10 is vertical
@@ -121,8 +123,10 @@ begin
     -- Output channel
         out_req => req,
         out_data => data,
-        out_ack => ack
+        out_ack => shady_ack
     );
+    
+    shady_ack <= ack after 10ns;
 
     
     -- going to be an input for the click element
@@ -157,22 +161,11 @@ begin
         );
     
     
-    --o_req_vertical <= req when dx = x else '0';
-    --o_req_oblique <= req when dx /= x and dy /= y else '0';
-    --o_req_horizontal <= req when dy = y else '0';
-    
-    -- o_data_vertical <= processed_data when dx = x else (others => '0');
-    --o_data_oblique <= processed_data when dx /= x and dy /= y else (others => '0');
-    --o_data_horizontal <= processed_data when dy = y else (others => '0');
     
         
     c0: if DIRECTION = 0 generate
-    
-        -- dx <= std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx < x;
-        -- dy <= std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy < y;
-
+   
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x else dx;
-        -- o_addr(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector("1111") when dx < x;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy > y else dy;
         
     end generate;

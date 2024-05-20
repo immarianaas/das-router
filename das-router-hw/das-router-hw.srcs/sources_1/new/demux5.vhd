@@ -48,7 +48,16 @@ architecture Behavioral of demux5 is
     signal d2_2_req,d2_2_ack : std_logic;
     signal d2_2_data : std_logic_vector(DATA_WIDTH-1 downto 0);
 
+
+    signal straight_ack, left_ack, lefto_ack, right_ack, righto_ack: std_logic;
+
 begin
+
+straight_ack <= o_straight_ack after 10ns; 
+left_ack <= o_left_ack  after 10ns; 
+lefto_ack <= o_lefto_ack after 10ns; 
+right_ack <= o_right_ack after 10ns; 
+righto_ack <= o_righto_ack after 10ns; 
 
 demux1 : entity demux
     port map(
@@ -69,7 +78,7 @@ demux1 : entity demux
     
     -- 0
     outC_req => o_straight_req,
-    outC_ack => o_straight_ack,
+    outC_ack => straight_ack,
     outC_data => o_straight_data
     );
     
@@ -81,8 +90,8 @@ demux2: entity demux
     inA_data => d1_data,
     inA_ack => d1_ack,
     
-    inSel_req => inSel_req,
-    inSel_ack => inSel_ack,
+    inSel_req => d1_req,
+    inSel_ack => d1_ack,
     selector => selector(1),
     
     -- 1
@@ -104,16 +113,16 @@ demux2_1: entity demux
     inA_data => d2_1_data,
     inA_ack => d2_1_ack,
     
-    inSel_req => inSel_req,
-    inSel_ack => inSel_ack,
+    inSel_req => d2_1_req,
+    inSel_ack => d2_1_ack,
     selector => selector(2),
     
     outB_req =>  o_lefto_req,
-    outB_ack => o_lefto_ack,
+    outB_ack => lefto_ack,
     outB_data => o_lefto_data,
     
     outC_req => o_left_req,
-    outC_ack => o_left_ack,
+    outC_ack => left_ack,
     outC_data => o_left_data
     );
 demux2_2: entity demux
@@ -124,18 +133,18 @@ demux2_2: entity demux
     inA_data => d2_2_data,
     inA_ack => d2_2_ack,
     
-    inSel_req => inSel_req,
-    inSel_ack => inSel_ack,
+    inSel_req => d2_2_req,
+    inSel_ack => d2_2_ack,
     selector => selector(2),
     
     -- 1
     outB_req =>  o_righto_req,
-    outB_ack => o_righto_ack,
+    outB_ack => righto_ack,
     outB_data => o_righto_data,
     
     -- 0
     outC_req => o_right_req,
-    outC_ack => o_right_ack,
+    outC_ack => right_ack,
     outC_data => o_right_data
     );
 

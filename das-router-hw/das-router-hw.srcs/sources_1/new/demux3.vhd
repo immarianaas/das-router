@@ -65,9 +65,13 @@ architecture Behavioral of demux3 is
     signal ack1, ack2 : std_logic;
     signal data1, data2 : std_logic_vector(DATA_WIDTH-1 downto 0);
     
-    
+    signal shady_ack_oblique, shady_ack_horizontal, shady_ack_vertical : std_logic;
 
 begin
+
+    shady_ack_oblique <= out_oblique_ack after 10ns;
+    shady_ack_horizontal <= out_horizontal_ack after 10ns;
+    shady_ack_vertical <= out_vertical_ack after 10ns;
 
     demux1 : entity demux
     port map (
@@ -103,11 +107,11 @@ begin
         selector => selector(1),
         
         outB_req => out_oblique_req,
-        outB_ack => out_oblique_ack,
+        outB_ack => shady_ack_oblique,
         outB_data => out_oblique_data,
         
         outC_req => out_horizontal_req,
-        outC_ack => out_horizontal_ack,
+        outC_ack => shady_ack_horizontal,
         outC_data => out_horizontal_data
         );
 
@@ -124,7 +128,7 @@ begin
         selector => selector(1),
         
         outB_req => out_vertical_req,
-        outB_ack => out_vertical_ack,
+        outB_ack => shady_ack_vertical,
         outB_data => out_vertical_data,
         
         outC_req => open,
@@ -203,34 +207,63 @@ begin
 
 process begin
 
-    
-    -------- test 1 -------- 
     rst <= '1', '0' after 2ns;
+    selector <= "11";
+    -------- try 1 -------- 
+    
+    
     inA_req <= '0', '1' after 20 ns;
-    inA_data <= "0001000000000001";
+    inSel_req <= '0', '1' after 20 ns;
+
+    inA_data <= "0000000000000000000000000000000000000000000000000010000000100000";
     
     outB_ack <= '0';
     outC_ack <= '0';
     outD_ack <= '0';
     
-    selector <= "11";
-    --selector <= '1';
-    inSel_req <= '0', '1' after 20 ns;
-    
     
     wait until outB_req = '1';
-    wait for 10 ns;
-    
+    wait for 20 ns;
     outB_ack <= '1';
+    
+    wait until inA_ack = '1';    
+    wait for 50 ns;
+    
+    -------- try 2 -------- 
+      
+    inA_req <= '1', '0' after 20 ns;
+    inSel_req <= '1', '0' after 20 ns;
+    inA_data <= "0000000000000000000000000000001000000000000000000010000000100000";
+    
+    wait until outB_req = '0';
+    -- wait for 6 ns; -- important!
+    outB_ack <= '0';
+    
+    wait until inA_ack = '0';
+    
+    wait for 50 ns;
+    
+    -------- try 3 --------
+
+    inA_req <= '0', '1' after 20 ns;
+    inSel_req <= '0', '1' after 20 ns;
+    inA_data <= "0000000010000000000000000000000000000000000000000010000000100000";
+    
+    wait until outB_req = '1';
+    wait for 20 ns;
+    outB_ack <= '1';
+    
+    
+    wait until inA_ack = '1';
 
     
     wait for 50 ns;
-    --assert o_data_horizontal = "0000000100000001" report "fail" severity failure; 
-    -- assert i_ack = "1" report "fail" severity failure;
-    -------- -------- -------- --------
+
+
     
     
-    report "passed! ;)";
+    
+    
     finish;
     
     --wait for 50 ns;

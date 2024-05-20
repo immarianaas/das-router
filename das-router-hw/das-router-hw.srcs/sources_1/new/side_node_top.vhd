@@ -64,7 +64,11 @@ entity side_node_top is
         
         ir_righto : in  std_logic;
         ia_righto : out std_logic;
-        id_righto : in  std_logic_vector(DATA_WIDTH-1 downto 0)
+        id_righto : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+        
+        
+        int_req : out std_logic;
+        int_ack : out std_logic
     );
 end side_node_top;
 
@@ -225,7 +229,11 @@ router: entity router5
         od_left => od_left_ext,
         od_right => od_right_ext,
         od_lefto => od_lefto,
-        od_righto => od_righto
+        od_righto => od_righto,
+        
+        
+        int_ack => int_ack,
+        int_req => int_req
     );
     
     --B,D,E fast
@@ -288,11 +296,15 @@ architecture tb of side_node_top_tb is
     signal ia, ir, oa, orr : std_logic;
     signal id, od : std_logic_vector(DATA_WIDTH-1 downto 0);
     
+    signal int_req, int_ack : std_logic;
+    
+    
+    
 begin
 
 node: entity side_node_top
 generic map( 
-    SIDE => 3 -- EAST
+    SIDE => 1 -- WEST
     )
     port map (
         rst => rst,
@@ -341,13 +353,23 @@ generic map(
         
         ir_righto => req_in(4),
         ia_righto => ack_in(4),
-        id_righto => data_in(4)
+        id_righto => data_in(4),
+        
+        
+        
+        int_req => int_req,
+        int_ack => int_ack
         
         -- internal_nw_req_horizontal => internal_nw_req_horizontal,
         -- internal_nw_req_vertical => internal_nw_req_vertical
     );
     
-    process begin
+    process is
+    
+    variable msg1, msg2, msg3: std_logic_vector(DATA_WIDTH-1 downto 0);
+    variable direction: Integer;
+    
+    begin
 --        -- horizontal -> 0
 --        -- vertical -> 1
 --        -- oblique -> 2
@@ -380,54 +402,102 @@ generic map(
         
 
 
---        rst <= '1', '0' after 7ns;
---        ack_out <= (others =>'0');
---        req_in <= (others =>'0');
---        data_in <= (others => (others => '0'));
-   
---        ir <= '0'; oa <= '0';
+--        direction := 1;
+--        -- (0,1) to (0,2)                                       |  1, 0 ,  2, 0  | -> (0,1) to (0,2)
+--        msg1 := "0000000000000000000000000000000000000000000000010001000000100000";
+--        msg2 := "0000000000000000000000000000000000000000000000100001000000100000";
+--        msg3 := "0000000000000000000000000000000000000000000000110001000000100000";
+
+
+--        direction := 0; -- straight
+--        -- (0,1) to (3,1)                                       |  1, 0 ,  2, 0  | -> (0,1) to (0,2)
+--        msg1 := "0000000000000000000000000000000000000000000000010001000000010001";
+--        msg2 := "0000000000000000000000000000000000000000000000100001000000010001";
+--        msg3 := "0000000000000000000000000000000000000000000000110001000000010001";
         
---        id <= (others =>'0');
         
---        -- we're in (0,0) and want to go to (3,0)
---        data_in(1) <= "0000000000000011";
---        req_in(1) <= '0', '1' after 20ns;
-        
---        wait until req_out(2) = '1';
-        
-  
+        direction := 3; -- lefto
+        -- (0,1) to (2, 3)                                       
+        msg1 := "0000000000000000000000000000000000000000000000000001000000110010";
+        msg2 := "0000000000000000000000000000010000000000000000000001000000110010";
+        msg3 := "0000000000000001000000000000000000000000000000000001000000110010";
+
+
+
+
+
+
         rst <= '1', '0' after 7ns;
+        oa <= '0';
         ack_out <= (others =>'0');
         req_in <= (others =>'0');
         data_in <= (others => (others => '0'));
    
-        ir <= '0'; oa <= '0';
+        ir <= '0'; 
         
         id <= (others =>'0');
         
-        -- we're in (0,1) and want to go to (0,1)
-        data_in(0) <= "0001000000010000";
-        req_in(0) <= '0', '1' after 20ns;
+        wait for 20ns;
+        -- currently in (3,3), wanna go to (0,0)
+        id <= msg1;
+        ir <= '0', '1' after 30ns;
         
-        wait until orr = '1';
+       
+        -- we should see something on the output line
+        if req_out(direction) /= '1' then
+            wait until req_out(direction) = '1';
+        end if;
+        
+        if ia /= '1' then
+            wait until ia = '1';
+        end if;
+        
+        ack_out(direction) <= '0','1' after 20ns;
+
+        wait for 100ns;
+
+        
+        id <= msg2;
+        ir <= '1', '0' after 30ns;
+
+        -- stuck here
+        
+        if req_out(direction) /= '0' then
+            wait until req_out(direction) = '0';
+        end if;
+        
+        if ia /= '0' then
+            wait until ia = '0';
+        end if;
+        
+        -- finish;
+
+        ack_out(direction) <= '1', '0' after 20ns;
+        
+                
+        wait for 100ns;
         
         
+        -- currently in (3,3), wanna go to (3,0)
+        id <= msg3;
+        ir <= '0', '1' after 20ns;
         
+
+        if req_out(direction) /= '1' then
+            wait until req_out(direction) = '1';
+        end if;
+        
+        if ia /= '1' then
+        wait until ia = '1';
+        end if;
+
+        ack_out(direction) <= '0','1' after 20ns;
+       
 
         wait for 50ns;
         finish;
 
 
-        
-        -- it's in (3,3) and goes to (3, 0)
---        --data_in(0) <= "0011001100000011";
-        
---        -- it's in (3,3) and goes to (5,3)
---        data_in(2) <= "0011001100110101";
---        req_in(2) <= '0', '1' after 40ns;
---        wait until ack_in(2) = '1';
-        
---        ack_out(5) <= '1';
 
 
 

@@ -37,7 +37,7 @@ entity router5 is
         od_left : out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_right : out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_lefto : out std_logic_vector(DATA_WIDTH-1 downto 0);
-        od_righto : out std_logic_vector(DATA_WIDTH-1 downto 0)
+        od_righto : out std_logic_vector(DATA_WIDTH-1 downto 0);
         
         --TEMP
 --        dxx : out std_logic_vector(VALUE_WIDTH -1 downto 0);
@@ -45,6 +45,9 @@ entity router5 is
 --        xx  : out std_logic_vector(VALUE_WIDTH -1 downto 0);
 --        yy  : out std_logic_vector(VALUE_WIDTH -1 downto 0);
 --        datao : out std_logic_vector(DATA_WIDTH -1 downto 0)
+
+        int_req : out std_logic;
+        int_ack : out std_logic
          
   );
 end router5;
@@ -54,7 +57,13 @@ architecture Behavioral of router5 is
     signal req, ack : std_logic;
     signal processed_data, data : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal selector : std_logic_vector(2 downto 0);
+    
+    signal shady_ack : std_logic;
+    
+    
+    
 begin
+    
     x <= data(VALUE_WIDTH-1 downto VALUE_WIDTH*0);
     y <= data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1);
     dx <= data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2);
@@ -72,12 +81,14 @@ begin
         in_data => id,
         out_req => req,
         out_data => data,
-        out_ack => ack
+        out_ack => shady_ack 
     );
     
--- TODO: DOUBLE CHECK the data logic, just if the minus and plus is correct
--- TODO: DOUBLE CHECK SELECTOR, main idea was to reverse direction on selector N/S and E/W
--- TODO: SELECTION BASED ON GOING LEFT, double check this is true
+    shady_ack <= ack after 20ns;
+    int_ack <= shady_ack;
+    int_req <= req;
+    
+    
     N: if SIDE = 0 generate
         -- dx
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x 
@@ -96,7 +107,7 @@ begin
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y 
         else std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy>y else dy;
         selector(0) <= '0' when dy = y else '1'; -- Go straight?
-        selector(1) <= '0' when dy < y else '1'; -- Go right?
+        selector(1) <= '1' when dy < y else '0'; -- Go right?
         selector(2) <= '1' when dx /= x else '0'; -- Go oblique?
     end generate; 
     

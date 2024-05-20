@@ -62,6 +62,9 @@ architecture Behavioral of generator is
     
     file write_output_file : text;
     
+    signal data_test : std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal req_test, ack_test: std_logic;
+    
 begin
     file_open(write_output_file, "/home/mar/DTU/das-24/das-router/mesh_output.txt", write_mode);
 
@@ -151,7 +154,11 @@ begin
         ack_33_out => ack_out_sig(3,3),
         data_33_out => data_out_sig(3,3),
         req_33_out => req_out_sig(3,3),
-        ack_33_in => ack_in_sig(3,3)
+        ack_33_in => ack_in_sig(3,3),
+        
+        ack_test => ack_test,
+        req_test => req_test,
+        data_test => data_test
 
         );
         
@@ -190,7 +197,7 @@ begin
     
     -- then we toggle the request signal TODO: not sure about the 10ns
     --req_in_sig(dx, dy) <= req_in_sig(dx, dy), not req_in_sig(dx, dy) after 10ns;
-    wait for 10ns;
+    wait for 100ns;
     -- to start, we put the data on the line
     data_in_sig(dx, dy) <= data(DATA_WIDTH-1 downto 0);
     

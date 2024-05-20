@@ -1,7 +1,4 @@
-Running: xsim.dir/router_node_top_tb_behav/xsimk -simmode gui -wdb router_node_top_tb_behav.wdb -simrunnum 0 -socket 51713
+Running: xsim.dir/router_node_top_tb_behav/xsimk -simmode gui -wdb router_node_top_tb_behav.wdb -simrunnum 0 -socket 41025
 Design successfully loaded
-Design Loading Memory Usage: 24140 KB (Peak: 24148 KB)
-Design Loading CPU Usage: 60 ms
-Simulation completed
-Simulation Memory Usage: 114076 KB (Peak: 163408 KB)
-Simulation CPU Usage: 70 ms
+Design Loading Memory Usage: 24152 KB (Peak: 24160 KB)
+Design Loading CPU Usage: 90 ms

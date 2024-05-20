@@ -123,7 +123,11 @@ entity router_mesh_top is
         ack_33_out: in std_logic;
         data_33_out: out std_logic_vector(DATA_WIDTH-1 downto 0);
         req_33_out: out std_logic;
-        ack_33_in: out std_logic
+        ack_33_in: out std_logic;
+        
+        data_test: out std_logic_vector(DATA_WIDTH-1 downto 0);
+        req_test: out std_logic;
+        ack_test: out std_logic
 
     );
 end router_mesh_top;
@@ -391,6 +395,10 @@ signal zero: std_logic;
 begin
 
 zero <= '0';
+
+data_test <= data_12_23;
+req_test <= req_12_23;
+ack_test <= ack_23_12;
 
 
     router00: entity corner_node_top

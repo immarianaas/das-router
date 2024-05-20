@@ -496,7 +496,7 @@ node: entity router_node_top
     process is
        variable direction: Integer;
         variable direction_out: Integer;
-        variable msg : std_logic_vector(DATA_WIDTH-1 downto 0);
+        variable msg1, msg2, msg3 : std_logic_vector(DATA_WIDTH-1 downto 0);
    
    begin
     
@@ -507,17 +507,19 @@ node: entity router_node_top
 --        msg := "0000000000000000000000000000000000000000000000000011001100000000";
         
         
---         --  the following doesnt work
---        direction := 6; -- sw
---        direction_out := 2; -- ne
---        -- (0,0) to (3,3)
---        msg := "0000000000000000000000000000000000000000000000000000000000110011";
-
-
+         --  the following doesnt work
         direction := 6; -- sw
-        direction_out := 3; -- e
-        -- (0,0) to (3,0)
-        msg := "0000000000000000000000000000000000000000000000000000000000000011";
+        direction_out := 2; -- ne
+        -- (0,0) to (3,3)
+        msg1 := "0000000000000000000000000000000000000000000000000000000000110011";
+        msg2 := "0000000000000000100000000000000000000000000000000000000000110011";
+        msg3 := "0000001000000000000000000000000000000000000000000000000000110011";
+
+
+--        direction := 6; -- sw
+--        direction_out := 3; -- e
+--        -- (0,0) to (3,0)
+--        msg := "0000000000000000000000000000000000000000000000000000000000000011";
 
 
 --    -- works:
@@ -539,20 +541,16 @@ node: entity router_node_top
 --        msg := "0000000000000000000000000000000000000000000000000011001100000011";
 
 
-        rst <= '1', '0' after 7ns;
         ack_out <= (others =>'0');
         req_in <= (others =>'0');
         data_in <= (others => (others => '0'));
    
-        req_in(direction) <= '0'; 
-        ack_out(direction) <= '0';
-        
-        data_in(direction) <= (others =>'0');
-        
+        rst <= '1', '0' after 7ns;
+
         wait for 20ns;
-        -- currently in (3,3), wanna go to (0,0)
-        data_in(direction) <= msg;
-        req_in(direction) <= '0', '1' after 30ns;
+
+        data_in(direction) <= msg1;
+        req_in(direction) <= '0', '1' after 20ns;
         
        
         -- we should see something on the output line
@@ -564,16 +562,13 @@ node: entity router_node_top
             wait until ack_in(direction) = '1';
         end if;
         
-
-
-        ack_out(direction_out) <= '0','1' after 50ns;
-        
-
-        wait for 20ns;
+        ack_out(direction_out) <= '0','1' after 20ns;
+       
+        wait for 50ns;
 
         
-        data_in(direction) <= msg;
-        req_in(direction) <= '1', '0' after 30ns;
+        data_in(direction) <= msg2;
+        req_in(direction) <= '1', '0' after 20ns;
         
         if req_out(direction_out) /= '0' then
             wait until req_out(direction_out) = '0';
@@ -584,12 +579,11 @@ node: entity router_node_top
         end if;
 
         ack_out(direction_out) <= '1', '0' after 20ns;
-        
-
                 
-        wait for 30ns;
-        -- currently in (3,3), wanna go to (3,0)
-        data_in(direction) <= msg;
+        wait for 50ns;
+        
+        
+        data_in(direction) <= msg3;
         req_in(direction) <= '0', '1' after 20ns;
         
 
@@ -600,23 +594,13 @@ node: entity router_node_top
         wait until ack_in(direction) = '1';
         end if;
 
-        ack_out(direction_out) <= '0','1' after 50ns;
-        
-
-        
+        ack_out(direction_out) <= '0','1' after 20ns;
         
 
         wait for 50ns;
         finish;
 
 
-
-
-    
-    
-    
-    
-    
     
 --        rst <= '1', '0' after 7ns;
 --        ack_out <= (others =>'0');
