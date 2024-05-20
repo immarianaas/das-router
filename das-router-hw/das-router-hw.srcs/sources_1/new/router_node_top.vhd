@@ -99,11 +99,17 @@ entity router_node_top is
         od_se:  out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_s:   out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_sw:  out std_logic_vector(DATA_WIDTH-1 downto 0);
-        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0)
+        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0);
         
         
         -- internal_nw_req_horizontal: out std_logic;
         -- internal_nw_req_vertical: out std_logic
+        
+        
+       test_req: out std_logic;
+       test_ack : out std_logic;
+       test_ack_oblique: out std_logic
+
         
     );
 end router_node_top;
@@ -166,6 +172,7 @@ architecture Behavioral of router_node_top is
     
     
     
+    
      
 
 begin
@@ -185,6 +192,11 @@ begin
 --    ia_sw <= ne_ack_oblique;
 --    ia_nw <= se_ack_oblique;
 --    ia_ne <= sw_ack_oblique;
+    
+    nw_ack_oblique <= oa_se;
+    ne_ack_oblique <= oa_sw;
+    se_ack_oblique <= oa_nw;
+    sw_ack_oblique <= oa_ne;
     
     or_se <= nw_req_oblique;
     or_sw <= ne_req_oblique;
@@ -323,6 +335,9 @@ begin
     );
     
 ----------------------------------------------------------------------------------------------------
+    
+    test_ack_oblique <= sw_ack_oblique;
+
 
     R_sw: entity router
         generic map(
@@ -346,7 +361,10 @@ begin
 
         o_ack_vertical => sw_ack_vertical,
         o_ack_oblique => sw_ack_oblique,
-        o_ack_horizontal => sw_ack_horizontal
+        o_ack_horizontal => sw_ack_horizontal,
+        
+        test_ack => test_ack,
+        test_req => test_req
         );
 
         
@@ -423,6 +441,8 @@ architecture tb of router_node_top_tb is
    
    signal rst : std_logic;
    
+   signal test_ack, test_req,test_ack_oblique : std_logic;
+   
 
    
    --signal internal_nw_req_horizontal : std_logic;
@@ -487,10 +507,14 @@ node: entity router_node_top
         od_se  => data_out(4),
         od_s   => data_out(5),
         od_sw  => data_out(6),
-        od_w   => data_out(7)
+        od_w   => data_out(7),
         
         -- internal_nw_req_horizontal => internal_nw_req_horizontal,
         -- internal_nw_req_vertical => internal_nw_req_vertical
+        
+        test_ack => test_ack,
+        test_req => test_req,
+        test_ack_oblique => test_ack_oblique
     );
     
     process is
@@ -519,7 +543,9 @@ node: entity router_node_top
 --        direction := 6; -- sw
 --        direction_out := 3; -- e
 --        -- (0,0) to (3,0)
---        msg := "0000000000000000000000000000000000000000000000000000000000000011";
+--        msg1 := "0000000000000000000000000000000000000000000000000000000000000011";
+--        msg2 := "0000000000000001000000000000000000000000000000000000000000000011";
+--        msg3 := "0000000000000000000000000001000000000000000000000000000000000011";
 
 
 --    -- works:
@@ -538,7 +564,9 @@ node: entity router_node_top
 --        direction := 1; -- n
 --        direction_out := 5; -- s
 --        -- (3,3) to (3,0)
---        msg := "0000000000000000000000000000000000000000000000000011001100000011";
+--        msg1 := "0000000100000000000000000000000000000000000000000011001100000011";
+--        msg2 := "0000000000000100000000000000000000000000000000000011001100000011";
+--        msg3 := "0000000000000000000000000100000000000000000000000011001100000011";
 
 
         ack_out <= (others =>'0');

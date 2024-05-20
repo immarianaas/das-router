@@ -73,7 +73,10 @@ entity router is
         i_ack:  out std_logic;
         o_ack_vertical: in std_logic;
         o_ack_oblique: in std_logic;
-        o_ack_horizontal: in std_logic
+        o_ack_horizontal: in std_logic;
+        
+        test_ack : out std_logic;
+        test_req : out std_logic
         
     );
 end router;
@@ -127,6 +130,8 @@ begin
     );
     
     shady_ack <= ack after 10ns;
+    test_ack <= shady_ack;
+    test_req <= req;
 
     
     -- going to be an input for the click element
