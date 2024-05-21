@@ -128,7 +128,6 @@ process begin
     
      --wait for 10ns;
      
-     finish;
     
     
 
