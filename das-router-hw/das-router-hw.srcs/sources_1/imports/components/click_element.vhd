@@ -68,7 +68,7 @@ end behavioral;
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 use work.defs.all;
-use std.env.finish;
+
 use work.click_element;
 
 entity click_element_tb is

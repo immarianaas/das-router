@@ -201,7 +201,7 @@ begin
     if (x /= px or y /= py or dx /= pdx or dy /= pdy) and not first_time then
         wait for 1000ns; -- wait for a while so that we are sure that the message gets through
         rst <= '1', '0' after 10ns;
-        wait for 10ns; -- doesn's matter
+        wait for 15ns; -- doesn's matter
     end if;
     
     -- if this is the same input node as before:
