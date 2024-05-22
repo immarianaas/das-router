@@ -1,24 +1,3 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 03/18/2024 04:32:13 PM
--- Design Name: 
--- Module Name: router - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 USE work.defs.ALL;
@@ -26,18 +5,7 @@ use work.click_element;
 use work.demux3;
 use ieee.numeric_std.all;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
-
-
--- DIRECTION WHERE THE DATA COMES FROM!!!! NOT TO WHERE IT GOES
+-- DIRECTION where data comes from, not where it goes
 -- direction:
 -- 0 nw north west
 -- 1 ne north east
@@ -58,40 +26,40 @@ entity router is
     port (         
         rst   : in std_logic;
     
-        i_req:  in std_logic;
+        i_req : in std_logic;
         i_data: in std_logic_vector(DATA_WIDTH-1 downto 0);
         
-        o_data_vertical: out std_logic_vector(DATA_WIDTH-1 downto 0);
-        o_data_oblique: out std_logic_vector(DATA_WIDTH-1 downto 0);
+        o_data_vertical  : out std_logic_vector(DATA_WIDTH-1 downto 0);
+        o_data_oblique   : out std_logic_vector(DATA_WIDTH-1 downto 0);
         o_data_horizontal: out std_logic_vector(DATA_WIDTH-1 downto 0);
 
-        o_req_vertical: out std_logic; -- vertical
-        o_req_oblique: out std_logic; -- obliquious
-        o_req_horizontal: out std_logic; -- horizontal
+        o_req_vertical   : out std_logic; -- vertical
+        o_req_oblique    : out std_logic; -- obliquious
+        o_req_horizontal : out std_logic; -- horizontal
         
         
-        i_ack:  out std_logic;
-        o_ack_vertical: in std_logic;
-        o_ack_oblique: in std_logic;
-        o_ack_horizontal: in std_logic;
+        i_ack            : out std_logic;
+        o_ack_vertical   : in std_logic;
+        o_ack_oblique    : in std_logic;
+        o_ack_horizontal : in std_logic;
         
-        test_ack : out std_logic;
-        test_req : out std_logic
+        test_ack         : out std_logic;
+        test_req         : out std_logic
         
     );
 end router;
 
 architecture Behavioral of router is
-  signal x, y, dx, dy : std_logic_vector(VALUE_WIDTH-1 downto 0);
+  signal x, y, dx, dy         : std_logic_vector(VALUE_WIDTH-1 downto 0);
   
   -- data -> comes out of the click element
   -- processed data -> data after updating the address 
-    signal processed_data, data: std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal processed_data, data : std_logic_vector(DATA_WIDTH-1 downto 0);
   
   -- req and ack out of the click element
-  signal req, ack : std_logic;
+  signal req, ack  : std_logic;
   
-  signal selector : std_logic_vector(1 downto 0);
+  signal selector  : std_logic_vector(1 downto 0);
   
   signal shady_ack : std_logic;
   -- 11 is oblique
@@ -104,34 +72,33 @@ begin
     -- dx ( 11 downto 8)
     -- dy (15 downto 12)
      
-    x <= data(VALUE_WIDTH-1 downto VALUE_WIDTH*0);
-    y <= data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1);
+    x  <= data(VALUE_WIDTH-1 downto VALUE_WIDTH*0);
+    y  <= data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1);
     dx <= data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2);
     dy <= data( VALUE_WIDTH*4-1 downto VALUE_WIDTH*3);
     
     
-    processed_data(VALUE_WIDTH-1 downto VALUE_WIDTH*0) <= x;
+    processed_data(VALUE_WIDTH-1 downto VALUE_WIDTH*0)   <= x;
     processed_data(VALUE_WIDTH*2-1 downto VALUE_WIDTH*1) <= y;
-    processed_data(DATA_WIDTH-1 downto VALUE_WIDTH*4) <= data(DATA_WIDTH-1 downto VALUE_WIDTH*4);
-    -- ack_internal <= ack;
+    processed_data(DATA_WIDTH-1 downto VALUE_WIDTH*4)    <= data(DATA_WIDTH-1 downto VALUE_WIDTH*4);
 
     
     click: entity click_element 
     port map (
         rst => rst,
         
-        in_ack => i_ack,
-        in_req => i_req,
-        in_data => i_data,
+        in_ack   => i_ack,
+        in_req   => i_req,
+        in_data  => i_data,
     -- Output channel
-        out_req => req,
+        out_req  => req,
         out_data => data,
-        out_ack => shady_ack
+        out_ack  => shady_ack
     );
     
     shady_ack <= ack; -- after 10ns;
-    test_ack <= shady_ack;
-    test_req <= req;
+    test_ack  <= shady_ack;
+    test_req  <= req;
 
     
     -- going to be an input for the click element
@@ -144,53 +111,47 @@ begin
         port map (
         rst => rst,
         
-        inA_req     =>      req,    -- from click
-        inA_data    =>      processed_data,   -- from click
-        inA_ack     =>      ack,    -- to click
+        inA_req     => req,    -- from click
+        inA_data    => processed_data,   -- from click
+        inA_ack     => ack,    -- to click
         
-        inSel_req   =>      req,
-        inSel_ack   =>      ack,
-        selector    =>      selector,
+        inSel_req   => req,
+        inSel_ack   => ack,
+        selector    => selector,
         
-        out_oblique_req      => o_req_oblique,
-        out_oblique_data     => o_data_oblique,
-        out_oblique_ack      => o_ack_oblique,
+        out_oblique_req         => o_req_oblique,
+        out_oblique_data        => o_data_oblique,
+        out_oblique_ack         => o_ack_oblique,
 
         out_horizontal_req      => o_req_horizontal,
         out_horizontal_data     => o_data_horizontal,
         out_horizontal_ack      => o_ack_horizontal,
 
-        out_vertical_req      => o_req_vertical,
-        out_vertical_data     => o_data_vertical,
-        out_vertical_ack      => o_ack_vertical
+        out_vertical_req        => o_req_vertical,
+        out_vertical_data       => o_data_vertical,
+        out_vertical_ack        => o_ack_vertical
         );
-    
-    
-    
+
         
-    c0: if DIRECTION = 0 generate
-   
+    nw: if DIRECTION = 0 generate
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x else dx;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy > y else dy;
         
     end generate;
 
-    c1: if DIRECTION = 1 generate
-        
+    ne: if DIRECTION = 1 generate
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx > x else dx;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) - unsigned(ONE)) when dy > y else dy;
         
     end generate;
     
-    c2: if DIRECTION = 2 generate
-     
+    se: if DIRECTION = 2 generate
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) - unsigned(ONE)) when dx > x else dx;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y else dy;
         
     end generate;
        
-    c3: if DIRECTION = 3 generate
-     
+    sw: if DIRECTION = 3 generate
         processed_data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2) <= std_logic_vector(unsigned(dx) + unsigned(ONE)) when dx < x else dx;
         processed_data(VALUE_WIDTH*4-1 downto VALUE_WIDTH*3) <= std_logic_vector(unsigned(dy) + unsigned(ONE)) when dy < y else dy;
         
@@ -225,8 +186,6 @@ architecture tb of router_tb is
         signal o_req_oblique: std_logic; -- obliquious
         signal o_req_horizontal:std_logic; -- horizontal
         
-        -- unsure if right, but:
-        -- additional ports that we didn't thought of before
         signal i_ack:   std_logic;
         signal o_ack_vertical: std_logic;
         signal o_ack_oblique:  std_logic;
@@ -252,8 +211,6 @@ begin
         o_req_oblique,
         o_req_horizontal,
         
-        -- unsure if right, but:
-        -- additional ports that we didn't thought of before
         i_ack,
         o_ack_vertical,
         o_ack_oblique,
@@ -291,8 +248,8 @@ process begin
     -- NORTH WEST
     
     -------- test 1 -------- 
-    rst <= '1', '0' after 2ns;
-    i_req <= '0', '1' after 7 ns;
+    rst    <= '1', '0' after 2ns;
+    i_req  <= '0', '1' after 7 ns;
     i_data <= "0000000000110011";
     --o_ack_horizontal <= '0', '1' after 20ns;
     o_ack_horizontal <= '0';

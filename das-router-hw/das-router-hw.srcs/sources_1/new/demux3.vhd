@@ -1,37 +1,8 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 04/15/2024 11:40:35 AM
--- Design Name: 
--- Module Name: demux3 - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.demux;
 USE work.defs.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity demux3 is
   port(
@@ -49,20 +20,20 @@ entity demux3 is
     out_oblique_data     : out std_logic_vector(DATA_WIDTH-1 downto 0);
     out_oblique_ack      : in  std_logic;
     -- Output channel 2
-    out_horizontal_req      : out std_logic;
-    out_horizontal_data     : out std_logic_vector(DATA_WIDTH-1 downto 0);
-    out_horizontal_ack      : in  std_logic;
+    out_horizontal_req   : out std_logic;
+    out_horizontal_data  : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    out_horizontal_ack   : in  std_logic;
     -- Output channel 3
-    out_vertical_req      : out std_logic;
-    out_vertical_data     : out std_logic_vector(DATA_WIDTH-1 downto 0);
-    out_vertical_ack      : in  std_logic
+    out_vertical_req     : out std_logic;
+    out_vertical_data    : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    out_vertical_ack     : in  std_logic
     );
 end demux3;
 
 architecture Behavioral of demux3 is
 
-    signal req1, req2 : std_logic;
-    signal ack1, ack2 : std_logic;
+    signal req1, req2   : std_logic;
+    signal ack1, ack2   : std_logic;
     signal data1, data2 : std_logic_vector(DATA_WIDTH-1 downto 0);
     
     signal shady_ack_oblique, shady_ack_horizontal, shady_ack_vertical : std_logic;
@@ -77,62 +48,62 @@ begin
     port map (
         rst => rst,
         
-        inA_req => inA_req,
-        inA_data => inA_data,
-        inA_ack => inA_ack,
+        inA_req   => inA_req,
+        inA_data  => inA_data,
+        inA_ack   => inA_ack,
         
         inSel_req => inSel_req,
         inSel_ack => inSel_ack,
-        selector => selector(0), -- 00 ILLEGAL DO NOT USE
+        selector  => selector(0), -- 00 ILLEGAL DO NOT USE
         
-        outB_req => req1,
-        outB_ack => ack1,
+        outB_req  => req1,
+        outB_ack  => ack1,
         outB_data => data1,
         
-        outC_req => req2,
-        outC_ack => ack2,
+        outC_req  => req2,
+        outC_ack  => ack2,
         outC_data => data2        
         );
         
     demux2_1 : entity demux
     port map (
-        rst => rst,
+        rst       => rst,
         
-        inA_req => req1,
-        inA_data => data1,
-        inA_ack => ack1,
+        inA_req   => req1,
+        inA_data  => data1,
+        inA_ack   => ack1,
         
         inSel_req => req1,
         inSel_ack => ack1,
-        selector => selector(1),
+        selector  => selector(1),
         
-        outB_req => out_oblique_req,
-        outB_ack => shady_ack_oblique,
+        outB_req  => out_oblique_req,
+        outB_ack  => shady_ack_oblique,
         outB_data => out_oblique_data,
         
-        outC_req => out_horizontal_req,
-        outC_ack => shady_ack_horizontal,
+        outC_req  => out_horizontal_req,
+        outC_ack  => shady_ack_horizontal,
         outC_data => out_horizontal_data
         );
 
     demux2_2 : entity demux
     port map (
-        rst => rst,
+        rst       => rst,
         
-        inA_req => req2,
-        inA_data => data2,
-        inA_ack => ack2,
+        inA_req   => req2,
+        inA_data  => data2,
+        inA_ack   => ack2,
         
         inSel_req => req2,
         inSel_ack => ack2,
-        selector => selector(1),
+        selector  => selector(1),
         
-        outB_req => out_vertical_req,
-        outB_ack => shady_ack_vertical,
+        outB_req  => out_vertical_req,
+        outB_ack  => shady_ack_vertical,
         outB_data => out_vertical_data,
         
-        outC_req => open,
-        outC_ack => '0',
+        outC_req  => open,
+        outC_ack  => '0',
         outC_data => open
         );
 
@@ -245,9 +216,9 @@ process begin
     
     -------- try 3 --------
 
-    inA_req <= '0', '1' after 20 ns;
+    inA_req   <= '0', '1' after 20 ns;
     inSel_req <= '0', '1' after 20 ns;
-    inA_data <= "0000000010000000000000000000000000000000000000000010000000100000";
+    inA_data  <= "0000000010000000000000000000000000000000000000000010000000100000";
     
     wait until outB_req = '1';
     wait for 20 ns;

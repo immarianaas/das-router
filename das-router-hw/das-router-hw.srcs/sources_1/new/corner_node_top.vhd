@@ -16,7 +16,7 @@ entity corner_node_top is
         ir  : in  std_logic;
         id  : in  std_logic_vector(DATA_WIDTH-1 downto 0);
         oa  : in  std_logic;
-        orr  : out std_logic; --or is protected
+        orr : out std_logic; --or is protected
         od  : out std_logic_vector(DATA_WIDTH-1 downto 0);
         
         oa_horizontal : in std_logic;
@@ -53,43 +53,43 @@ Router_corner: entity router
     DIRECTION => CORNER
     )
     port map(
-    rst=>rst,
-    i_req =>ir,
+    rst    => rst,
+    i_req  => ir,
     i_data => id,
     
-    o_data_vertical => od_vertical,
-    o_data_oblique => od_oblique,
+    o_data_vertical   => od_vertical,
+    o_data_oblique    => od_oblique,
     o_data_horizontal => od_horizontal,
     
-    o_req_vertical => or_vertical,
-    o_req_oblique => or_oblique,
+    o_req_vertical   => or_vertical,
+    o_req_oblique    => or_oblique,
     o_req_horizontal => or_horizontal,
     
     i_ack => ia,
     
-    o_ack_vertical => oa_vertical,
-    o_ack_oblique => oa_oblique,
+    o_ack_vertical   => oa_vertical,
+    o_ack_oblique    => oa_oblique,
     o_ack_horizontal => oa_horizontal
     );
 
 Arbiter_corner : entity arbiter3
     port map ( 
     rst => rst,
-    inA_req => ir_vertical,
+    inA_req  => ir_vertical,
     inA_data => id_vertical,
-    inA_ack => ia_vertical,
+    inA_ack  => ia_vertical,
     
-    inB_req => ir_horizontal,
+    inB_req  => ir_horizontal,
     inB_data => id_horizontal,
-    inB_ack => ia_horizontal,
+    inB_ack  => ia_horizontal,
     
-    inC_req => ir_oblique,
+    inC_req  => ir_oblique,
     inC_data => id_oblique,
-    inC_ack => ia_oblique,
+    inC_ack  => ia_oblique,
     
-    out_req => orr,
+    out_req  => orr,
     out_data => od,
-    out_ack => oa
+    out_ack  => oa
     );
 
 end Behavioral;
@@ -112,18 +112,18 @@ architecture tb of corner_node_top_tb is
     type t_bit_arr is array (0 to 2) of std_logic;
     type t_data_arr is array (0 to 2) of std_logic_vector(DATA_WIDTH-1 downto 0);
     
-    signal ack_out : t_bit_arr;
-    signal data_in : t_data_arr;
-    signal req_in : t_bit_arr;
+    signal ack_out  : t_bit_arr;
+    signal data_in  : t_data_arr;
+    signal req_in   : t_bit_arr;
     
-    signal ack_in : t_bit_arr;
+    signal ack_in   : t_bit_arr;
     signal data_out : t_data_arr;
-    signal req_out : t_bit_arr;
+    signal req_out  : t_bit_arr;
    
    signal rst : std_logic;
    
    signal ia, ir, oa, orr : std_logic;
-   signal id, od : std_logic_vector(DATA_WIDTH-1 downto 0);
+   signal id, od          : std_logic_vector(DATA_WIDTH-1 downto 0);
    
     -- horizontal -> 0
     -- vertical -> 1
@@ -148,7 +148,7 @@ generic map(
         ir  => ir,
         id  => id,
         oa  => oa,
-        orr  => orr,
+        orr => orr,
         od  => od,
         
         oa_horizontal => ack_out(0),

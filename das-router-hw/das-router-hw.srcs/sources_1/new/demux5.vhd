@@ -9,9 +9,9 @@ entity demux5 is
  port ( 
     rst : in std_logic;
     
-    in_req  : in  std_logic;
-    in_data : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-    in_ack  : out std_logic;
+    in_req    : in  std_logic;
+    in_data   : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+    in_ack    : out std_logic;
     
     inSel_req : in  std_logic;
     inSel_ack : out std_logic;
@@ -21,17 +21,17 @@ entity demux5 is
     o_straight_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
     o_straight_ack  : in  std_logic;
     
-    o_left_req  : out std_logic;
-    o_left_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
-    o_left_ack  : in  std_logic;
+    o_left_req    : out std_logic;
+    o_left_data   : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    o_left_ack    : in  std_logic;
 
-    o_right_req  : out std_logic;
-    o_right_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
-    o_right_ack  : in  std_logic;
+    o_right_req   : out std_logic;
+    o_right_data  : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    o_right_ack   : in  std_logic;
 
-    o_lefto_req  : out std_logic;
-    o_lefto_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
-    o_lefto_ack  : in  std_logic;
+    o_lefto_req   : out std_logic;
+    o_lefto_data  : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    o_lefto_ack   : in  std_logic;
 
     o_righto_req  : out std_logic;
     o_righto_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
