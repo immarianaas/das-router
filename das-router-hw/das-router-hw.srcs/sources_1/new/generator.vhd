@@ -185,7 +185,8 @@ begin
     
     wait for 5ns; -- this is the minimum (by testing)
 
-    file_open(read_file, "/home/mar/DTU/das-24/das-router/test_1_x10.txt", read_mode);
+    -- file_open(read_file, "/home/mar/DTU/das-24/das-router/test_1_x10.txt", read_mode);
+    file_open(read_file, "/home/mar/DTU/das-24/das-router/test_2_x1000.txt", read_mode);
     file_open(write_input_file, "/home/mar/DTU/das-24/das-router/mesh_input.txt", write_mode);
     
 
@@ -198,11 +199,11 @@ begin
     dx:= to_integer(unsigned(data(VALUE_WIDTH*3-1 downto VALUE_WIDTH*2)));
     dy:= to_integer(unsigned(data( VALUE_WIDTH*4-1 downto VALUE_WIDTH*3))); 
     
-    if (x /= px or y /= py or dx /= pdx or dy /= pdy) and not first_time then
-        wait for 1000ns; -- wait for a while so that we are sure that the message gets through
-        rst <= '1', '0' after 10ns;
-        wait for 15ns; -- doesn's matter
-    end if;
+--    if (x /= px or y /= py or dx /= pdx or dy /= pdy) and not first_time then
+--        wait for 1000ns; -- wait for a while so that we are sure that the message gets through
+--        rst <= '1', '0' after 10ns;
+--        wait for 15ns; -- doesn's matter
+--    end if;
     
     -- if this is the same input node as before:
     if pdx = dx and pdy = dy then
@@ -250,6 +251,24 @@ begin
     variable curr_ack_in : t_bit_matrix := (others => (others =>'0')); 
     
     variable i, j: integer;
+    
+    
+    
+
+procedure handle_output_transition(
+        i : Integer;
+        j : Integer
+        ) is 
+begin
+        write(line_v, data_out_sig(i,j));
+        write(line_v, string'(","));
+        write(line_v, time'image(now));
+        write(line_v, string'(",(") & integer'image(i) & string'(".") & integer'image(j) & string'(")"));
+        writeline(write_output_file, line_v);
+        -- ack_out_sig(i,j) <= ack_out_sig(i,j), req_out_sig(i,j) after 20ns;
+        ack_out_sig(i,j) <= req_out_sig(i,j);
+end procedure;
+
 
   begin
 
@@ -257,47 +276,85 @@ begin
             
             if req_out_sig(0,0)'event then
                     i:=0; j:= 0;
-            elsif req_out_sig(0,1)'event then
+                    handle_output_transition(i,j);
+        end if;
+        
+            if req_out_sig(0,1)'event then
                     i:=0; j:= 1;
-            elsif req_out_sig(0,2)'event then
+                    handle_output_transition(i,j);
+        end if;
+        
+            if req_out_sig(0,2)'event then
                     i:=0; j:= 2;
-            elsif req_out_sig(0,3)'event then
+                    handle_output_transition(i,j);
+                            
+        end if;
+        
+            if req_out_sig(0,3)'event then
                     i:=0; j:= 3;
-            elsif req_out_sig(1,0)'event then
+                    handle_output_transition(i,j);
+                    
+        end if;
+        
+            if req_out_sig(1,0)'event then
                     i:=1; j:= 0;
-            elsif req_out_sig(1,3)'event then
+                    handle_output_transition(i,j);
+                            
+                            
+        end if;
+        
+            if req_out_sig(1,3)'event then
                     i:=1; j:= 3;
-            elsif req_out_sig(2,0)'event then
+                    handle_output_transition(i,j);
+                    
+        end if;
+        
+            if req_out_sig(2,0)'event then
                     i:=2; j:= 0;
-            elsif req_out_sig(2,3)'event then
+                    handle_output_transition(i,j);
+                    
+        end if;
+        
+            if req_out_sig(2,3)'event then
                     i:=2; j:= 3;
-            elsif req_out_sig(3,0)'event then
+                    handle_output_transition(i,j);
+                    
+        end if;
+        
+            if req_out_sig(3,0)'event then
                     i:=3; j:= 0;
-            elsif req_out_sig(3,1)'event then
+                    handle_output_transition(i,j);
+                            
+                            
+        end if;
+        
+            if req_out_sig(3,1)'event then
                     i:=3; j:= 1;
-            elsif req_out_sig(3,2)'event then
+                    handle_output_transition(i,j);
+                    
+        end if;
+        
+            if req_out_sig(3,2)'event then
                     i:=3; j:= 2;
-            elsif req_out_sig(3,3)'event then
+                    handle_output_transition(i,j);
+                    
+        end if;
+        
+            if req_out_sig(3,3)'event then
                     i:=3; j:= 3;
+                    handle_output_transition(i,j);
+                            
+                        
+  
             end if;
     
-        
-        write(line_v, data_out_sig(i,j));
-        write(line_v, string'(","));
-        write(line_v, time'image(now));
-        write(line_v, string'(",(") & integer'image(i) & string'(".") & integer'image(j) & string'(")"));
-        writeline(write_output_file, line_v);
     
-    
-        assert ack_out_sig(i,j) /= req_out_sig(i,j) report "MAR: SHOULD ONLY HAPPEN 1";
-
-        ack_out_sig(i,j) <= ack_out_sig(i,j), req_out_sig(i,j) after 10ns;
         
     end if;
     
     
-
     
+ 
 
     
   end process;

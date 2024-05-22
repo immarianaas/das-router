@@ -7,6 +7,8 @@
 #   [1][ ][ ][ ]
 #    ^
 
+import random
+
 ROOT_PATH = "/home/mar/DTU/das-24/das-router/"
 NODES = []
 
@@ -192,6 +194,8 @@ def main(option: int, number_times: int = 1):
 
                     msg_list += packets(origin, dest,
                                         number_times, len(msg_list))
+                    
+                    print(origin, dest)
 
             text = "\n".join(msg_list)
 
@@ -199,6 +203,19 @@ def main(option: int, number_times: int = 1):
             msg_list = []
             msg_list += five_lines((3, 1), (2, 0), len(msg_list))
             text = "\n".join(msg_list)
+
+        case 10:
+            subnodes = [(0,0),(1,0),(2,0), (3,0)]
+            # subnodes = NODES
+            msg_list = []
+            for _ in range(number_times):
+                nodes = random.choices(subnodes, k=2)
+                # while nodes[0] == nodes[1] or nodes[0][0] == 0 : nodes = random.choices(NODES, k=2)
+                while nodes[0] == nodes[1]: nodes = random.choices(subnodes, k=2)
+                msg_list += packets(nodes[0], nodes[1], 1, len(msg_list))
+                print(nodes)
+            text = "\n".join(msg_list)
+            
 
         case _:
             raise Exception("Invalid option")
@@ -210,5 +227,5 @@ def main(option: int, number_times: int = 1):
     print(f"Saved on: {file_path}")
 
 
-main(option=4, number_times=10)
+main(option=10, number_times=10)
 

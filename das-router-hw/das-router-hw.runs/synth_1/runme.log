@@ -17,20 +17,20 @@ Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 131343
+INFO: [Synth 8-7075] Helper process launched with PID 453990
 ---------------------------------------------------------------------------------
-Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1685.328 ; gain = 350.832 ; free physical = 252 ; free virtual = 16103
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1685.254 ; gain = 349.832 ; free physical = 409 ; free virtual = 16317
 ---------------------------------------------------------------------------------
-ERROR: [Synth 8-9704] library 'std' is mapped to '/tools/Xilinx/Vivado/2023.1/scripts/rt/data/vhdl/latest_verific_pkgs/1993/vdbs/std' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/click_element.vhd:71]
-ERROR: [Synth 8-4169] error in use clause: package 'env' not found in library 'std' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/click_element.vhd:71]
-INFO: [Synth 8-11252] unit 'click_element_tb' is ignored due to previous errors [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/click_element.vhd:75]
-INFO: [Synth 8-10443] VHDL file '/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/click_element.vhd' is ignored due to errors
+ERROR: [Synth 8-9704] library 'std' is mapped to '/tools/Xilinx/Vivado/2023.1/scripts/rt/data/vhdl/latest_verific_pkgs/1993/vdbs/std' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd:149]
+ERROR: [Synth 8-4169] error in use clause: package 'env' not found in library 'std' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd:149]
+INFO: [Synth 8-11252] unit 'demux3_tb' is ignored due to previous errors [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd:152]
+INFO: [Synth 8-10443] VHDL file '/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd' is ignored due to errors
 ---------------------------------------------------------------------------------
-Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1748.297 ; gain = 413.801 ; free physical = 246 ; free virtual = 16028
+Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1748.223 ; gain = 412.801 ; free physical = 327 ; free virtual = 16235
 ---------------------------------------------------------------------------------
 synthesize failed
 INFO: [Common 17-83] Releasing license: Synthesis
 7 Infos, 0 Warnings, 0 Critical Warnings and 3 Errors encountered.
 synth_design failed
 ERROR: [Common 17-69] Command failed: Vivado Synthesis failed
-INFO: [Common 17-206] Exiting Vivado at Tue May 21 11:09:54 2024...
+INFO: [Common 17-206] Exiting Vivado at Wed May 22 11:42:35 2024...
