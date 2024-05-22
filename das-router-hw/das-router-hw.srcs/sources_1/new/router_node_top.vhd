@@ -25,7 +25,6 @@ use work.defs.all;
 use work.arbiter3;
 use work.router;
 
-use std.env.finish;
 
 
 
@@ -420,8 +419,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.router_node_top;
-use std.env.finish;
-
 
 
 entity router_node_top_tb is
@@ -626,7 +623,6 @@ node: entity router_node_top
         
 
         wait for 50ns;
-        finish;
 
 
     

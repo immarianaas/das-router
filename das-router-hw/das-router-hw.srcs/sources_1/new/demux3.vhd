@@ -146,8 +146,6 @@ USE ieee.std_logic_1164.ALL;
 use work.defs.all;
 USE work.demux3;
 
-use std.env.finish;
-
 entity demux3_tb is
 end entity;
 
@@ -264,7 +262,6 @@ process begin
     
     
     
-    finish;
     
     --wait for 50 ns;
     --i_addr <= "0011001100110011";

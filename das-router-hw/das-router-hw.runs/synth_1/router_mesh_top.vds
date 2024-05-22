@@ -3,8 +3,8 @@
 # SW Build 3865809 on Sun May  7 15:04:56 MDT 2023
 # IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
 # SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
-# Start of session at: Wed May 22 11:42:25 2024
-# Process ID: 453951
+# Start of session at: Wed May 22 11:47:12 2024
+# Process ID: 456060
 # Current directory: /home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.runs/synth_1
 # Command line: vivado -log router_mesh_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source router_mesh_top.tcl
 # Log file: /home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.runs/synth_1/router_mesh_top.vds
@@ -18,20 +18,39 @@ Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 453990
+INFO: [Synth 8-7075] Helper process launched with PID 456100
 ---------------------------------------------------------------------------------
-Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1685.254 ; gain = 349.832 ; free physical = 409 ; free virtual = 16317
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1685.332 ; gain = 350.832 ; free physical = 294 ; free virtual = 16220
 ---------------------------------------------------------------------------------
-ERROR: [Synth 8-9704] library 'std' is mapped to '/tools/Xilinx/Vivado/2023.1/scripts/rt/data/vhdl/latest_verific_pkgs/1993/vdbs/std' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd:149]
-ERROR: [Synth 8-4169] error in use clause: package 'env' not found in library 'std' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd:149]
-INFO: [Synth 8-11252] unit 'demux3_tb' is ignored due to previous errors [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd:152]
-INFO: [Synth 8-10443] VHDL file '/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd' is ignored due to errors
+INFO: [Synth 8-638] synthesizing module 'router_mesh_top' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/router_mesh_top.vhd:135]
+INFO: [Synth 8-638] synthesizing module 'corner_node_top' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/corner_node_top.vhd:46]
+	Parameter CORNER bound to: 3 - type: integer 
+INFO: [Synth 8-638] synthesizing module 'router' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/router.vhd:84]
+	Parameter DIRECTION bound to: 3 - type: integer 
+INFO: [Synth 8-638] synthesizing module 'click_element' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/click_element.vhd:31]
+INFO: [Synth 8-256] done synthesizing module 'click_element' (0#1) [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/click_element.vhd:31]
+INFO: [Synth 8-638] synthesizing module 'demux3' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd:62]
+INFO: [Synth 8-638] synthesizing module 'demux' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/DEMUX.vhd:36]
+INFO: [Synth 8-256] done synthesizing module 'demux' (0#1) [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/DEMUX.vhd:36]
+INFO: [Synth 8-256] done synthesizing module 'demux3' (0#1) [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/demux3.vhd:62]
+INFO: [Synth 8-256] done synthesizing module 'router' (0#1) [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/router.vhd:84]
+INFO: [Synth 8-638] synthesizing module 'arbiter3' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/arbiter3.vhd:61]
+INFO: [Synth 8-638] synthesizing module 'arbiter' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/arbiter.vhd:25]
+INFO: [Synth 8-638] synthesizing module 'rgd_mutex' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/rgd_mutex.vhd:56]
+INFO: [Synth 8-638] synthesizing module 'mutex' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/rgd_mutex.vhd:12]
+INFO: [Synth 8-256] done synthesizing module 'mutex' (0#1) [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/rgd_mutex.vhd:12]
+ERROR: [Synth 8-27] else clause after check for clock not supported [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/rgd_mutex.vhd:132]
+ERROR: [Synth 8-285] failed synthesizing module 'rgd_mutex' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/rgd_mutex.vhd:56]
+ERROR: [Synth 8-285] failed synthesizing module 'arbiter' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/imports/components/arbiter.vhd:25]
+ERROR: [Synth 8-285] failed synthesizing module 'arbiter3' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/arbiter3.vhd:61]
+ERROR: [Synth 8-285] failed synthesizing module 'corner_node_top' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/corner_node_top.vhd:46]
+ERROR: [Synth 8-285] failed synthesizing module 'router_mesh_top' [/home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.srcs/sources_1/new/router_mesh_top.vhd:135]
 ---------------------------------------------------------------------------------
-Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1748.223 ; gain = 412.801 ; free physical = 327 ; free virtual = 16235
+Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1754.301 ; gain = 419.801 ; free physical = 276 ; free virtual = 16142
 ---------------------------------------------------------------------------------
 synthesize failed
 INFO: [Common 17-83] Releasing license: Synthesis
-7 Infos, 0 Warnings, 0 Critical Warnings and 3 Errors encountered.
+20 Infos, 0 Warnings, 0 Critical Warnings and 7 Errors encountered.
 synth_design failed
 ERROR: [Common 17-69] Command failed: Vivado Synthesis failed
-INFO: [Common 17-206] Exiting Vivado at Wed May 22 11:42:35 2024...
+INFO: [Common 17-206] Exiting Vivado at Wed May 22 11:47:21 2024...

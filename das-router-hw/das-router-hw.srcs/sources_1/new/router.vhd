@@ -206,7 +206,6 @@ USE ieee.std_logic_1164.ALL;
 use work.defs.all;
 USE work.router;
 
-use std.env.finish;
 
 entity router_tb is
 end entity;
@@ -336,7 +335,6 @@ process begin
     
     
     report "passed! ;)";
-    finish;
     
     end process;
 end architecture;

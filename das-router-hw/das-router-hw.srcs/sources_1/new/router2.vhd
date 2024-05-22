@@ -24,7 +24,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.click_element;
 use work.demux;
-use std.env.finish;
 use ieee.numeric_std.all;
 
 
@@ -132,8 +131,6 @@ USE ieee.std_logic_1164.ALL;
 use work.defs.all;
 USE work.router2;
 
-use std.env.finish;
-
 entity router2_tb is
 end entity;
 
@@ -231,7 +228,6 @@ begin
     wait for 30 ns;
     assert od_outside = "0011000000110000" report "fail" severity failure; 
     
-    finish;
 
     
     end process;

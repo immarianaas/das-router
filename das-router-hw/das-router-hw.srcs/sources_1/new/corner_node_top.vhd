@@ -4,7 +4,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.arbiter3;
 use work.router;
-use std.env.finish;
 
 entity corner_node_top is
     generic(
@@ -101,7 +100,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.corner_node_top;
-use std.env.finish;
 
 
 
@@ -272,7 +270,6 @@ generic map(
         
 
         wait for 50ns;
-        finish;
 
 
 

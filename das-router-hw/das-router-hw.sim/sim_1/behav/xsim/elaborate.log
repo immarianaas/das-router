@@ -5,4 +5,43 @@ Running: /tools/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --debug 
 Using 8 slave threads.
 Starting static elaboration
 Completed static elaboration
-INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package xil_defaultlib.defs
+Compiling package ieee.std_logic_textio
+Compiling package ieee.numeric_std
+Compiling architecture behavioral of entity xil_defaultlib.click_element [click_element_default]
+Compiling architecture behavioral of entity xil_defaultlib.demux [demux_default]
+Compiling architecture behavioral of entity xil_defaultlib.demux3 [demux3_default]
+Compiling architecture behavioral of entity xil_defaultlib.router [\router(direction=3)\]
+Compiling architecture impl of entity xil_defaultlib.mutex [mutex_default]
+Compiling architecture impl of entity xil_defaultlib.rgd_mutex [rgd_mutex_default]
+Compiling architecture behavioral of entity xil_defaultlib.merge [merge_default]
+Compiling architecture impl of entity xil_defaultlib.arbiter [arbiter_default]
+Compiling architecture behavioral of entity xil_defaultlib.arbiter3 [arbiter3_default]
+Compiling architecture behavioral of entity xil_defaultlib.corner_node_top [\corner_node_top(corner=3)\]
+Compiling architecture behavioral of entity xil_defaultlib.router2 [router2_default]
+Compiling architecture behavioral of entity xil_defaultlib.demux5 [demux5_default]
+Compiling architecture behavioral of entity xil_defaultlib.router5 [\router5(side=1)\]
+Compiling architecture behavioral of entity xil_defaultlib.arbiter5 [arbiter5_default]
+Compiling architecture behavioral of entity xil_defaultlib.side_node_top [\side_node_top(side=1)\]
+Compiling architecture behavioral of entity xil_defaultlib.router [router_default]
+Compiling architecture behavioral of entity xil_defaultlib.corner_node_top [corner_node_top_default]
+Compiling architecture behavioral of entity xil_defaultlib.router5 [\router5(side=2)\]
+Compiling architecture behavioral of entity xil_defaultlib.side_node_top [\side_node_top(side=2)\]
+Compiling architecture behavioral of entity xil_defaultlib.router [\router(direction=1)\]
+Compiling architecture behavioral of entity xil_defaultlib.router [\router(direction=2)\]
+Compiling architecture behavioral of entity xil_defaultlib.router_node_top [router_node_top_default]
+Compiling architecture behavioral of entity xil_defaultlib.router5 [router5_default]
+Compiling architecture behavioral of entity xil_defaultlib.side_node_top [side_node_top_default]
+Compiling architecture behavioral of entity xil_defaultlib.corner_node_top [\corner_node_top(corner=2)\]
+Compiling architecture behavioral of entity xil_defaultlib.router5 [\router5(side=3)\]
+Compiling architecture behavioral of entity xil_defaultlib.side_node_top [\side_node_top(side=3)\]
+Compiling architecture behavioral of entity xil_defaultlib.corner_node_top [\corner_node_top(corner=1)\]
+Compiling architecture behavioral of entity xil_defaultlib.router_mesh_top [router_mesh_top_default]
+Compiling architecture behavioral of entity xil_defaultlib.generator
+Built simulation snapshot generator_behav

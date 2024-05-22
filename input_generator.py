@@ -11,11 +11,12 @@ import random
 
 ROOT_PATH = "/home/mar/DTU/das-24/das-router/"
 NODES = []
+SIDE = 4
+SIDE = 10
+for i in range(SIDE):
+    for j in range(SIDE):
 
-for i in range(4):
-    for j in range(4):
-
-        if i in [1, 2] and j in [1, 2]:
+        if i in range(1,SIDE-1) and j in range(1,SIDE-1):
             continue
 
         NODES.append((i, j))
@@ -227,5 +228,5 @@ def main(option: int, number_times: int = 1):
     print(f"Saved on: {file_path}")
 
 
-main(option=10, number_times=10)
+main(option=8, number_times=100)
 

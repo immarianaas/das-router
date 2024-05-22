@@ -5,7 +5,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.click_element;
 use work.demux5;
-use std.env.finish;
 use ieee.numeric_std.all;
 
 
@@ -185,7 +184,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.router5;
-use std.env.finish;
 
 entity router5_tb is 
 end entity; 
@@ -254,7 +252,6 @@ generic map(
         wait until req_out(2) = '1';
         
         wait for 50ns;
-        finish;
         
     end process;
 end architecture;

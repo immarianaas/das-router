@@ -3,8 +3,8 @@
 # SW Build 3865809 on Sun May  7 15:04:56 MDT 2023
 # IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
 # SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
-# Start of session at: Wed May 22 11:42:25 2024
-# Process ID: 453951
+# Start of session at: Wed May 22 11:47:12 2024
+# Process ID: 456060
 # Current directory: /home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.runs/synth_1
 # Command line: vivado -log router_mesh_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source router_mesh_top.tcl
 # Log file: /home/mar/DTU/das-24/das-router/das-router-hw/das-router-hw.runs/synth_1/router_mesh_top.vds

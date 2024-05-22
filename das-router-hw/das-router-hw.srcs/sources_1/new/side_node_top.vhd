@@ -8,7 +8,6 @@ use work.router2;
 use work.arbiter5;
 use work.arbiter3;
 use work.arbiter;
-use std.env.finish;
 
 entity side_node_top is
     generic(
@@ -274,7 +273,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 use work.side_node_top;
-use std.env.finish;
 
 entity side_node_top_tb is
 end entity;
@@ -495,12 +493,6 @@ generic map(
        
 
         wait for 50ns;
-        finish;
-
-
-
-
-
         
     end process;
 end architecture;

@@ -2,7 +2,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.demux;
 use work.defs.all;
-use std.env.finish;
 
 
 entity demux5 is
