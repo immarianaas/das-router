@@ -35,10 +35,8 @@ entity router5 is
         od_left     : out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_right    : out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_lefto    : out std_logic_vector(DATA_WIDTH-1 downto 0);
-        od_righto   : out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_righto   : out std_logic_vector(DATA_WIDTH-1 downto 0)
 
-        int_req     : out std_logic;
-        int_ack     : out std_logic
          
   );
 end router5;
@@ -47,11 +45,7 @@ architecture Behavioral of router5 is
     signal x,y,dx,dy            : std_logic_vector(VALUE_WIDTH-1 downto 0);
     signal req, ack             : std_logic;
     signal processed_data, data : std_logic_vector(DATA_WIDTH-1 downto 0);
-    signal selector             : std_logic_vector(2 downto 0);
-    
-    signal shady_ack : std_logic;
-    
-    
+    signal selector             : std_logic_vector(2 downto 0); 
     
 begin
     
@@ -72,12 +66,9 @@ begin
         in_data => id,
         out_req => req,
         out_data => data,
-        out_ack => shady_ack 
+        out_ack => ack 
     );
     
-    shady_ack <= ack; -- after 20ns;
-    int_ack   <= shady_ack;
-    int_req   <= req;
     
     
     N: if SIDE = 0 generate

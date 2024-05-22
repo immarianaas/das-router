@@ -31,8 +31,6 @@ architecture Behavioral of router2 is
     signal req, ack             : std_logic;
     signal processed_data, data : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal selector             : std_logic;
-    
-    signal shady_ack            : std_logic;
 begin
 
     x  <= data(VALUE_WIDTH-1 downto VALUE_WIDTH*0);
@@ -64,10 +62,8 @@ begin
         in_data  => id,
         out_req  => req,
         out_data => data,
-        out_ack  => shady_ack
+        out_ack  => ack
     );
-    
-    shady_ack <= ack; -- after 10ns;
     
     demux1: entity demux
         port map (

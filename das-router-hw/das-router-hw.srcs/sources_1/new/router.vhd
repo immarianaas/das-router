@@ -41,10 +41,7 @@ entity router is
         i_ack            : out std_logic;
         o_ack_vertical   : in std_logic;
         o_ack_oblique    : in std_logic;
-        o_ack_horizontal : in std_logic;
-        
-        test_ack         : out std_logic;
-        test_req         : out std_logic
+        o_ack_horizontal : in std_logic
         
     );
 end router;
@@ -61,7 +58,6 @@ architecture Behavioral of router is
   
   signal selector  : std_logic_vector(1 downto 0);
   
-  signal shady_ack : std_logic;
   -- 11 is oblique
   -- 01 is horizontal
   -- 10 is vertical
@@ -93,12 +89,9 @@ begin
     -- Output channel
         out_req  => req,
         out_data => data,
-        out_ack  => shady_ack
+        out_ack  => ack
     );
     
-    shady_ack <= ack; -- after 10ns;
-    test_ack  <= shady_ack;
-    test_req  <= req;
 
     
     -- going to be an input for the click element

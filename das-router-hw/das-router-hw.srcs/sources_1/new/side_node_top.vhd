@@ -234,10 +234,7 @@ router: entity router5
         od_left     => od_left_ext,
         od_right    => od_right_ext,
         od_lefto    => od_lefto,
-        od_righto   => od_righto,
-    
-        int_ack     => int_ack,
-        int_req     => int_req
+        od_righto   => od_righto
     );
     
     --B,D,E fast

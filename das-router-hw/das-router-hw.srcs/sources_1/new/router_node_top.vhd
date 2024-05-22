@@ -65,17 +65,12 @@ entity router_node_top is
         od_se:  out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_s:   out std_logic_vector(DATA_WIDTH-1 downto 0);
         od_sw:  out std_logic_vector(DATA_WIDTH-1 downto 0);
-        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0);
+        od_w:   out std_logic_vector(DATA_WIDTH-1 downto 0)
         
         
         -- internal_nw_req_horizontal: out std_logic;
         -- internal_nw_req_vertical: out std_logic
-        
-        
-       test_req:         out std_logic;
-       test_ack :        out std_logic;
-       test_ack_oblique: out std_logic
-
+       
         
     );
 end router_node_top;
@@ -283,11 +278,7 @@ begin
     );
     
 ----------------------------------------------------------------------------------------------------
-    
-    test_ack_oblique <= sw_ack_oblique;
-
-
-    R_sw: entity router
+      R_sw: entity router
         generic map(
         DIRECTION => 3
         ) 
@@ -308,10 +299,7 @@ begin
 
         o_ack_vertical    => sw_ack_vertical,
         o_ack_oblique     => sw_ack_oblique,
-        o_ack_horizontal  => sw_ack_horizontal,
-        
-        test_ack => test_ack,
-        test_req => test_req
+        o_ack_horizontal  => sw_ack_horizontal
         );
 
         
@@ -387,11 +375,7 @@ architecture tb of router_node_top_tb is
     signal req_out  : t_bit_arr;
    
    signal rst : std_logic;
-   
-   signal test_ack, test_req,test_ack_oblique : std_logic;
-   
-
-   
+     
    --signal internal_nw_req_horizontal : std_logic;
    -- signal internal_nw_req_vertical : std_logic;
    
@@ -402,23 +386,23 @@ node: entity router_node_top
 
         rst => rst,
 
-        ia_nw => ack_in(0),
-        ia_n => ack_in(1),
-        ia_ne => ack_in(2),
-        ia_e => ack_in(3),
-        ia_se => ack_in(4),
-        ia_s => ack_in(5),
-        ia_sw => ack_in(6),
-        ia_w => ack_in(7),
+        ia_nw  => ack_in(0),
+        ia_n   => ack_in(1),
+        ia_ne  => ack_in(2),
+        ia_e   => ack_in(3),
+        ia_se  => ack_in(4),
+        ia_s   => ack_in(5),
+        ia_sw  => ack_in(6),
+        ia_w   => ack_in(7),
         
-        ir_nw  =>req_in(0),
-        ir_n   =>req_in(1),
-        ir_ne  =>req_in(2),
-        ir_e   =>req_in(3),
-        ir_se  =>req_in(4),
-        ir_s   =>req_in(5),
-        ir_sw  =>req_in(6),
-        ir_w   =>req_in(7),
+        ir_nw  => req_in(0),
+        ir_n   => req_in(1),
+        ir_ne  => req_in(2),
+        ir_e   => req_in(3),
+        ir_se  => req_in(4),
+        ir_s   => req_in(5),
+        ir_sw  => req_in(6),
+        ir_w   => req_in(7),
         
         id_nw  => data_in(0),
         id_n   => data_in(1),
@@ -454,14 +438,10 @@ node: entity router_node_top
         od_se  => data_out(4),
         od_s   => data_out(5),
         od_sw  => data_out(6),
-        od_w   => data_out(7),
+        od_w   => data_out(7)
         
         -- internal_nw_req_horizontal => internal_nw_req_horizontal,
         -- internal_nw_req_vertical => internal_nw_req_vertical
-        
-        test_ack => test_ack,
-        test_req => test_req,
-        test_ack_oblique => test_ack_oblique
     );
     
     process is

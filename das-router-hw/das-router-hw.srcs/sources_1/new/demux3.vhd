@@ -36,13 +36,8 @@ architecture Behavioral of demux3 is
     signal ack1, ack2   : std_logic;
     signal data1, data2 : std_logic_vector(DATA_WIDTH-1 downto 0);
     
-    signal shady_ack_oblique, shady_ack_horizontal, shady_ack_vertical : std_logic;
 
 begin
-
-    shady_ack_oblique <= out_oblique_ack; -- after 10ns;
-    shady_ack_horizontal <= out_horizontal_ack; -- after 10ns;
-    shady_ack_vertical <= out_vertical_ack; -- after 10ns;
 
     demux1 : entity demux
     port map (
@@ -78,11 +73,11 @@ begin
         selector  => selector(1),
         
         outB_req  => out_oblique_req,
-        outB_ack  => shady_ack_oblique,
+        outB_ack  => out_oblique_ack,
         outB_data => out_oblique_data,
         
         outC_req  => out_horizontal_req,
-        outC_ack  => shady_ack_horizontal,
+        outC_ack  => out_horizontal_ack,
         outC_data => out_horizontal_data
         );
 
@@ -99,7 +94,7 @@ begin
         selector  => selector(1),
         
         outB_req  => out_vertical_req,
-        outB_ack  => shady_ack_vertical,
+        outB_ack  => out_vertical_ack,
         outB_data => out_vertical_data,
         
         outC_req  => open,
